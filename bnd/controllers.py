@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, redirect, session
-from flask_oauth import OAuth
+from flask_oauthlib.client import OAuth
 
 GOOGLE_CLIENT_ID = '169743770999-fr1pv3hmkrlmhb959ogu3l0utebfe0kg.apps.googleusercontent.com'
 GOOGLE_CLIENT_SECRET = 'BlQ5zkY1GPfrdqgks0EhFVHO'
@@ -8,18 +8,21 @@ app = Flask(__name__)
 app.secret_key = 'asdf'
 oauth = OAuth()
 
-google = oauth.remote_app('google',
-            base_url='https://www.google.com/accounts/',
-            authorize_url='https://accounts.google.com/o/oauth2/auth',
-            request_token_url=None,
-            request_token_params={'scope': 'https://www.googleapis.com/auth/userinfo.email',
-                                'response_type': 'code'},
-            access_token_url='https://accounts.google.com/o/oauth2/token',
-            access_token_method='POST',
-            access_token_params={'grant_type': 'authorization_code'},
-            consumer_key=GOOGLE_CLIENT_ID,
-            consumer_secret=GOOGLE_CLIENT_SECRET)
-
+google = oauth.remote_app(
+    'google',
+    # TODO: When open-source this project, invalidate the current
+    # GOOGLE_CLIENT_SECRET and issue a new one
+    consumer_key=GOOGLE_CLIENT_ID,
+    consumer_secret=GOOGLE_CLIENT_SECRET,
+    request_token_params={
+        'scope': 'email'
+    },
+    base_url='https://www.googleapis.com/oauth2/v1/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+)
 
 @app.route('/')
 def index():
