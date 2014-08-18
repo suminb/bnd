@@ -30,7 +30,9 @@ def index():
     # if access_token is None:
     #     return redirect(url_for('login'))
 
-    return render_template('index.html')
+    context = dict()
+
+    return render_template('index.html', **context)
 
 
 @app.route('/login')
