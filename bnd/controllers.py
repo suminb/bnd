@@ -1,9 +1,13 @@
 from flask import render_template, url_for, redirect, session
 from flask_oauthlib.client import OAuth
+from logbook import Logger
 from __init__ import app
+
 
 GOOGLE_CLIENT_ID = '169743770999-fr1pv3hmkrlmhb959ogu3l0utebfe0kg.apps.googleusercontent.com'
 GOOGLE_CLIENT_SECRET = 'BlQ5zkY1GPfrdqgks0EhFVHO'
+
+log = Logger()
 
 oauth = OAuth()
 
@@ -29,9 +33,9 @@ def index():
     # if access_token is None:
     #     return redirect(url_for('login'))
 
-    me = google.get('userinfo')
-    print(me.raw_data)
-    print(me.data)
+    # if google.has('userinfo'):
+    #     me = google.get('userinfo')
+    #     print(me)
 
     context = dict()
 
