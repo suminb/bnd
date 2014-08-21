@@ -1,11 +1,10 @@
-from flask import Flask, render_template, url_for, redirect, session
+from flask import render_template, url_for, redirect, session
 from flask_oauthlib.client import OAuth
+from __init__ import app
 
 GOOGLE_CLIENT_ID = '169743770999-fr1pv3hmkrlmhb959ogu3l0utebfe0kg.apps.googleusercontent.com'
 GOOGLE_CLIENT_SECRET = 'BlQ5zkY1GPfrdqgks0EhFVHO'
 
-app = Flask(__name__)
-app.secret_key = 'asdf'
 oauth = OAuth()
 
 google = oauth.remote_app(
@@ -29,6 +28,10 @@ def index():
     # access_token = session.get('access_token')
     # if access_token is None:
     #     return redirect(url_for('login'))
+
+    me = google.get('userinfo')
+    print(me.raw_data)
+    print(me.data)
 
     context = dict()
 
