@@ -42,6 +42,11 @@ def index():
     return render_template('index.html', **context)
 
 
+@app.route('/user/info')
+def user_info():
+    context = dict()
+    return render_template('user/info.html', **context)
+
 @app.route('/login')
 def login():
     callback = url_for('authorized', _external=True)
