@@ -2,9 +2,10 @@ from flask import render_template, url_for, redirect, session
 from flask_oauthlib.client import OAuth
 from logbook import Logger
 from __init__ import app
+from forms import UserInfoForm
 
 
-GOOGLE_CLIENT_ID = '169743770999-fr1pv3hmkrlmhb959ogu3l0utebfe0kg.apps.googleusercontent.com'
+GOOGLE_CLIENT_ID = '169743770999-fr1pv3hmkrlmhb959ogu3l0utebfe0kg.apps.googleusercontent.com'  # noqa
 GOOGLE_CLIENT_SECRET = 'BlQ5zkY1GPfrdqgks0EhFVHO'
 
 log = Logger()
@@ -27,6 +28,7 @@ google = oauth.remote_app(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
 
+
 @app.route('/')
 def index():
     # access_token = session.get('access_token')
@@ -42,10 +44,18 @@ def index():
     return render_template('index.html', **context)
 
 
-@app.route('/user/info')
+@app.route('/user/info', methods=['get', 'post'])
 def user_info():
-    context = dict()
+    form = UserInfoForm()
+
+    if form.validate_on_submit():
+        return redirect('/user/info?page=2')
+
+    context = dict(
+        form=form,
+    )
     return render_template('user/info.html', **context)
+
 
 @app.route('/login')
 def login():
