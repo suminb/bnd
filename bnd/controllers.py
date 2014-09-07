@@ -4,9 +4,8 @@ from logbook import Logger
 from __init__ import app
 from forms import UserInfoForm
 
+import os
 
-GOOGLE_CLIENT_ID = '169743770999-fr1pv3hmkrlmhb959ogu3l0utebfe0kg.apps.googleusercontent.com'  # noqa
-GOOGLE_CLIENT_SECRET = 'BlQ5zkY1GPfrdqgks0EhFVHO'
 
 log = Logger()
 
@@ -14,10 +13,8 @@ oauth = OAuth()
 
 google = oauth.remote_app(
     'google',
-    # TODO: When open-source this project, invalidate the current
-    # GOOGLE_CLIENT_SECRET and issue a new one
-    consumer_key=GOOGLE_CLIENT_ID,
-    consumer_secret=GOOGLE_CLIENT_SECRET,
+    consumer_key=os.environ.get('GOOGLE_CLIENT_ID'),
+    consumer_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
     request_token_params={
         'scope': 'email'
     },
