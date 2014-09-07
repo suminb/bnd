@@ -2,7 +2,7 @@ from flask import render_template, url_for, redirect, session
 from flask_oauthlib.client import OAuth
 from logbook import Logger
 from __init__ import app
-from forms import UserInfoForm
+from forms import UserInfoForm, UserInfoForm2
 
 import os
 
@@ -46,12 +46,25 @@ def user_info():
     form = UserInfoForm()
 
     if form.validate_on_submit():
-        return redirect('/user/info?page=2')
+        return redirect('/user/info/2')
 
     context = dict(
         form=form,
     )
     return render_template('user/info.html', **context)
+
+
+@app.route('/user/info/2', methods=['get', 'post'])
+def user_info2():
+    form = UserInfoForm2()
+
+    if form.validate_on_submit():
+        return redirect('/')
+
+    context = dict(
+        form=form,
+    )
+    return render_template('user/info2.html', **context)
 
 
 @app.route('/login')

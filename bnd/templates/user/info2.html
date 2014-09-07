@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% from 'layout.html' import render_field %}
+{% block content %}
+<div class="content">
+
+<h2>Create an Account</h2>
+
+<ul class="nav nav-tabs" role="tablist">
+  <li><a href="#">1. 기본 정보 입력</a></li>
+  <li class="active"><a href="#">2. 추가 정보 입력</a></li>
+  <li><a href="#">3. 가입 완료</a></li>
+</ul>
+
+<form class="form-horizontal" role="form" method="post" action="">
+  {{ form.csrf_token }}
+  {{ render_field(form.question1) }}
+  {{ render_field(form.question2) }}
+  {{ render_field(form.question3) }}
+  <button type="submit" class="btn btn-default">다음</button>
+</form>
+
+</div><!-- end of div.content -->
+{% endblock %}
