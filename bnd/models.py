@@ -18,14 +18,20 @@ class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
 
-class UserTeamAssoc(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+user_team_assoc = db.Table(
+    'user_team_assoc',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('team_id', db.Integer, db.ForeignKey('team.id'))
+)
 
 
 class Goal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    tasks = db.relationship('Task', backref='goal', lazy='dynamic')
 
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
 
