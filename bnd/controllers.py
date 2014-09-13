@@ -1,5 +1,6 @@
-from flask import render_template, url_for, redirect, session
+from flask import request, render_template, url_for, redirect, session
 from flask_oauthlib.client import OAuth
+from flask_oauthlib.provider import OAuth2Provider
 from logbook import Logger
 from __init__ import app
 from forms import UserInfoForm, UserInfoForm2
@@ -10,13 +11,14 @@ import os
 log = Logger()
 
 oauth = OAuth()
+#oauth = OAuth2Provider(app)
 
 google = oauth.remote_app(
     'google',
     consumer_key=os.environ.get('GOOGLE_CLIENT_ID'),
     consumer_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
     request_token_params={
-        'scope': 'email'
+        'scope': 'openid profile email'
     },
     base_url='https://www.googleapis.com/oauth2/v1/',
     request_token_url=None,
@@ -32,9 +34,8 @@ def index():
     # if access_token is None:
     #     return redirect(url_for('login'))
 
-    # if google.has('userinfo'):
-    #     me = google.get('userinfo')
-    #     print(me)
+    me = google.get('userinfo')
+    log.info(me.data)
 
     context = dict()
 
@@ -78,7 +79,11 @@ def login():
 def authorized(resp):
     access_token = resp['access_token']
     session['access_token'] = access_token, ''
-    return redirect(url_for('index'))
+
+    # TODO: Check whether the user has filled up required information
+    # then redirect to an appropriate page
+
+    return redirect(url_for('user_info'))
 
 
 @google.tokengetter
