@@ -53,6 +53,10 @@ class User(db.Model, CRUDMixin):
     data = db.Column(JSON)
 
     @staticmethod
+    def get_by_oauth_id(oauth_id):
+        return User.query.filter_by(oauth_id=oauth_id).first()
+
+    @staticmethod
     def check_email(email):
         """Check if there already exists a user having the specified email.
         :param email: An email address

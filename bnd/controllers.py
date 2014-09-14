@@ -43,7 +43,11 @@ def index():
 
 @app.route('/user/info', methods=['get', 'post'])
 def user_info():
-    form = UserInfoForm()
+
+    guser = google.get('userinfo')
+    user = User.get_by_oauth_id(guser.data['id'])
+
+    form = UserInfoForm(request.form, obj=user)
 
     if form.validate_on_submit():
         return redirect('/user/info/2')
