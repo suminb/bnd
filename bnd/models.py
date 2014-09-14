@@ -5,13 +5,61 @@ from __init__ import app
 db = SQLAlchemy(app)
 
 
-class User(db.Model):
+class CRUDMixin(object):
+    """Copied from https://realpython.com/blog/python/python-web-applications-with-flask-part-ii/
+    """  # noqa
+
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    @classmethod
+    def create(cls, commit=True, **kwargs):
+        instance = cls(**kwargs)
+        return instance.save(commit=commit)
+
+    @classmethod
+    def get(cls, id):
+        return cls.query.get(id)
+
+    # We will also proxy Flask-SqlAlchemy's get_or_44
+    # for symmetry
+    @classmethod
+    def get_or_404(cls, id):
+        return cls.query.get_or_404(id)
+
+    def update(self, commit=True, **kwargs):
+        for attr, value in kwargs.iteritems():
+            setattr(self, attr, value)
+        return commit and self.save() or self
+
+    def save(self, commit=True):
+        db.session.add(self)
+        if commit:
+            db.session.commit()
+        return self
+
+    def delete(self, commit=True):
+        db.session.delete(self)
+        return commit and db.session.commit()
+
+
+class User(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     oauth_id = db.Column(db.String, unique=True)
     given_name = db.Column(db.String)
     family_name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     data = db.Column(JSON)
+
+    @staticmethod
+    def check_email(email):
+        """Check if there already exists a user having the specified email.
+        :param email: An email address
+        """
+        user = User.query.filter_by(email=email).first()
+
+        return user is not None
 
 
 class Team(db.Model):

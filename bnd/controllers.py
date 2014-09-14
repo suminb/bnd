@@ -4,6 +4,7 @@ from flask_oauthlib.provider import OAuth2Provider
 from logbook import Logger
 from __init__ import app
 from forms import UserInfoForm, UserInfoForm2
+from models import User
 
 import os
 
@@ -11,8 +12,9 @@ import os
 log = Logger()
 
 oauth = OAuth()
-#oauth = OAuth2Provider(app)
 
+# See https://github.com/lepture/flask-oauthlib/blob/master/example/google.py
+# for more examples
 google = oauth.remote_app(
     'google',
     consumer_key=os.environ.get('GOOGLE_CLIENT_ID'),
@@ -33,9 +35,6 @@ def index():
     # access_token = session.get('access_token')
     # if access_token is None:
     #     return redirect(url_for('login'))
-
-    me = google.get('userinfo')
-    log.info(me.data)
 
     context = dict()
 
@@ -83,7 +82,30 @@ def authorized(resp):
     # TODO: Check whether the user has filled up required information
     # then redirect to an appropriate page
 
-    return redirect(url_for('user_info'))
+    guser = google.get('userinfo')
+    email = guser.data['email']
+
+    if User.check_email(email):
+        log.info('A user with an email address <{}> already exists.'.format(
+            email))
+
+        return redirect(url_for('index'))
+
+    else:
+        log.info('New user <{}>'.format(email))
+
+        keys = (
+            # (google user.data key, model user key)
+            ('email', 'email'),
+            ('family_name', 'family_name'),
+            ('given_name', 'given_name'),
+            ('id', 'oauth_id'),
+        )
+        payload = {k[1]: guser.data[k[0]] for k in keys}
+
+        user = User.create(**payload)
+
+        return redirect(url_for('user_info'))
 
 
 @google.tokengetter
