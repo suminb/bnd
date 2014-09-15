@@ -69,9 +69,24 @@ def user_info():
 
 @app.route('/user/info/2', methods=['get', 'post'])
 def user_info2():
-    form = UserInfoForm2()
+    guser = google.get('userinfo')
+    user = User.get_by_oauth_id(guser.data['id'])
+
+    form = UserInfoForm2(request.form, obj=user)
 
     if form.validate_on_submit():
+        form.populate_obj(user)
+
+        keys = ('question1', 'question2', 'question3')
+
+        # If the old dict is re-used, the user.data field won't be updated
+        data = dict(user.data)
+        for k in keys:
+            data[k] = form.data[k]
+
+        user.data = data
+        user.save()
+
         return redirect('/')
 
     context = dict(
