@@ -15,6 +15,7 @@ class UserInfoForm(Form):
     email = EmailField('email', validators=[DataRequired()])
     phone = TelField('phone')
     referrer = StringField('referrer', validators=[DataRequired()])
+    education = StringField('Education', validators=[])
 
 
 class UserInfoForm2(Form):

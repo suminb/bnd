@@ -50,11 +50,21 @@ class User(db.Model, CRUDMixin):
     given_name = db.Column(db.String)
     family_name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
+    #: An enum name is required, otherwise the following error will be raised:
+    #  sqlalchemy.exc.CompileError: Postgresql ENUM type requires a name.
+    sex = db.Column(db.Enum('male', 'female', name='sex'))
+    birthdate = db.Column(db.Date)
+    phone = db.Column(db.String)
+    address = db.Column(db.String)
     data = db.Column(JSON)
 
     @staticmethod
     def get_by_oauth_id(oauth_id):
         return User.query.filter_by(oauth_id=oauth_id).first()
+
+    @staticmethod
+    def get_by_email(email):
+        return User.query.filter_by(email=email).first()
 
     @staticmethod
     def check_email(email):

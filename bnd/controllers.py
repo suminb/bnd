@@ -50,6 +50,15 @@ def user_info():
     form = UserInfoForm(request.form, obj=user)
 
     if form.validate_on_submit():
+        form.populate_obj(user)
+
+        # TODO: Refactoring
+        user.data = dict(
+            referrer=form.data['referrer'],
+            education=form.data['education'],
+        )
+        user.save()
+
         return redirect('/user/info/2')
 
     context = dict(
