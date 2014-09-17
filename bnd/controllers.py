@@ -3,7 +3,7 @@ from flask_oauthlib.client import OAuth
 from flask_oauthlib.provider import OAuth2Provider
 from logbook import Logger
 from __init__ import app
-from forms import UserInfoForm, UserInfoForm2
+from forms import UserInfoForm, UserInfoForm2, ApplicationForm
 from models import User
 
 import os
@@ -93,6 +93,15 @@ def user_info2():
         form=form,
     )
     return render_template('user/info2.html', **context)
+
+
+@app.route('/application')
+def application():
+    form = ApplicationForm(request.form, obj=None)
+
+    context = dict(form=form)
+
+    return render_template('application.html', **context)
 
 
 @app.route('/login')
