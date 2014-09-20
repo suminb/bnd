@@ -95,12 +95,16 @@ def user_info2():
     return render_template('user/info2.html', **context)
 
 
-@app.route('/application')
+@app.route('/application', methods=['get', 'post'])
 def application():
     form = ApplicationForm(request.form, obj=None)
 
-    context = dict(form=form)
+    if form.validate_on_submit():
+        Application.create(data=form.data)
 
+        return redirect('/')
+
+    context = dict(form=form)
     return render_template('application.html', **context)
 
 

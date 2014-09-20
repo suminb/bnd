@@ -1,5 +1,5 @@
 from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.postgresql import UUID, JSON
+from sqlalchemy.dialects.postgresql import UUID, JSON, ARRAY
 from __init__ import app
 
 db = SQLAlchemy(app)
@@ -97,3 +97,17 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
 
+
+class Application(db.Model, CRUDMixin):
+    """User application. Assumes the application cannot be modified once
+    submitted."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    timestamp = db.Column(db.DateTime(timezone=True))
+    data = db.Column(JSON)
+    #question1 = db.Column(db.String)
+    #question2 = db.Column(db.String)
+    #question3 = db.Column(db.Integer)
+    #question4 = db.Column(db.Text)
+    #question5 = db.Column(ARRAY(db.Integer))

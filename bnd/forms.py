@@ -1,8 +1,22 @@
 from flask_wtf import Form
 from wtforms.fields.html5 import EmailField, TelField
-from wtforms import StringField, RadioField, DateField, TextAreaField
+from wtforms import Field, StringField, RadioField, DateField, TextAreaField
+from wtforms import FieldList
+from wtforms.widgets import ListWidget
 from wtforms.validators import DataRequired
 
+
+class MultipleRadioFields(Field):
+    """A custom field to provide multiple radio button groups."""
+
+    widget = ListWidget()
+
+    def _value(self):
+        return ''
+
+    def __iter__(self):
+        yield RadioField('test1')
+        yield StringField('test3')
 
 class UserInfoForm(Form):
     family_name = StringField('family_name', validators=[DataRequired()])
@@ -34,7 +48,11 @@ class ApplicationForm(Form):
     )
     question2 = RadioField(
         'Chair/member 중 어떻게 지원하십니까?',
-        choices=[],
+        choices=[('chair-1', 'Chair 못 할 시, member 로 참여'),
+                 ('chair-2', 'Chair 못 할 시, 다음 기수로 참여'),
+                 ('member-1', 'Member (재참여), 하지만 chair 가능'),
+                 ('member-2', 'Member (재참여)'),
+                 ('member-3', 'Member (신규참여)')],
         validators=[DataRequired()]
     )
     question3 = StringField(
@@ -45,3 +63,5 @@ class ApplicationForm(Form):
         'Being & Doing은 어떤 모임입니까?',
         validators=[DataRequired()]
     )
+    #question5 = MultipleRadioFields('개인이 원하는 삶을 살기 위해 중요한 것은 무엇입니까?')
+
