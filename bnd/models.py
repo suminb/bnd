@@ -87,15 +87,30 @@ user_team_assoc = db.Table(
 )
 
 
-class Goal(db.Model):
+class Round(db.Model):
+    """A round contains multiple goals."""
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    goals = db.relationship('Goal', backref='round', lazy='dynamic')
+
+
+class Goal(db.Model):
+    """A goal contains multiple tasks."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    round_id = db.Column(db.Integer, db.ForeignKey('round.id'))
+    # TODO: due date
+    title = db.Column(db.String)
     tasks = db.relationship('Task', backref='goal', lazy='dynamic')
+    # TODO: attendance
 
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
+    content = db.Column(db.String)
+    rating = db.Column(db.Integer)
 
 
 class Application(db.Model, CRUDMixin):
@@ -106,8 +121,3 @@ class Application(db.Model, CRUDMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime(timezone=True))
     data = db.Column(JSON)
-    #question1 = db.Column(db.String)
-    #question2 = db.Column(db.String)
-    #question3 = db.Column(db.Integer)
-    #question4 = db.Column(db.Text)
-    #question5 = db.Column(ARRAY(db.Integer))
