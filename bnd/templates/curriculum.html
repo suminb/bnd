@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="content">
+  <h1>Being &amp; Doing 1기 (2014년 하반기)</h1>
+
+  <ul>
+    <li>
+      <div>O.T</div>
+      <div>참석</div>
+    </li>
+    <li>
+      <div>9월 1차</div>
+      <div>출석체크</div>
+    </li>
+    <li>
+      <div>9월 2차</div>
+      <div>출석체크</div>
+    </li>
+  </ul>
+
+  <div>
+    <div>___ 목표 설정</div>
+    <div>* 개인의 SMART한 목표를 설정하세요. (최대 10개까지)
+      <a href="#">SMART란?</a>
+    </div>
+  </div>
+
+  <form method="post">
+    <h3>Step 1: 목표 정하기</h3>
+
+    <label>목표 타입</label>
+    <select name="objective_type">
+      <option value="">전공</option>
+      <option value="">운동</option>
+      <option value="">예술</option>
+      <option value="">취미</option>
+      <option value="">생활</option>
+      <option value="">기타</option>
+    </select>
+
+    <label>목표 내용</label>
+    <input type="text" name="objective_title" placeholder="목표를 설정해주세요 (예: 크로스핏)"/>
+
+    <h3>Step 2: 목표 달성 기준 정하기</h3>
+  </form>
+
+  <button>목표 추가</button>
+</div>
+{% endblock %}

@@ -108,6 +108,11 @@ def application():
     return render_template('application.html', **context)
 
 
+@app.route('/curriculum')
+def curriculum():
+    return render_template('curriculum.html')
+
+
 @app.route('/login')
 def login():
     callback = url_for('authorized', _external=True)
