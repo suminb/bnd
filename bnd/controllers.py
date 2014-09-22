@@ -1,10 +1,12 @@
 from flask import request, render_template, url_for, redirect, session
 from flask_oauthlib.client import OAuth
 from flask_oauthlib.provider import OAuth2Provider
+from flask.ext.admin import Admin
+from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
 from __init__ import app
 from forms import UserInfoForm, UserInfoForm2, ApplicationForm
-from models import User
+from models import db, User, Team, Round, Goal, Task
 
 import os
 
@@ -12,6 +14,10 @@ import os
 log = Logger()
 
 oauth = OAuth()
+admin = Admin(app)
+classes = [User, Team, Round, Goal, Task]
+for cls in classes:
+    admin.add_view(ModelView(cls, db.session))
 
 # See https://github.com/lepture/flask-oauthlib/blob/master/example/google.py
 # for more examples
