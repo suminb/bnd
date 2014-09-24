@@ -11,6 +11,8 @@ from models import db, User, Team, Goal, Task
 import os
 
 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
+
 log = Logger()
 
 oauth = OAuth()

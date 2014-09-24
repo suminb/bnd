@@ -1,0 +1,15 @@
+language: python
+
+python:
+  - "2.7"
+
+install:
+  - pip install -r requirements.txt --use-mirrors
+
+script:
+  - export PYTHONPATH=$PYTHONPATH:.
+  - python bnd/controllers.py &
+  - py.test tests --cov bnd --durations=10
+
+after_success:
+  - coveralls

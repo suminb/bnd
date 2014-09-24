@@ -1,8 +1,13 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID, JSON, ARRAY
 from __init__ import app
+import os
+
 
 db = SQLAlchemy(app)
+
+if db.engine.driver != 'psycopg2':
+    UUID = JSON = ARRAY = db.String
 
 
 class CRUDMixin(object):
