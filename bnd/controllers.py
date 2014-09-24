@@ -6,7 +6,7 @@ from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
 from __init__ import app
 from forms import UserInfoForm, UserInfoForm2, ApplicationForm
-from models import db, User, Team, Round, Goal, Task
+from models import db, User, Team, Goal, Task
 
 import os
 
@@ -15,7 +15,7 @@ log = Logger()
 
 oauth = OAuth()
 admin = Admin(app)
-classes = [User, Team, Round, Goal, Task]
+classes = [User, Team, Goal, Task]
 for cls in classes:
     admin.add_view(ModelView(cls, db.session))
 

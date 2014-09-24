@@ -44,6 +44,13 @@ class CRUDMixin(object):
         return commit and db.session.commit()
 
 
+user_team_assoc = db.Table(
+    'user_team_assoc',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('team_id', db.Integer, db.ForeignKey('team.id'))
+)
+
+
 class User(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     oauth_id = db.Column(db.String, unique=True)
@@ -78,27 +85,16 @@ class User(db.Model, CRUDMixin):
 
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-
-
-user_team_assoc = db.Table(
-    'user_team_assoc',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('team_id', db.Integer, db.ForeignKey('team.id'))
-)
-
-
-class Round(db.Model):
-    """A round contains multiple goals."""
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    goals = db.relationship('Goal', backref='round', lazy='dynamic')
+    name = db.Column(db.String, unique=True)
+    users = db.relationship('User', secondary=user_team_assoc,
+        backref=db.backref('teams', lazy='dynamic'))
 
 
 class Goal(db.Model):
     """A goal contains multiple tasks."""
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    round_id = db.Column(db.Integer, db.ForeignKey('round.id'))
+    team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
     # TODO: due date
     title = db.Column(db.String)
     tasks = db.relationship('Task', backref='goal', lazy='dynamic')
@@ -110,6 +106,7 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
     content = db.Column(db.String)
+    evaluation_criteria = db.Column(db.String)
     rating = db.Column(db.Integer)
 
 
