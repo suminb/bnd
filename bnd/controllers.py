@@ -5,7 +5,7 @@ from flask.ext.login import LoginManager, login_required, login_user, current_us
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
-from __init__ import app
+from bnd import app
 from forms import UserInfoForm, UserInfoForm2, ApplicationForm
 from models import db, User, Team, Goal, Task
 

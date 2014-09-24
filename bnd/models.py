@@ -1,7 +1,7 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import UserMixin
 from sqlalchemy.dialects.postgresql import UUID, JSON, ARRAY
-from __init__ import app
+from bnd import app
 import os
 
 

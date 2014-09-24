@@ -2,12 +2,15 @@ language: python
 
 python:
   - "2.7"
+  - "3.4"
+  - "pypy"
 
 install:
   - pip install -r requirements.txt --use-mirrors
 
 script:
   - export PYTHONPATH=$PYTHONPATH:.
+  - export DB_URI="sqlite:////tmp/test.db"
   - python bnd/controllers.py &
   - py.test tests --cov bnd --durations=10
 
