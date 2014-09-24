@@ -3,6 +3,7 @@ Flask-OAuthlib==0.6.0
 Flask-SQLAlchemy==1.0
 flask-admin
 flask-wtf
+flask-login
 Jinja2==2.7.3
 Logbook==0.7.0
 MarkupSafe==0.23

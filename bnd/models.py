@@ -1,4 +1,5 @@
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.login import UserMixin
 from sqlalchemy.dialects.postgresql import UUID, JSON, ARRAY
 from __init__ import app
 import os
@@ -56,8 +57,11 @@ user_team_assoc = db.Table(
 )
 
 
-class User(db.Model, CRUDMixin):
+class User(db.Model, UserMixin, CRUDMixin):
+    __table_args__ = ( db.UniqueConstraint('oauth_provider', 'oauth_id'), {} )
+
     id = db.Column(db.Integer, primary_key=True)
+    oauth_provider = db.Column(db.String, unique=True)
     oauth_id = db.Column(db.String, unique=True)
     given_name = db.Column(db.String)
     family_name = db.Column(db.String)

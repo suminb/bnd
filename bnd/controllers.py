@@ -1,6 +1,7 @@
 from flask import request, render_template, url_for, redirect, session
 from flask_oauthlib.client import OAuth
 from flask_oauthlib.provider import OAuth2Provider
+from flask.ext.login import LoginManager, login_required, login_user, current_user
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
@@ -11,11 +12,13 @@ from models import db, User, Team, Goal, Task
 import os
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
-
 log = Logger()
 
 oauth = OAuth()
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 admin = Admin(app)
 classes = [User, Team, Goal, Task]
 for cls in classes:
@@ -38,13 +41,19 @@ google = oauth.remote_app(
 )
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+
 @app.route('/')
 def index():
     # access_token = session.get('access_token')
     # if access_token is None:
     #     return redirect(url_for('login'))
 
-    context = dict()
+    context = dict(
+    )
 
     return render_template('index.html', **context)
 
@@ -117,8 +126,14 @@ def application():
 
 
 @app.route('/curriculum')
+@login_required
 def curriculum():
-    return render_template('curriculum.html')
+    guser = google.get('userinfo')
+    context = dict(
+    #    user=current_user,
+        user=User.get_by_oauth_id(guser.data['id'])
+    )
+    return render_template('curriculum.html', **context)
 
 
 @app.route('/login')
@@ -139,9 +154,12 @@ def authorized(resp):
     guser = google.get('userinfo')
     email = guser.data['email']
 
-    if User.check_email(email):
+    user = User.get_by_oauth_id(guser.data['id'])
+
+    if user is not None:
         log.info('A user with an email address <{}> already exists.'.format(
             email))
+        login_user(user)
 
         return redirect(url_for('index'))
 
@@ -158,6 +176,7 @@ def authorized(resp):
         payload = {k[1]: guser.data[k[0]] for k in keys}
 
         user = User.create(**payload)
+        login_user(user)
 
         return redirect(url_for('user_info'))
 
