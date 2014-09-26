@@ -74,6 +74,14 @@ class User(db.Model, UserMixin, CRUDMixin):
     address = db.Column(db.String)
     data = db.Column(JSON)
 
+    @property
+    def current_team(self):
+        """The current team to which the user belongs."""
+        if self.teams.count() > 0:
+            return self.teams[0]  # FIXME: Return a proper team based on the current date
+        else:
+            raise Exception('User {} does not belong to any team'.format(self))
+
     @staticmethod
     def get_by_oauth_id(oauth_id):
         return User.query.filter_by(oauth_id=oauth_id).first()
@@ -97,6 +105,7 @@ class Team(db.Model):
     name = db.Column(db.String, unique=True)
     users = db.relationship('User', secondary=user_team_assoc,
         backref=db.backref('teams', lazy='dynamic'))
+    goals = db.relationship('Goal', backref='team', lazy='dynamic')
 
 
 class Goal(db.Model):

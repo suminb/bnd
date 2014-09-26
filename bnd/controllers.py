@@ -130,8 +130,7 @@ def application():
 def curriculum():
     guser = google.get('userinfo')
     context = dict(
-    #    user=current_user,
-        user=User.get_by_oauth_id(guser.data['id'])
+        user=current_user,
     )
     return render_template('curriculum.html', **context)
 

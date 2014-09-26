@@ -4,18 +4,11 @@
   <h1>Being &amp; Doing 1기 (2014년 하반기)</h1>
 
   <ul>
+  {% for goal in user.current_team.goals %}
     <li>
-      <div>O.T</div>
-      <div>참석</div>
+      <div>{{ goal.title }}</div>
     </li>
-    <li>
-      <div>9월 1차</div>
-      <div>출석체크</div>
-    </li>
-    <li>
-      <div>9월 2차</div>
-      <div>출석체크</div>
-    </li>
+  {% endfor %}
   </ul>
 
   <div>
