@@ -125,16 +125,6 @@ def application():
     return render_template('application.html', **context)
 
 
-@app.route('/curriculum')
-@login_required
-def curriculum():
-    guser = google.get('userinfo')
-    context = dict(
-        user=current_user,
-    )
-    return render_template('curriculum.html', **context)
-
-
 @app.route('/login')
 def login():
     callback = url_for('authorized', _external=True)
