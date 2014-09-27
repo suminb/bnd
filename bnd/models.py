@@ -103,12 +103,22 @@ class User(db.Model, UserMixin, CRUDMixin):
         return user is not None
 
 
-class Team(db.Model):
+class Team(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
     users = db.relationship('User', secondary=user_team_assoc,
         backref=db.backref('teams', lazy='dynamic'))
+    checkpoints = db.relationship('Checkpoint', backref='team', lazy='dynamic')
     goals = db.relationship('Goal', backref='team', lazy='dynamic')
+
+
+class Checkpoint(db.Model, CRUDMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
+    title = db.Column(db.String)
+    # TODO: due date
+    # TODO: attendance
+
 
 
 class Goal(db.Model, CRUDMixin):
@@ -123,17 +133,7 @@ class Goal(db.Model, CRUDMixin):
     criterion2 = db.Column(db.String)
     criterion3 = db.Column(db.String)
     criterion4 = db.Column(db.String)
-    tasks = db.relationship('Task', backref='goal', lazy='dynamic')
     # TODO: attendance
-
-
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
-    content = db.Column(db.String)
-    evaluation_criteria = db.Column(db.String)
-    rating = db.Column(db.Integer)
 
 
 class Application(db.Model, CRUDMixin):

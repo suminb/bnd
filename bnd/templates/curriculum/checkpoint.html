@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<h2>{{ entity.title }}</h2>
+
+<ul>
+{% for goal in entity.team.goals %}
+  <li>{{ goal.title }}</li>
+{% endfor %}
+</ul>
+
+<a href="{{ url_for('curriculum.goal_edit', id='new') }}">Make a new goal</a>
+
+{% endblock %}
