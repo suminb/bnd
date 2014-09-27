@@ -1,14 +1,13 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import UserMixin
-from sqlalchemy.dialects.postgresql import UUID, JSON, ARRAY
+from sqlalchemy.dialects.postgresql import JSON, ARRAY
 from bnd import app
-import os
 
 
 db = SQLAlchemy(app)
 
 if db.engine.driver != 'psycopg2':
-    UUID = JSON = ARRAY = db.String
+    JSON = ARRAY = db.String
 
 
 class CRUDMixin(object):
@@ -116,6 +115,10 @@ class Goal(db.Model, CRUDMixin):
     # TODO: due date
     title = db.Column(db.String)
     content = db.Column(db.Text)
+    criterion1 = db.Column(db.String)
+    criterion2 = db.Column(db.String)
+    criterion3 = db.Column(db.String)
+    criterion4 = db.Column(db.String)
     tasks = db.relationship('Task', backref='goal', lazy='dynamic')
     # TODO: attendance
 

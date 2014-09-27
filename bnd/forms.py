@@ -68,7 +68,27 @@ class ApplicationForm(Form):
 
 
 class GoalForm(Form):
-    type = SelectField(u'목표 타입',
-        choices=[('전공', '전공')],
+    type = SelectField(
+        u'목표 타입',
+        choices=[('전공', '전공'),
+                 ('운동', '운동'),
+                 ('예술', '예술'),
+                 ('취미', '취미'),
+                 ('생활', '생활'),
+                 ('기타', '기타')],
         validators=[DataRequired()])
-    title = StringField(u'목표 내용')
+    title = StringField(
+        u'목표 내용',
+        validators=[DataRequired()])
+    criterion1 = StringField(
+        '',
+        validators=[DataRequired()])
+    criterion2 = StringField(
+        '',
+        validators=[DataRequired()])
+    criterion3 = StringField(
+        '',
+        validators=[DataRequired()])
+    criterion4 = StringField(
+        '',
+        validators=[DataRequired()])

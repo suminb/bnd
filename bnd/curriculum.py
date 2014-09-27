@@ -7,7 +7,7 @@ curriculum_module = Blueprint(
     'curriculum', __name__, template_folder='templates')
 
 
-@curriculum_module.route('/')
+@curriculum_module.route('')
 @login_required
 def curriculum():
     context = dict(
