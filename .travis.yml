@@ -10,7 +10,6 @@ install:
 script:
   - export PYTHONPATH=$PYTHONPATH:.
   - export DB_URI="sqlite:////tmp/test.db"
-  - python bnd/controllers.py &
   - py.test tests --cov bnd --durations=10
 
 after_success:
