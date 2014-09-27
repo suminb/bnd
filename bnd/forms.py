@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 from flask_wtf import Form
 from wtforms.fields.html5 import EmailField, TelField
-from wtforms import Field, StringField, RadioField, DateField, TextAreaField
+from wtforms import Field, StringField, RadioField, DateField, TextAreaField, SelectField
 from wtforms import FieldList
 from wtforms.widgets import ListWidget
 from wtforms.validators import DataRequired
@@ -66,3 +66,9 @@ class ApplicationForm(Form):
     )
     #question5 = MultipleRadioFields('개인이 원하는 삶을 살기 위해 중요한 것은 무엇입니까?')
 
+
+class GoalForm(Form):
+    type = SelectField(u'목표 타입',
+        choices=[('전공', '전공')],
+        validators=[DataRequired()])
+    title = StringField(u'목표 내용')

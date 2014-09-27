@@ -6,8 +6,9 @@ from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
 from bnd import app
-from forms import UserInfoForm, UserInfoForm2, ApplicationForm
-from models import db, User, Team, Goal, Task
+from bnd.forms import UserInfoForm, UserInfoForm2, ApplicationForm
+from bnd.models import db, User, Team, Goal, Task
+from bnd.curriculum import curriculum_module
 
 import os
 
@@ -18,6 +19,9 @@ oauth = OAuth()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# Blueprint modules
+app.register_blueprint(curriculum_module, url_prefix='/curriculum')
 
 admin = Admin(app)
 classes = [User, Team, Goal, Task]

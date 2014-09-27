@@ -108,7 +108,7 @@ class Team(db.Model):
     goals = db.relationship('Goal', backref='team', lazy='dynamic')
 
 
-class Goal(db.Model):
+class Goal(db.Model, CRUDMixin):
     """A goal contains multiple tasks."""
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
