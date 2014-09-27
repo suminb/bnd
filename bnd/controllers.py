@@ -1,7 +1,6 @@
 from flask import request, render_template, url_for, redirect, session
 from flask_oauthlib.client import OAuth
-from flask_oauthlib.provider import OAuth2Provider
-from flask.ext.login import LoginManager, login_required, login_user, current_user
+from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
@@ -19,6 +18,7 @@ oauth = OAuth()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 # Blueprint modules
 app.register_blueprint(curriculum_module, url_prefix='/curriculum')
@@ -57,12 +57,14 @@ def index():
     #     return redirect(url_for('login'))
 
     context = dict(
+        user=current_user,
     )
 
     return render_template('index.html', **context)
 
 
 @app.route('/user/info', methods=['get', 'post'])
+@login_required
 def user_info():
 
     guser = google.get('userinfo')
@@ -89,6 +91,7 @@ def user_info():
 
 
 @app.route('/user/info/2', methods=['get', 'post'])
+@login_required
 def user_info2():
     guser = google.get('userinfo')
     user = User.get_by_oauth_id(guser.data['id'])
@@ -133,6 +136,13 @@ def application():
 def login():
     callback = url_for('authorized', _external=True)
     return google.authorize(callback=callback)
+
+
+@app.route('/logout')
+def logout():
+    session['login'] = False
+    logout_user()
+    return redirect('/')
 
 
 @app.route('/authorized')

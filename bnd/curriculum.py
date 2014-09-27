@@ -11,7 +11,6 @@ curriculum_module = Blueprint(
 @login_required
 def curriculum():
     context = dict(
-        user=current_user,
     )
     return render_template('curriculum/index.html', **context)
 
