@@ -57,7 +57,6 @@ def index():
     #     return redirect(url_for('login'))
 
     context = dict(
-        user=current_user,
     )
 
     return render_template('index.html', **context)
@@ -67,8 +66,9 @@ def index():
 @login_required
 def user_info():
 
-    guser = google.get('userinfo')
-    user = User.get_by_oauth_id(guser.data['id'])
+#    guser = google.get('userinfo')
+#    user = User.get_by_oauth_id(guser.data['id'])
+    user = current_user
 
     form = UserInfoForm(request.form, obj=user)
 
