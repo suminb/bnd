@@ -81,6 +81,10 @@ class User(db.Model, UserMixin, CRUDMixin):
         else:
             raise Exception('User {} does not belong to any team'.format(self))
 
+    @property
+    def past_teams(self):
+        return []
+
     @staticmethod
     def get_by_oauth_id(oauth_id):
         return User.query.filter_by(oauth_id=oauth_id).first()
