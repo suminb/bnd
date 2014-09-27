@@ -1,16 +1,21 @@
 language: python
 
 python:
-  - "2.7"
-  - "3.4"
+- '2.7'
+- '3.4'
 
 install:
-  - pip install -r requirements.txt --use-mirrors
+- pip install -r requirements.txt --use-mirrors
 
 script:
-  - export PYTHONPATH=$PYTHONPATH:.
-  - export DB_URI="sqlite:////tmp/test.db"
-  - py.test tests --cov bnd --durations=10
+- export PYTHONPATH=$PYTHONPATH:.
+- export DB_URI="sqlite:////tmp/test.db"
+- py.test tests --cov bnd --durations=10
 
 after_success:
-  - coveralls
+- coveralls
+
+env:
+  global:
+  - secure: PWrOa0kkfEAARZSzlknnSLXaBrcM/KblsBsZZSFh2CS7nHDEqB0L5FXIeCqOdc/eJLsBdWqrNFcfik7mnobVITEWL5tin29BuXJIFMbRaOQAkJ1knZUSzW6M37kxQDOD5vnFRjvD1aeaUK+Uh1L+v4rfSuW6on1ItaC1e+VznC8=
+  - secure: ACXcONTobLx5U9deUzecv0nMlieX8AJLz8nSyNyNviL5mQE8Bu260Z1s2Jop4F4hCHCIIEzM8uxdbUS1RFkzzGIWN44aChMcTyapMqr/00GO1j0c/StW8kq2HywiIgqnbxNEbE3LuE/Srvi0rieN+BwNm7F3ufTQ5nOapoX0L7Y=
