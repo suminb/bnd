@@ -1,12 +1,13 @@
 {% extends 'layout.html' %}
 {% block content %}
 <div class="content">
-  <h1>Being &amp; Doing 1기 (2014년 하반기)</h1>
+  <h1>{{ user.current_team.name }}</h1>
 
   <ul>
   {% for goal in user.current_team.goals %}
     <li>
       <div>{{ goal.title }}</div>
+      <div><!-- whether completed or not --></div>
     </li>
   {% endfor %}
   </ul>

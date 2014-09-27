@@ -115,6 +115,7 @@ class Goal(db.Model):
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
     # TODO: due date
     title = db.Column(db.String)
+    content = db.Column(db.Text)
     tasks = db.relationship('Task', backref='goal', lazy='dynamic')
     # TODO: attendance
 
