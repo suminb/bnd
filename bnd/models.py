@@ -115,6 +115,8 @@ class User(db.Model, UserMixin, CRUDMixin):
 
 class Team(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
+    open_datetime = db.Column(db.DateTime(timezone=True))
+    close_datetime = db.Column(db.DateTime(timezone=True))
     name = db.Column(db.String, unique=True)
     #: Long text to be shown when users are about to join a particular team
     poster = db.Column(db.Text)
@@ -122,6 +124,13 @@ class Team(db.Model, CRUDMixin):
         backref=db.backref('teams', lazy='dynamic'))
     checkpoints = db.relationship('Checkpoint', backref='team', lazy='dynamic')
     goals = db.relationship('Goal', backref='team', lazy='dynamic')
+
+    def __repr__(self):
+        return 'Team {}'.format(self.name)
+
+    @property
+    def is_open(self):
+        raise NotImplemented()
 
 
 class Checkpoint(db.Model, CRUDMixin):
