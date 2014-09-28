@@ -67,11 +67,15 @@ class User(db.Model, UserMixin, CRUDMixin):
     email = db.Column(db.String, unique=True)
     #: An enum name is required, otherwise the following error will be raised:
     #  sqlalchemy.exc.CompileError: Postgresql ENUM type requires a name.
-    sex = db.Column(db.Enum('male', 'female', name='sex'))
+    sex = db.Column(db.Enum('male', 'female', 'undisclosed', name='sex'))
     birthdate = db.Column(db.Date)
     phone = db.Column(db.String)
     address = db.Column(db.String)
     data = db.Column(JSON)
+
+    def __repr__(self):
+        return '{}, {} <{}>'.format(
+            self.family_name, self.given_name, self.email)
 
     @property
     def has_current_team(self):
