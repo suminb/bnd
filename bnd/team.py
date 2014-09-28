@@ -18,6 +18,15 @@ def list_():
     return render_template('list.html', **context)
 
 
+@team_module.route('/<int:id>')
+def view(id):
+    team = Team.get_or_404(id)
+    context = dict(
+        team=team,
+    )
+    return render_template('view.html', **context)
+
+
 @team_module.route('/join/<id>')
 def join(id):
     team = Team.get_or_404(id)

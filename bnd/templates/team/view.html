@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+  <h1>{{ team.name }}</h1>
+
+  <ul>
+  {% for checkpoint in team.checkpoints %}
+    <li>
+      <div><a href="{{ url_for('curriculum.checkpoint', id=checkpoint.id) }}">{{ checkpoint.title }}</a></div>
+      <div><!-- whether completed or not --></div>
+    </li>
+  {% endfor %}
+  </ul>
+
+{% endblock %}
