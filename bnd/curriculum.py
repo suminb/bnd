@@ -30,10 +30,3 @@ def index():
         user=current_user,
     )
     return render_template('index.html', **context)
-
-
-def curriculum_goal_evaluate():
-    context = dict(
-        user=current_user,
-    )
-    return render_template('goal_evaluate.html', **context)

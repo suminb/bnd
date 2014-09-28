@@ -12,3 +12,28 @@
   </div>
 {% endmacro %}
 
+{% macro render_checkpoints(team, checkpoints) %}
+  <h3>Checkpoints</h3>
+  <ul>
+  {% for checkpoint in checkpoints %}
+    <li>
+      <div><a href="{{ url_for('team.checkpoint_view', team_id=team.id, checkpoint_id=checkpoint.id) }}">{{ checkpoint.title }}</a></div>
+      <div><!-- whether completed or not --></div>
+    </li>
+  {% endfor %}
+  </ul>
+{% endmacro %}
+
+{% macro render_goals(user, team, checkpoint) %}
+  <h3>My Goals</h3>
+  <ul>
+  {% for goal in user.goals_for_team(team.id) %}
+    {% if checkpoint %}
+      <li><a href="{{ url_for('goal.evaluate', goal_id=goal.id, team_id=team.id, checkpoint_id=checkpoint.id) }}">{{ goal.title }}</a></li>
+    {% else %}
+      <li>{{ goal.title }}</li>
+    {% endif %}
+  {% endfor %}
+  </ul>
+{% endmacro %}
+

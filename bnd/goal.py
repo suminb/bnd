@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
-from bnd.models import Goal
+from bnd.models import Goal, Team, Checkpoint
 from bnd.forms import GoalForm
 
 goal_module = Blueprint(
@@ -40,3 +40,17 @@ def edit(id):
     return render_template('edit.html', **context)
 
 
+@goal_module.route('/<int:goal_id>/evaluate')
+def evaluate(goal_id):
+    team_id, checkpoint_id = map(request.args.get, ['team_id', 'checkpoint_id'])
+
+    goal = Goal.get_or_404(goal_id)
+    team = Team.get_or_404(team_id)
+    checkpoint = Checkpoint.get_or_404(checkpoint_id)
+
+    context = dict(
+        goal=goal,
+        team=team,
+        checkpoint=checkpoint,
+    )
+    return render_template('evaluate.html', **context)

@@ -67,6 +67,7 @@ def goal_edit(team_id, goal_id):
     form = GoalForm(request.form, obj=None)
     if form.validate_on_submit():
         form.populate_obj(goal)
+        goal.user = current_user
         goal.team = current_user.current_team
         goal.save()
 
@@ -79,5 +80,3 @@ def goal_edit(team_id, goal_id):
         user=current_user,
     )
     return render_template('goal_edit.html', **context)
-
-

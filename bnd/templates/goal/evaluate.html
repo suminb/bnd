@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+  <h1>Evaluate {{ goal.title }} for {{ checkpoint.title }}</h1>
+
+  <ul>
+    <li>3점: {{ goal.criterion1 }}</li>
+    <li>6점: {{ goal.criterion2 }}</li>
+    <li>9점: {{ goal.criterion3 }}</li>
+    <li>12점: {{ goal.criterion4 }}</li>
+  </ul>
+
+{% endblock %}
