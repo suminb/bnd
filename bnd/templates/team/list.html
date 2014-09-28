@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<h1>Available Teams</h1>
+
+<ul>
+{% for team in teams %}
+  <li><a href="{{ url_for('team.join', id=team.id) }}">{{ team.name }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

@@ -74,9 +74,15 @@ class User(db.Model, UserMixin, CRUDMixin):
     data = db.Column(JSON)
 
     @property
+    def has_current_team(self):
+        # FIXME: Determine whether the user currently belongs to any team based
+        # on the timestamp
+        return self.teams.count() > 0
+
+    @property
     def current_team(self):
         """The current team to which the user belongs."""
-        if self.teams.count() > 0:
+        if self.has_current_team:
             return self.teams[0]  # FIXME: Return a proper team based on the current date
         else:
             raise Exception('User {} does not belong to any team'.format(self))
@@ -106,6 +112,8 @@ class User(db.Model, UserMixin, CRUDMixin):
 class Team(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
+    #: Long text to be shown when users are about to join a particular team
+    poster = db.Column(db.Text)
     users = db.relationship('User', secondary=user_team_assoc,
         backref=db.backref('teams', lazy='dynamic'))
     checkpoints = db.relationship('Checkpoint', backref='team', lazy='dynamic')

@@ -8,6 +8,7 @@ from bnd import app
 from bnd.forms import UserInfoForm, UserInfoForm2, ApplicationForm
 from bnd.models import db, User, Team, Checkpoint, Goal, Evaluation
 from bnd.curriculum import curriculum_module
+from bnd.team import team_module
 
 import os
 
@@ -22,6 +23,7 @@ login_manager.login_view = 'login'
 
 # Blueprint modules
 app.register_blueprint(curriculum_module, url_prefix='/curriculum')
+app.register_blueprint(team_module, url_prefix='/team')
 
 admin = Admin(app)
 classes = [User, Team, Checkpoint, Goal, Evaluation]
