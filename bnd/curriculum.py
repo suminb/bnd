@@ -9,7 +9,7 @@ curriculum_module = Blueprint(
 
 @curriculum_module.route('')
 @login_required
-def curriculum():
+def index():
     context = dict(
         user=current_user,
     )
@@ -41,7 +41,7 @@ def goal_edit(id):
         goal.team = current_user.current_team
         goal.save()
 
-        return redirect(url_for('curriculum'))
+        return redirect(url_for('curriculum.index'))
 
     context = dict(
         form=form,

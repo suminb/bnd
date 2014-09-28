@@ -115,10 +115,10 @@ class Team(db.Model, CRUDMixin):
 class Checkpoint(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
+    due_date = db.Column(db.DateTime(timezone=True))
     title = db.Column(db.String)
-    # TODO: due date
     # TODO: attendance
-
+    evaluations = db.relationship('Evaluation', backref='checkpoint', lazy='dynamic')
 
 
 class Goal(db.Model, CRUDMixin):
@@ -126,7 +126,6 @@ class Goal(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
-    # TODO: due date
     title = db.Column(db.String)
     content = db.Column(db.Text)
     criterion1 = db.Column(db.String)
@@ -134,6 +133,19 @@ class Goal(db.Model, CRUDMixin):
     criterion3 = db.Column(db.String)
     criterion4 = db.Column(db.String)
     # TODO: attendance
+    evaluations = db.relationship('Evaluation', backref='goal', lazy='dynamic')
+
+
+class Evaluation(db.Model, CRUDMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
+    checkpoint_id = db.Column(db.Integer, db.ForeignKey('checkpoint.id'))
+    timestamp = db.Column(db.DateTime(timezone=True))
+    evaluation1 = db.Column(db.Integer)
+    evaluation2 = db.Column(db.Integer)
+    evaluation3 = db.Column(db.Integer)
+    evaluation4 = db.Column(db.Integer)
 
 
 class Application(db.Model, CRUDMixin):

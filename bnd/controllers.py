@@ -6,7 +6,7 @@ from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
 from bnd import app
 from bnd.forms import UserInfoForm, UserInfoForm2, ApplicationForm
-from bnd.models import db, User, Team, Checkpoint, Goal
+from bnd.models import db, User, Team, Checkpoint, Goal, Evaluation
 from bnd.curriculum import curriculum_module
 
 import os
@@ -24,7 +24,7 @@ login_manager.login_view = 'login'
 app.register_blueprint(curriculum_module, url_prefix='/curriculum')
 
 admin = Admin(app)
-classes = [User, Team, Checkpoint, Goal]
+classes = [User, Team, Checkpoint, Goal, Evaluation]
 for cls in classes:
     admin.add_view(ModelView(cls, db.session))
 
