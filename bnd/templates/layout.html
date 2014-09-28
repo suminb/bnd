@@ -61,7 +61,6 @@
 
 <div class="container">
 
-{% if not current_user.is_anonymous() %}
 <div class="row row-offcanvas row-offcanvas-left">
   <p class="pull-left visible-xs">
     <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
@@ -107,15 +106,13 @@
     </div><!-- panel-group accordion -->
 
   </div><!-- sidebar-offcanvas -->
-{% endif %}
 
   <div class="col-xs-12 col-sm-9">
     {% block content %}{% endblock %}
   </div><!-- div.content -->
 
-{% if not current_user.is_anonymous() %}
 </div><!-- div.row-offcanvas  -->
 </div><!-- div.container -->
-{% endif %}
+
 </body>
 </html>
