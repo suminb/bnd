@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<h2>{{ team.name }}</h2>
+
+<ul>
+{% for checkpoint in team.checkpoints %}
+  <li>{{ checkpoint.title }}</li>
+{% endfor %}
+</ul>
+
+<a href="{{ url_for('goal.edit', id='new') }}">Make a new goal</a>
+
+{% endblock %}

@@ -3,12 +3,20 @@
 
   <h1>{{ team.name }}</h1>
 
+  <h3>Checkpoints</h3>
   <ul>
   {% for checkpoint in team.checkpoints %}
     <li>
-      <div><a href="{{ url_for('curriculum.checkpoint', id=checkpoint.id) }}">{{ checkpoint.title }}</a></div>
+      <div><a href="{{ url_for('team.checkpoint_view', team_id=team.id, checkpoint_id=checkpoint.id) }}">{{ checkpoint.title }}</a></div>
       <div><!-- whether completed or not --></div>
     </li>
+  {% endfor %}
+  </ul>
+
+  <h3>My Goals</h3>
+  <ul>
+  {% for goal in current_user.goals_for_team(team.id) %}
+    <li>{{ goal.title }}</li>
   {% endfor %}
   </ul>
 

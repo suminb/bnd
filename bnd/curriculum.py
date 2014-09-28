@@ -32,40 +32,6 @@ def index():
     return render_template('index.html', **context)
 
 
-@curriculum_module.route('/checkpoint/<id>')
-@login_required
-def checkpoint(id):
-    checkpoint = Checkpoint.get_or_404(id)
-    context = dict(
-        entity=checkpoint,
-    )
-    return render_template('curriculum/checkpoint.html', **context)
-
-
-@curriculum_module.route('/goal/edit/new', methods=['get', 'post'], defaults=dict(id=None))
-@curriculum_module.route('/goal/edit/<id>', methods=['get', 'post'])
-@login_required
-def goal_edit(id):
-    if id is None:
-        goal = Goal()
-    else:
-        goal = Goal.get_or_404(id)
-
-    form = GoalForm(request.form, obj=None)
-    if form.validate_on_submit():
-        form.populate_obj(goal)
-        goal.team = current_user.current_team
-        goal.save()
-
-        return redirect(url_for('curriculum.index'))
-
-    context = dict(
-        form=form,
-        user=current_user,
-    )
-    return render_template('goal_edit.html', **context)
-
-
 def curriculum_goal_evaluate():
     context = dict(
         user=current_user,

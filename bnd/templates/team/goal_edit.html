@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import render_field %}
+{% block content %}
+
+<h1>{{ team.name }}</h1>
+
+  <form method="post">
+    {{ form.csrf_token }}
+
+    <h3>Step 1: 목표 정하기</h3>
+
+    <div class="row">
+      {{ render_field(form.type) }}
+      {{ render_field(form.title) }}
+    </div>
+
+    <h3>Step 2: 목표 달성 기준 정하기</h3>
+
+    <div class="row">
+      <div class="col-sm-2">달성 점수</div>
+      <div class="col-sm-10">달성 기준 세부 내용</div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-2">3점</div>
+      <div class="col-sm-10">
+        {{ render_field(form.criterion1, placeholder='예: 크로스핏 1회, 런닝 1회') }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-2">6점</div>
+      <div class="col-sm-10">
+        {{ render_field(form.criterion2, placeholder='예: 크로스핏 2회, 런닝 2회') }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-2">9점</div>
+      <div class="col-sm-10">
+        {{ render_field(form.criterion3, placeholder='예: 크로스핏 3회, 런닝 3회') }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-2">12점</div>
+      <div class="col-sm-10">
+        {{ render_field(form.criterion4, placeholder='예: 크로스핏 4회, 런닝 4회') }}
+      </div>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}

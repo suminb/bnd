@@ -72,10 +72,14 @@ class User(db.Model, UserMixin, CRUDMixin):
     phone = db.Column(db.String)
     address = db.Column(db.String)
     data = db.Column(JSON)
+    goals = db.relationship('Goal', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return '{}, {} <{}>'.format(
             self.family_name, self.given_name, self.email)
+
+    def goals_for_team(self, team_id):
+        return Goal.query.filter_by(user_id=self.id, team_id=team_id).all()
 
     @property
     def has_current_team(self):
