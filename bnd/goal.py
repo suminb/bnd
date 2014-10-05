@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
 from bnd.models import Goal, Team, Checkpoint

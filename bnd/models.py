@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import UserMixin
 from sqlalchemy.dialects.postgresql import JSON, ARRAY
@@ -130,7 +131,8 @@ class Team(db.Model, CRUDMixin):
     goals = db.relationship('Goal', backref='team', lazy='dynamic')
 
     def __repr__(self):
-        return 'Team {}'.format(self.name)
+        #return 'Team {}'.format(self.name)
+        return 'Team ' + self.name
 
     @property
     def is_open(self):

@@ -70,12 +70,12 @@ class ApplicationForm(Form):
 class GoalForm(Form):
     type = SelectField(
         u'목표 타입',
-        choices=[('전공', '전공'),
-                 ('운동', '운동'),
-                 ('예술', '예술'),
-                 ('취미', '취미'),
-                 ('생활', '생활'),
-                 ('기타', '기타')],
+        choices=[(u'전공', u'전공'),
+                 (u'운동', u'운동'),
+                 (u'예술', u'예술'),
+                 (u'취미', u'취미'),
+                 (u'생활', u'생활'),
+                 (u'기타', u'기타')],
         validators=[DataRequired()])
     title = StringField(
         u'목표 내용',
