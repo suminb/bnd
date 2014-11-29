@@ -3,6 +3,11 @@ div.content {
   margin: .5em;
 }
 
+div.checkpoints div.checkpoint {
+}
+ul.checkpoint li {
+}
+
 /*
  * Style tweaks
  * --------------------------------------------------

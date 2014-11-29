@@ -14,14 +14,14 @@
 
 {% macro render_checkpoints(team, checkpoints) %}
   <h3>Checkpoints</h3>
-  <ul>
+  <div class="row checkpoints">
   {% for checkpoint in checkpoints %}
-    <li>
+    <div class="col-sm-2 checkpoint btn">
       <div><a href="{{ url_for('team.checkpoint_view', team_id=team.id, checkpoint_id=checkpoint.id) }}">{{ checkpoint.title }}</a></div>
-      <div><!-- whether completed or not --></div>
-    </li>
+      <div><span class="label label-default">In-progress</span></div>
+    </div>
   {% endfor %}
-  </ul>
+  </div>
 {% endmacro %}
 
 {% macro render_goals(user, team, checkpoint) %}

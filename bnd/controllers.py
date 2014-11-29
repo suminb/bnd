@@ -8,8 +8,8 @@ from bnd import app
 from bnd.forms import UserInfoForm, UserInfoForm2, ApplicationForm
 from bnd.models import db, User, Team, Checkpoint, Goal, Evaluation
 from bnd.curriculum import curriculum_module
-from bnd.team import team_module
 from bnd.checkpoint import checkpoint_module
+from bnd.team import team_module
 from bnd.goal import goal_module
 
 import os
