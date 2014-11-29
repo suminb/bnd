@@ -4,7 +4,7 @@
 
   <h1>Team view: {{ team.name }}</h1>
 
-  {{ render_checkpoints(team, team.checkpoints) }}
+  {{ render_checkpoints(current_user, team, team.checkpoints) }}
   <!-- {{ render_goals(current_user, team, None) }} -->
 
   <a href="{{ url_for('team.goal_edit', team_id=team.id, goal_id='new') }}">목표 추가</a>

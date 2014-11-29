@@ -29,6 +29,16 @@ app.register_blueprint(team_module, url_prefix='/team')
 app.register_blueprint(checkpoint_module, url_prefix='/checkpoint')
 app.register_blueprint(goal_module, url_prefix='/goal')
 
+# FIXME: Refacfor the following section
+def checkpoint_status_class(status):
+    if status == 'Completed':
+        return 'label-success'
+    elif status == 'Past-due':
+        return 'label-danger'
+    else:
+        return 'label-default'
+app.jinja_env.globals.update(checkpoint_status_class=checkpoint_status_class)
+
 admin = Admin(app)
 classes = [User, Team, Checkpoint, Goal, Evaluation]
 for cls in classes:

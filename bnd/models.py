@@ -2,8 +2,8 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import UserMixin
 from sqlalchemy.dialects.postgresql import JSON, ARRAY
+from datetime import datetime
 from bnd import app
-
 
 db = SQLAlchemy(app)
 
@@ -74,6 +74,7 @@ class User(db.Model, UserMixin, CRUDMixin):
     address = db.Column(db.String)
     data = db.Column(JSON)
     goals = db.relationship('Goal', backref='user', lazy='dynamic')
+    evaluations = db.relationship('Evaluation', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return '{}, {} <{}>'.format(
@@ -81,6 +82,22 @@ class User(db.Model, UserMixin, CRUDMixin):
 
     def goals_for_team(self, team_id):
         return Goal.query.filter_by(user_id=self.id, team_id=team_id).all()
+
+    def get_checkpoint_status(self, checkpoint):
+        """Determines whether the user has an evaluation for a particular
+        checkpoint."""
+
+        evaluation = Evaluation.query \
+            .filter_by(user_id=self.id, checkpoint_id=checkpoint.id).first()
+
+        if evaluation is not None:
+            return 'Completed'
+        elif checkpoint.due_date is None:
+            return 'Unknown'
+        elif checkpoint.due_date < datetime.now():
+            return 'Past-due'
+        else:
+            return 'In-progress'
 
     @property
     def has_current_team(self):

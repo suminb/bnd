@@ -12,13 +12,13 @@
   </div>
 {% endmacro %}
 
-{% macro render_checkpoints(team, checkpoints) %}
+{% macro render_checkpoints(user, team, checkpoints) %}
   <h3>Checkpoints</h3>
   <div class="row checkpoints">
   {% for checkpoint in checkpoints %}
     <div class="col-sm-2 checkpoint btn">
       <div><a href="{{ url_for('team.checkpoint_view', team_id=team.id, checkpoint_id=checkpoint.id) }}">{{ checkpoint.title }}</a></div>
-      <div><span class="label label-default">In-progress</span></div>
+      <div><span class="label {{ checkpoint_status_class(user.get_checkpoint_status(checkpoint)) }}">{{ user.get_checkpoint_status(checkpoint) }}</span></div>
     </div>
   {% endfor %}
   </div>
