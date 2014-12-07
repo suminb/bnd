@@ -3,11 +3,24 @@
 
   <h1>Evaluate {{ goal.title }} for {{ checkpoint.title }}</h1>
 
-  <ul>
-    <li>3점: {{ goal.criterion1 }}</li>
-    <li>6점: {{ goal.criterion2 }}</li>
-    <li>9점: {{ goal.criterion3 }}</li>
-    <li>12점: {{ goal.criterion4 }}</li>
-  </ul>
+  <form method="post">
+    <div class="form">
+      <label class="control-label">
+          이번 체크포인트에서 이 목표에 대한 나의 평가는?</label>
+      <label class="radio">
+          <input name="evaluation" value="1" type="radio">{{ goal.criterion1 }}
+      </label>
+      <label class="radio">
+          <input name="evaluation" value="2" type="radio">{{ goal.criterion2 }}
+      </label>
+      <label class="radio">
+          <input name="evaluation" value="3" type="radio">{{ goal.criterion3 }}
+      </label>
+      <label class="radio">
+          <input name="evaluation" value="4" type="radio">{{ goal.criterion4 }}
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 
 {% endblock %}

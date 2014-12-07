@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import render_checkpoints, render_goals %}
+{% block content %}
+
+  <h1>Goal: {{ goal.title }}</h1>
+
+  <!-- {{ render_checkpoints(current_user, team, team.checkpoints) }} -->
+  <!-- {{ render_goals(current_user, team, None) }} -->
+  <h3>Checkpoints</h3>
+  <div class="row checkpoints">
+  {% for checkpoint in team.checkpoints %}
+    <div class="col-sm-2 checkpoint btn">
+      <div><a href="{{ url_for('goal.evaluate', goal_id=goal.id, team_id=current_user.current_team.id, checkpoint_id=checkpoint.id) }}">{{ checkpoint.title }}</a></div>
+      <div><span class="label {{ checkpoint_status_class(current_user.get_checkpoint_status(checkpoint)) }}">{{ current_user.get_checkpoint_status(checkpoint) }}</span></div>
+    </div>
+  {% endfor %}
+  </div>
+
+  <a href="{{ url_for('team.goal_edit', team_id=team.id, goal_id='new') }}">목표 추가</a>
+{% endblock %}

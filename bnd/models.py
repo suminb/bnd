@@ -162,11 +162,12 @@ class Checkpoint(db.Model, CRUDMixin):
     due_date = db.Column(db.DateTime(timezone=True))
     title = db.Column(db.String)
     # TODO: attendance
-    evaluations = db.relationship('Evaluation', backref='checkpoint', lazy='dynamic')
+    evaluations = db.relationship('Evaluation', backref='checkpoint',
+                                  lazy='dynamic')
 
 
 class Goal(db.Model, CRUDMixin):
-    """A goal contains multiple tasks."""
+    """One evaluation per checkpoint"""
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
@@ -199,4 +200,5 @@ class Application(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     timestamp = db.Column(db.DateTime(timezone=True))
+    #: A generic field to contain auxiliary information
     data = db.Column(JSON)

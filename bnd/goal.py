@@ -9,12 +9,14 @@ goal_module = Blueprint(
 
 
 @goal_module.route('/<int:id>')
+@login_required
 def view(id):
     goal = Goal.get_or_404(id)
     context = dict(
         goal=goal,
+        team=current_user.current_team,
     )
-    return render_template('view.html', **context)
+    return render_template('goal/view.html', **context)
 
 
 @goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(id=None))
@@ -41,17 +43,33 @@ def edit(id):
     return render_template('edit.html', **context)
 
 
-@goal_module.route('/<int:goal_id>/evaluate')
+@goal_module.route('/<int:goal_id>/evaluate', methods=['get', 'post'])
+@login_required
 def evaluate(goal_id):
-    team_id, checkpoint_id = map(request.args.get, ['team_id', 'checkpoint_id'])
+    def get():
+        team_id, checkpoint_id = map(request.args.get,
+                                     ['team_id', 'checkpoint_id'])
 
-    goal = Goal.get_or_404(goal_id)
-    team = Team.get_or_404(team_id)
-    checkpoint = Checkpoint.get_or_404(checkpoint_id)
+        goal = Goal.get_or_404(goal_id)
+        #team = Team.get_or_404(team_id)
+        checkpoint = Checkpoint.get_or_404(checkpoint_id)
 
-    context = dict(
-        goal=goal,
-        team=team,
-        checkpoint=checkpoint,
-    )
-    return render_template('evaluate.html', **context)
+        context = dict(
+            goal=goal,
+        #    team=team,
+            checkpoint=checkpoint,
+        )
+        return render_template('evaluate.html', **context)
+
+    def post():
+        team_id, checkpoint_id = map(request.args.get,
+                                     ['team_id', 'checkpoint_id'])
+
+        # TODO: Validate user input
+        # TODO: Update the database
+
+        return redirect(url_for('goal.evaluate', goal_id=goal_id,
+                        checkpoint_id=checkpoint_id))
+
+    # FIXME: Potential security issues
+    return locals()[request.method.lower()]()
