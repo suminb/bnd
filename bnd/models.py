@@ -187,10 +187,7 @@ class Evaluation(db.Model, CRUDMixin):
     goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
     checkpoint_id = db.Column(db.Integer, db.ForeignKey('checkpoint.id'))
     timestamp = db.Column(db.DateTime(timezone=True))
-    evaluation1 = db.Column(db.Integer)
-    evaluation2 = db.Column(db.Integer)
-    evaluation3 = db.Column(db.Integer)
-    evaluation4 = db.Column(db.Integer)
+    evaluation = db.Column(db.Integer)
 
 
 class Application(db.Model, CRUDMixin):

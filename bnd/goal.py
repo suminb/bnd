@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
-from bnd.models import Goal, Team, Checkpoint
+from bnd.models import Goal, Team, Checkpoint, Evaluation
 from bnd.forms import GoalForm
 
 goal_module = Blueprint(
     'goal', __name__, template_folder='templates/goal')
 
 
-@goal_module.route('/<int:id>')
+@goal_module.route('/<int:goal_id>')
 @login_required
-def view(id):
-    goal = Goal.get_or_404(id)
+def view(goal_id):
+    goal = Goal.get_or_404(goal_id)
     context = dict(
         goal=goal,
         team=current_user.current_team,
@@ -51,13 +51,17 @@ def evaluate(goal_id):
                                      ['team_id', 'checkpoint_id'])
 
         goal = Goal.get_or_404(goal_id)
-        #team = Team.get_or_404(team_id)
         checkpoint = Checkpoint.get_or_404(checkpoint_id)
+
+        evaluation = Evaluation.query.filter_by(
+            goal=goal,
+            checkpoint=checkpoint,
+        ).first()
 
         context = dict(
             goal=goal,
-        #    team=team,
             checkpoint=checkpoint,
+            evaluation=evaluation,
         )
         return render_template('evaluate.html', **context)
 
@@ -66,10 +70,27 @@ def evaluate(goal_id):
                                      ['team_id', 'checkpoint_id'])
 
         # TODO: Validate user input
-        # TODO: Update the database
 
-        return redirect(url_for('goal.evaluate', goal_id=goal_id,
-                        checkpoint_id=checkpoint_id))
+        goal = Goal.get_or_404(goal_id)
+        checkpoint = Checkpoint.get_or_404(checkpoint_id)
+
+        evaluation = Evaluation.query.filter_by(
+            goal=goal,
+            checkpoint=checkpoint,
+        ).first()
+
+        if evaluation is None:
+            evaluation = Evaluation()
+
+        evaluation.user = current_user
+        evaluation.goal = goal
+        evaluation.checkpoint = checkpoint
+        evaluation.evaluation = request.form.get('evaluation')
+
+        evaluation.save()
+
+        return redirect(url_for('.view', goal_id=goal_id))
+
 
     # FIXME: Potential security issues
     return locals()[request.method.lower()]()
