@@ -1,4 +1,4 @@
-from bnd.controllers import app
+from bnd import create_app
 import pytest
 
 
@@ -8,16 +8,19 @@ HOST = 'http://localhost:5000'
 @pytest.fixture(scope='session')
 def testapp():
     """ setup any state specific to the execution of the given module."""
+    app = create_app(None)
     client = app.test_client()
 
     from bnd.models import db
-    db.create_all()
+    with app.app_context():
+        db.create_all()
 
     return client
 
 
 def test_pages(testapp):
-    pages = ('/', '/login', '/curriculum')
+    # pages = ('/', '/user/login', '/curriculum')
+    pages = ('/user/login',)
 
     for page in pages:
         resp = testapp.get(page)

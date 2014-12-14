@@ -3,11 +3,15 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import UserMixin
 from sqlalchemy.dialects.postgresql import JSON, ARRAY
 from datetime import datetime
-from bnd import app
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
-if db.engine.driver != 'psycopg2':
+try:
+    if db.engine.driver != 'psycopg2':
+        JSON = ARRAY = db.String
+    pass
+except RuntimeError:
+    # NOTE: This is a temporary solution
     JSON = ARRAY = db.String
 
 
@@ -58,7 +62,7 @@ user_team_assoc = db.Table(
 
 
 class User(db.Model, UserMixin, CRUDMixin):
-    __table_args__ = ( db.UniqueConstraint('oauth_provider', 'oauth_id'), {} )
+    __table_args__ = (db.UniqueConstraint('oauth_provider', 'oauth_id'), {})
 
     id = db.Column(db.Integer, primary_key=True)
     oauth_provider = db.Column(db.String, unique=True)

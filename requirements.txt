@@ -1,13 +1,13 @@
 Flask==0.10.1
 Flask-OAuthlib==0.6.0
-Flask-SQLAlchemy==1.0
+Flask-SQLAlchemy==2.0
 flask-admin
 flask-wtf
 flask-login
 Jinja2==2.7.3
 Logbook==0.7.0
 MarkupSafe==0.23
-SQLAlchemy==0.9.7
+SQLAlchemy==0.9.8
 Werkzeug==0.9.6
 gunicorn==19.1.1
 itsdangerous==0.24
