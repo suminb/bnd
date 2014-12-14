@@ -4,7 +4,7 @@ from bnd.models import Checkpoint
 
 
 checkpoint_module = Blueprint(
-    'checkpoint', __name__, template_folder='templates/checkpoint')
+    'checkpoint_module', __name__, template_folder='templates/checkpoint')
 
 
 @checkpoint_module.route('/<int:id>')
