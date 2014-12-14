@@ -13,4 +13,4 @@ def view(id):
     context = dict(
         checkpoint=checkpoint,
     )
-    return render_template('view.html', **context)
+    return render_template('checkpoint/view.html', **context)

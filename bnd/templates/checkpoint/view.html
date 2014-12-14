@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<h2>Checkpoint: {{ checkpoint.title }}</h2>
+
+<div>
+TODO: Show goals
+</div>
+
+<a href="{{ url_for('goal.edit', id='new') }}">Make a new goal</a>
+
+{% endblock %}

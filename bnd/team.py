@@ -5,7 +5,7 @@ from bnd.forms import GoalForm
 
 
 team_module = Blueprint(
-    'team_module', __name__, template_folder='templates/team')
+    'team', __name__, template_folder='templates/team')
 
 
 @team_module.route('/list')

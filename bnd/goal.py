@@ -5,7 +5,7 @@ from bnd.models import Goal, Team, Checkpoint, Evaluation
 from bnd.forms import GoalForm
 
 goal_module = Blueprint(
-    'goal_module', __name__, template_folder='templates/goal')
+    'goal', __name__, template_folder='templates/goal')
 
 
 @goal_module.route('/<int:goal_id>')
