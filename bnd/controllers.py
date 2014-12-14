@@ -29,6 +29,7 @@ app.register_blueprint(team_module, url_prefix='/team')
 app.register_blueprint(checkpoint_module, url_prefix='/checkpoint')
 app.register_blueprint(goal_module, url_prefix='/goal')
 
+
 # FIXME: Refacfor the following section
 def checkpoint_status_class(status):
     if status == 'Completed':
