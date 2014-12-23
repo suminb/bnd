@@ -6,7 +6,7 @@ from flask import request, render_template, redirect
 from flask.ext.admin import Admin
 from flask.ext.admin.contrib.sqla import ModelView
 from bnd.forms import ApplicationForm
-from bnd.models import User, Team, Checkpoint, Goal, Evaluation, Application
+from bnd.models import db, User, Team, Checkpoint, Goal, Evaluation, Application
 
 
 
@@ -23,9 +23,9 @@ def checkpoint_status_class(status):
 app.jinja_env.globals.update(checkpoint_status_class=checkpoint_status_class)
 
 admin = Admin(app)
-#classes = [User, Team, Checkpoint, Goal, Evaluation]
-#for cls in classes:
-#    admin.add_view(ModelView(cls, db.session))
+classes = [User, Team, Checkpoint, Goal, Evaluation]
+for cls in classes:
+    admin.add_view(ModelView(cls, db.session, endpoint='admin_'+cls.__name__))
 
 # See https://github.com/lepture/flask-oauthlib/blob/master/example/google.py
 # for more examples
