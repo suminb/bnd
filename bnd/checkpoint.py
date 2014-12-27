@@ -4,7 +4,7 @@ from bnd.models import Checkpoint
 
 
 checkpoint_module = Blueprint(
-    'checkpoint', __name__, template_folder='templates/checkpoint')
+    'checkpoint_module', __name__, template_folder='templates/checkpoint')
 
 
 @checkpoint_module.route('/<int:id>')
@@ -13,4 +13,4 @@ def view(id):
     context = dict(
         checkpoint=checkpoint,
     )
-    return render_template('view.html', **context)
+    return render_template('checkpoint/view.html', **context)

@@ -119,7 +119,7 @@ class User(db.Model, UserMixin, CRUDMixin):
 
     @property
     def past_teams(self):
-        return []
+        raise NotImplementedError()
 
     @staticmethod
     def get_by_oauth_id(oauth_id):
