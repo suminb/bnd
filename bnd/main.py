@@ -8,7 +8,7 @@ from bnd.forms import ApplicationForm
 from bnd.models import db, User, Team, Checkpoint, Goal, Evaluation, Application
 
 main_module = Blueprint(
-    'main_module', __name__, template_folder='templates/main')
+    'main', __name__, template_folder='templates/main')
 
 
 @main_module.route('/')

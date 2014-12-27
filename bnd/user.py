@@ -118,7 +118,7 @@ def authorized(resp):
             email))
         login_user(user)
 
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     else:
         log.info('New user <{}>'.format(email))
