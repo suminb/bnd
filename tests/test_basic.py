@@ -19,8 +19,7 @@ def testapp():
 
 
 def test_pages(testapp):
-    # pages = ('/', '/user/login', '/curriculum')
-    pages = ('/user/login',)
+    pages = ('/', '/user/login', '/curriculum')
 
     for page in pages:
         resp = testapp.get(page)
