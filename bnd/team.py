@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
-from bnd.models import Team, Checkpoint, Goal
+from bnd.models import Team, Checkpoint, Goal, EvaluationChart
 from bnd.forms import GoalForm
 
 
@@ -20,10 +20,15 @@ def list_():
 @team_module.route('/<int:id>')
 def view(id):
     team = Team.get_or_404(id)
+
+    chart_data = EvaluationChart().get_chart_data(current_user, team)
+
     context = dict(
         team=team,
+        chart_labels=chart_data[0],
+        chart_evaluations=chart_data[1],
     )
-    return render_template('view.html', **context)
+    return render_template('team/view.html', **context)
 
 
 @team_module.route('/join/<id>')

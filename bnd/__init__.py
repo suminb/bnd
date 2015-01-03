@@ -3,7 +3,7 @@ from flask.ext.login import LoginManager
 from flask.ext.admin import Admin, BaseView, expose
 from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
-from bnd.models import db, User, Team, Checkpoint, Goal, Evaluation, Application
+from bnd.models import User, Team, Checkpoint, Goal, Evaluation
 import os
 
 

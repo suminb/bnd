@@ -208,3 +208,27 @@ class Application(db.Model, CRUDMixin):
     timestamp = db.Column(db.DateTime(timezone=True))
     #: A generic field to contain auxiliary information
     data = db.Column(JSON)
+
+
+
+# FIXME: To be relocated to elsewhere
+class EvaluationChart(object):
+    def extract(self, user, team):
+
+        checkpoint_ids = map(lambda x: x.id, team.checkpoints)
+        evaluations = Evaluation.query.filter_by(
+            user_id=user.id,
+        ).filter(
+            Evaluation.checkpoint_id.in_(checkpoint_ids)
+        ).all()
+
+        return evaluations
+
+    def get_chart_data(self, user, team):
+        """Outputs data to feed to a chart library."""
+        evaluations = self.extract(user, team)
+        tuples = map(lambda x: (x.checkpoint.title, x.evaluation), evaluations)
+        labels, evaluations = zip(*tuples)
+
+        import json
+        return json.dumps(labels), json.dumps(evaluations)
