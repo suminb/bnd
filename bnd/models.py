@@ -152,8 +152,7 @@ class Team(db.Model, CRUDMixin):
     goals = db.relationship('Goal', backref='team', lazy='dynamic')
 
     def __repr__(self):
-        #return 'Team {}'.format(self.name)
-        return 'Team ' + self.name
+        return u"Team '{}'".format(self.name)
 
     @property
     def is_open(self):
@@ -169,6 +168,9 @@ class Checkpoint(db.Model, CRUDMixin):
     evaluations = db.relationship('Evaluation', backref='checkpoint',
                                   lazy='dynamic')
 
+    def __repr__(self):
+        return u"Checkpoint '{}'".format(self.title)
+
 
 class Goal(db.Model, CRUDMixin):
     """One evaluation per checkpoint"""
@@ -183,6 +185,9 @@ class Goal(db.Model, CRUDMixin):
     criterion4 = db.Column(db.String)
     # TODO: attendance
     evaluations = db.relationship('Evaluation', backref='goal', lazy='dynamic')
+
+    def __repr__(self):
+        return u"Goal '{}'".format(self.title)
 
 
 class Evaluation(db.Model, CRUDMixin):
