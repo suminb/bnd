@@ -23,7 +23,7 @@ def view(id):
     context = dict(
         team=team,
     )
-    return render_template('view.html', **context)
+    return render_template('team/view.html', **context)
 
 
 @team_module.route('/join/<id>')
