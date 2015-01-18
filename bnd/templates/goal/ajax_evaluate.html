@@ -1,0 +1,21 @@
+<h1>Evaluate {{ goal.title }} for {{ checkpoint.title }}</h1>
+
+<form method="post">
+  <div class="form" style="margin-left: 1em">
+    <label class="control-label">
+        이번 체크포인트에서 이 목표에 대한 나의 평가는?</label>
+    <label class="radio">
+        <input name="evaluation" value="3" type="radio">3점: {{ goal.criterion1 }}
+    </label>
+    <label class="radio">
+        <input name="evaluation" value="6" type="radio">6점: {{ goal.criterion2 }}
+    </label>
+    <label class="radio">
+        <input name="evaluation" value="9" type="radio">9점: {{ goal.criterion3 }}
+    </label>
+    <label class="radio">
+        <input name="evaluation" value="12" type="radio">12점: {{ goal.criterion4 }}
+    </label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

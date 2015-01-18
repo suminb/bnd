@@ -3,6 +3,8 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
 from bnd.models import Goal, Team, Checkpoint, Evaluation
 from bnd.forms import GoalForm
+from bnd.utils import handle_request_type
+
 
 goal_module = Blueprint(
     'goal', __name__, template_folder='templates/goal')
@@ -45,6 +47,7 @@ def edit(id):
 
 @goal_module.route('/<int:goal_id>/evaluate', methods=['get', 'post'])
 @login_required
+@handle_request_type
 def evaluate(goal_id):
     def get():
         team_id, checkpoint_id = map(request.args.get,
@@ -63,7 +66,7 @@ def evaluate(goal_id):
             checkpoint=checkpoint,
             evaluation=evaluation,
         )
-        return render_template('evaluate.html', **context)
+        return render_template('ajax_evaluate.html', **context)
 
     def post():
         team_id, checkpoint_id = map(request.args.get,
@@ -91,6 +94,4 @@ def evaluate(goal_id):
 
         return redirect(url_for('.view', goal_id=goal_id))
 
-
-    # FIXME: Potential security issues
-    return locals()[request.method.lower()]()
+    return dict(get=get, post=post)
