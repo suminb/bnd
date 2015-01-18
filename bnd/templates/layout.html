@@ -80,7 +80,7 @@
         </div>
         <div id="collapse-one" class="panel-collapse collapse in">
           <div class="panel-body">
-            <a href="/team/1" class="list-group-item">커리큘럼</a>
+            <a href="{{ url_for('team.view', id=current_user.current_team.id) }}" class="list-group-item">커리큘럼</a>
             <a href="#" class="list-group-item">진행결과</a>
           </div>
         </div>
