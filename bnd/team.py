@@ -8,13 +8,13 @@ team_module = Blueprint(
     'team', __name__, template_folder='templates/team')
 
 
-@team_module.route('/list')
-def list_():
+@team_module.route('/view_all')
+def view_all():
     teams = Team.query.all()
     context = dict(
         teams=teams,
     )
-    return render_template('list.html', **context)
+    return render_template('view_all.html', **context)
 
 
 @team_module.route('/<int:id>')
