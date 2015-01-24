@@ -21,6 +21,16 @@ class AdminIndexView(BaseView):
 #admin.index_view = AdminIndexView
 
 
+# FIXME: Refacfor the following section
+def checkpoint_status_class(status):
+    if status == 'Completed':
+        return 'label-success'
+    elif status == 'Past-due':
+        return 'label-danger'
+    else:
+        return 'label-default'
+
+
 def create_app(config_filename):
     app = Flask(__name__)
     # app.config.from_pyfile(config_filename)
@@ -54,5 +64,7 @@ def create_app(config_filename):
     classes = [User, Team, Checkpoint, Goal, Evaluation]
     for cls in classes:
         admin.add_view(ModelView(cls, db.session, endpoint='admin_'+cls.__name__))
+
+    app.jinja_env.globals.update(checkpoint_status_class=checkpoint_status_class)
 
     return app
