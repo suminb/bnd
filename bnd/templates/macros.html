@@ -17,11 +17,11 @@
   <div class="row checkpoints">
   {% for checkpoint in checkpoints %}
     <div class="col-sm-2 checkpoint btn">
-      <div>
-        <a class="checkpoint-view" data-team-id="{{ team.id }}"
-           data-checkpoint-id="{{ checkpoint.id }}">{{ checkpoint.title }}</a>
-      </div>
-      <div><span class="label {{ checkpoint_status_class(user.get_checkpoint_status(checkpoint)) }}">{{ user.get_checkpoint_status(checkpoint) }}</span></div>
+      <a class="checkpoint-view" data-team-id="{{ team.id }}"
+         data-checkpoint-id="{{ checkpoint.id }}">
+        <div>{{ checkpoint.title }}</div>
+        <span class="label {{ checkpoint_status_class(user.get_checkpoint_status(checkpoint)) }}">{{ user.get_checkpoint_status(checkpoint) }}</span>
+      </a>
     </div>
   {% endfor %}
   </div>

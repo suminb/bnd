@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from flask.ext.login import login_required, current_user
 from bnd.models import Goal, Team, Checkpoint, Evaluation
 from bnd.forms import GoalForm
@@ -8,6 +8,18 @@ from bnd.utils import handle_request_type
 
 goal_module = Blueprint(
     'goal', __name__, template_folder='templates/goal')
+
+
+@goal_module.route('/view_all/ajax')
+def view_all():
+    team_id = request.args.get('team_id')
+    goals = Goal.query.filter_by(team_id=team_id)
+
+    context = dict(
+        goals=goals,
+    )
+
+    return render_template('view_all_ajax.html', **context)
 
 
 @goal_module.route('/<int:goal_id>')
@@ -66,7 +78,7 @@ def evaluate(goal_id):
             checkpoint=checkpoint,
             evaluation=evaluation,
         )
-        return render_template('ajax_evaluate.html', **context)
+        return render_template('evaluate_ajax.html', **context)
 
     def post():
         team_id, checkpoint_id = map(request.args.get,
