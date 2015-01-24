@@ -14,6 +14,8 @@
 
   <!-- Latest compiled and minified JavaScript -->
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <script src="/static/sprintf.min.js"></script>
   <script src="/static/main.js"></script>
 
 </head>
@@ -69,32 +71,50 @@
   <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
 
     <div class="panel-group" id="accordion">
-      <!-- First collapsible section -->
+      {% if current_user.has_current_team %}
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapse-one">
-              Being &amp; Doing 6기
+              {{ current_user.current_team.name }}
             </a>
           </h4>
         </div>
         <div id="collapse-one" class="panel-collapse collapse in">
           <div class="panel-body">
-            <a href="#" class="list-group-item">지원하기</a>
+            <a href="{{ url_for('team.view', id=current_user.current_team.id) }}" class="list-group-item">커리큘럼</a>
+            <a href="#" class="list-group-item">진행결과</a>
           </div>
         </div>
       </div>
+      {% endif %}
 
-      <!-- Second collapsible section -->
+      <!--
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapse-two">
-              지난 Being &amp; Doing
+              Being &amp; Doing 6기
             </a>
           </h4>
         </div>
         <div id="collapse-two" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <a href="#" class="list-group-item">지원하기</a>
+          </div>
+        </div>
+      </div>
+      -->
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-three">
+              지난 Being &amp; Doing
+            </a>
+          </h4>
+        </div>
+        <div id="collapse-three" class="panel-collapse collapse in">
           <div class="panel-body">
             <a href="#" class="list-group-item">Being &amp; Doing 5기</a>
             <a href="#" class="list-group-item">Readers 2기</a>

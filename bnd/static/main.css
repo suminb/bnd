@@ -8,6 +8,10 @@ div.checkpoints div.checkpoint {
 ul.checkpoint li {
 }
 
+a.checkpoint {
+  display: block;
+}
+
 /*
  * Style tweaks
  * --------------------------------------------------
