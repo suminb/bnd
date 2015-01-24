@@ -228,7 +228,12 @@ class EvaluationChart(object):
         """Outputs data to feed to a chart library."""
         evaluations = self.extract(user, team)
         tuples = map(lambda x: (x.checkpoint.title, x.evaluation), evaluations)
-        labels, evaluations = zip(*tuples)
 
-        import json
-        return json.dumps(labels), json.dumps(evaluations)
+        # if len(tuples) > 0:
+        try:
+            labels, evaluations = zip(*tuples)
+
+            import json
+            return json.dumps(labels), json.dumps(evaluations)
+        except:
+            return [[], []]
