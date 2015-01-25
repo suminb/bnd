@@ -17,9 +17,9 @@ def view_all():
     return render_template('view_all.html', **context)
 
 
-@team_module.route('/<int:id>')
-def view(id):
-    team = Team.get_or_404(id)
+@team_module.route('/<int:team_id>')
+def view(team_id):
+    team = Team.get_or_404(team_id)
 
     context = dict(
         team=team,
@@ -27,9 +27,9 @@ def view(id):
     return render_template('team/view.html', **context)
 
 
-@team_module.route('/<int:id>/progress')
-def progress(id):
-    team = Team.get_or_404(id)
+@team_module.route('/<int:team_id>/progress')
+def progress(team_id):
+    team = Team.get_or_404(team_id)
 
     chart_data = EvaluationChart().get_chart_data(current_user, team)
 
@@ -41,9 +41,9 @@ def progress(id):
     return render_template('team/progress.html', **context)
 
 
-@team_module.route('/join/<id>')
-def join(id):
-    team = Team.get_or_404(id)
+@team_module.route('/join/<int:team_id>')
+def join(team_id):
+    team = Team.get_or_404(team_id)
     context = dict(
         team=team,
     )
