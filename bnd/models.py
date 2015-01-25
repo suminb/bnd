@@ -122,6 +122,12 @@ class User(db.Model, UserMixin, CRUDMixin):
     def past_teams(self):
         raise NotImplementedError()
 
+    @property
+    def is_chair(self):
+        import warnings
+        warnings.warn('User.is_char() is not completely implemented')
+        return True
+
     @staticmethod
     def get_by_oauth_id(oauth_id):
         return User.query.filter_by(oauth_id=oauth_id).first()

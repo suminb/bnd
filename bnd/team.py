@@ -42,6 +42,16 @@ def progress(team_id):
     return render_template('team/progress.html', **context)
 
 
+@team_module.route('/<int:team_id>/members')
+def members(team_id):
+    team = Team.get_or_404(team_id)
+
+    context = dict(
+        team=team,
+        members=team.users,
+    )
+    return render_template('team/members.html', **context)
+
 @team_module.route('/join/<int:team_id>')
 def join(team_id):
     team = Team.get_or_404(team_id)

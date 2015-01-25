@@ -84,6 +84,9 @@
           <div class="panel-body">
             <a href="{{ url_for('team.view', team_id=current_user.current_team.id) }}" class="list-group-item">커리큘럼</a>
             <a href="{{ url_for('team.progress', team_id=current_user.current_team.id) }}" class="list-group-item">진행결과</a>
+            {% if current_user.is_chair %}
+              <a href="{{ url_for('team.members', team_id=current_user.current_team.id) }}" class="list-group-item">나의 멤버</a>
+            {% endif %}
           </div>
         </div>
       </div>
