@@ -4,6 +4,13 @@
 
   <h2>Being &amp; Doing 목표 성취 현황</h2>
   <canvas id="eval_chart" width="600" height="280"></canvas>
+
+  <ul>
+  {% for team in current_user.teams %}
+    <li><a href="{{ url_for('team.progress', team_id=team.id) }}">{{ team.name }}</a></li>
+  {% endfor %}
+  </ul>
+
   <script src="/static/chart.js"></script>
   <script>
     var options = Chart.defaults.Bar;
