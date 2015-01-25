@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import render_checkpoints, render_goals %}
+{% block content %}
+
+  <h2>Being &amp; Doing 목표 성취 현황</h2>
+  <canvas id="eval_chart" width="600" height="280"></canvas>
+  <script src="/static/chart.js"></script>
+  <script>
+    var options = Chart.defaults.Bar;
+    var data = {
+        labels: {{ chart_labels | safe }},
+        datasets: [
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.5)",
+                strokeColor: "rgba(220,220,220,0.8)",
+                highlightFill: "rgba(220,220,220,0.75)",
+                highlightStroke: "rgba(220,220,220,1)",
+                data: {{ chart_evaluations | safe }}
+            }
+            /*
+            {
+                label: "My Second dataset",
+                fillColor: "rgba(151,187,205,0.5)",
+                strokeColor: "rgba(151,187,205,0.8)",
+                highlightFill: "rgba(151,187,205,0.75)",
+                highlightStroke: "rgba(151,187,205,1)",
+                data: [28, 48, 40, 19, 86, 27, 90]
+            }
+            */
+        ]
+    };
+
+    $(function() {
+        // Get context with jQuery - using jQuery's .get() method.
+        var ctx = $("#eval_chart").get(0).getContext("2d");
+        // This will get the first returned node in the jQuery collection.
+        var myNewChart = new Chart(ctx).Bar(data, options);
+    });
+
+  </script>
+
+{% endblock %}
