@@ -15,7 +15,7 @@ $(function() {
 });
 
 function showGoalsForCheckpoint(teamID, checkpointID) {
-    $.get(sprintf('/goal/view_all/ajax?team_id=%d', teamID), function(response) {
+    $.get(sprintf('/goal/view_all/ajax?team_id=%d&checkpoint_id=%d', teamID, checkpointID), function(response) {
         $('#rendered-results').html(response);
     });
 }
