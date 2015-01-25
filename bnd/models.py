@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import UserMixin
+from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON, ARRAY
 from datetime import datetime
 
@@ -216,24 +217,36 @@ class EvaluationChart(object):
     def extract(self, user, team):
 
         checkpoint_ids = map(lambda x: x.id, team.checkpoints)
-        evaluations = Evaluation.query.filter_by(
+
+        user_ids = map(lambda x: x.id, team.users)
+
+        user_evaluations = Evaluation.query.filter_by(
             user_id=user.id,
         ).filter(
             Evaluation.checkpoint_id.in_(checkpoint_ids)
         ).all()
 
-        return evaluations
+        team_evaluations = Evaluation.query.with_entities(
+            func.avg(Evaluation.evaluation)
+        ).filter(
+            Evaluation.user_id.in_(user_ids),
+        ).group_by(Evaluation.checkpoint_id).all()
+
+        return user_evaluations, team_evaluations
 
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
-        evaluations = self.extract(user, team)
-        tuples = map(lambda x: (x.checkpoint.title, x.evaluation), evaluations)
+        user_evaluations, team_evaluations = self.extract(user, team)
+        print('team_eval')
+        print(list(map(lambda x: x, team_evaluations)))
+        tuples = map(lambda x: (x.checkpoint.title, x.evaluation), user_evaluations)
 
         # if len(tuples) > 0:
         try:
             labels, evaluations = zip(*tuples)
 
             import json
-            return json.dumps(labels), json.dumps(evaluations)
+            return json.dumps(labels), json.dumps(evaluations), \
+                json.dumps(team_evaluations)
         except:
-            return [[], []]
+            return [[], [], []]
