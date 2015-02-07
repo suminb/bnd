@@ -6,10 +6,10 @@
 <h3>Goals</h3>
 <ul>
 {% for goal in checkpoint.goals %}
-  <li><a href="{{ url_for('goal.view', goal_id=goal.id) }}">{{ goal.title }}</a></li>
+  <li><a href="{{ url_for('goal.view', goal_id=goal.id, checkpoint_id=checkpoint.id) }}">{{ goal.title }}</a></li>
 {% endfor %}
 </ul>
 
-<a href="{{ url_for('goal.edit', goal_id='new') }}">Make a new goal</a>
+<a href="{{ url_for('goal.edit', goal_id='new', checkpoint_id=checkpoint.id) }}">Make a new goal</a>
 
 {% endblock %}

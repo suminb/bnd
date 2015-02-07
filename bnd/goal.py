@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
-from flask.ext import restful
 from flask.ext.login import login_required, current_user
 from bnd.models import Goal, Team, Checkpoint, Evaluation
 from bnd.forms import GoalForm
@@ -34,6 +33,7 @@ def view(goal_id):
     context = dict(
         goal=goal,
         team=current_user.current_team,
+        checkpoint_id=request.args.get('checkpoint_id'),
     )
     return render_template('goal/view.html', **context)
 
@@ -109,6 +109,7 @@ def evaluate(goal_id):
 
         evaluation.save()
 
-        return redirect(url_for('goal.view', goal_id=goal_id))
+        return redirect(url_for('goal.view', goal_id=goal_id, checkpoint_id=checkpoint.id))
 
+    # FIXME: This is stupid
     return dict(get=get, post=post)[request.method.lower()]()

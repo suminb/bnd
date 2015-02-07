@@ -17,4 +17,12 @@
     </div>
   {% endfor %}
   </div>
+
+  <p>3: {{ goal.criterion1 }}</p>
+  <p>6: {{ goal.criterion2 }}</p>
+  <p>9: {{ goal.criterion3 }}</p>
+  <p>12: {{ goal.criterion4 }}</p>
+
+  <a href="{{ url_for('goal.evaluate', goal_id=goal.id, checkpoint_id=checkpoint_id) }}">Evaluate</a>
+
 {% endblock %}
