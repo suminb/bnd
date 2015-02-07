@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask.ext import restful
 from flask.ext.login import login_required, current_user
 from bnd.models import Goal, Team, Checkpoint, Evaluation
 from bnd.forms import GoalForm
@@ -23,7 +24,7 @@ def view_all():
         team=checkpoint.team,
     )
 
-    return render_template('view_all_ajax.html', **context)
+    return render_template('goal/view_all_ajax.html', **context)
 
 
 @goal_module.route('/<int:goal_id>')
@@ -38,13 +39,13 @@ def view(goal_id):
 
 
 @goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(id=None))
-@goal_module.route('/edit/<id>', methods=['get', 'post'])
+@goal_module.route('/edit/<goal_id>', methods=['get', 'post'])
 @login_required
-def edit(id):
-    if id is None:
+def edit(goal_id):
+    if goal_id is None:
         goal = Goal()
     else:
-        goal = Goal.get_or_404(id)
+        goal = Goal.get_or_404(goal_id)
 
     form = GoalForm(request.form, obj=None)
     if form.validate_on_submit():
@@ -61,9 +62,9 @@ def edit(id):
     return render_template('edit.html', **context)
 
 
+# @handle_request_type
 @goal_module.route('/<int:goal_id>/evaluate', methods=['get', 'post'])
 @login_required
-@handle_request_type
 def evaluate(goal_id):
     def get():
         team_id, checkpoint_id = map(request.args.get,
@@ -82,7 +83,7 @@ def evaluate(goal_id):
             checkpoint=checkpoint,
             evaluation=evaluation,
         )
-        return render_template('evaluate_ajax.html', **context)
+        return render_template('goal/evaluate.html', **context)
 
     def post():
         team_id, checkpoint_id = map(request.args.get,
@@ -108,6 +109,6 @@ def evaluate(goal_id):
 
         evaluation.save()
 
-        return redirect(url_for('.view', goal_id=goal_id))
+        return redirect(url_for('goal.view', goal_id=goal_id))
 
-    return dict(get=get, post=post)
+    return dict(get=get, post=post)[request.method.lower()]()

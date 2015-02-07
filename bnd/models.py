@@ -178,6 +178,10 @@ class Checkpoint(db.Model, CRUDMixin):
     def __repr__(self):
         return u"Checkpoint '{}'".format(self.title)
 
+    @property
+    def goals(self):
+        return Goal.query.filter_by(team_id=self.team_id)
+
 
 class Goal(db.Model, CRUDMixin):
     """One evaluation per checkpoint"""

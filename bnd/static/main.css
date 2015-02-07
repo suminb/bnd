@@ -4,6 +4,8 @@ div.content {
 }
 
 div.checkpoints div.checkpoint {
+  margin: .5em 0;
+  text-align: center;
 }
 ul.checkpoint li {
 }

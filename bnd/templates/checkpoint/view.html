@@ -3,10 +3,13 @@
 
 <h2>Checkpoint: {{ checkpoint.title }}</h2>
 
-<div>
-TODO: Show goals
-</div>
+<h3>Goals</h3>
+<ul>
+{% for goal in checkpoint.goals %}
+  <li><a href="{{ url_for('goal.view', goal_id=goal.id) }}">{{ goal.title }}</a></li>
+{% endfor %}
+</ul>
 
-<a href="{{ url_for('goal.edit', id='new') }}">Make a new goal</a>
+<a href="{{ url_for('goal.edit', goal_id='new') }}">Make a new goal</a>
 
 {% endblock %}
