@@ -168,6 +168,10 @@ class Team(db.Model, CRUDMixin):
     def is_open(self):
         raise NotImplemented()
 
+    @property
+    def regular_checkpoints(self):
+        return filter(lambda x: x.type != 'special', self.checkpoints)
+
 
 class Checkpoint(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -175,8 +179,8 @@ class Checkpoint(db.Model, CRUDMixin):
     due_date = db.Column(db.DateTime(timezone=True))
     title = db.Column(db.String)
     description = db.Column(db.Text)
-    type = db.Column(db.Enum('special', 'online', 'offline'), nullable=False,
-                     default='offline')
+    type = db.Column(db.Enum('special', 'online', 'offline', name='type'),
+                     nullable=False, default='offline')
 
     evaluations = db.relationship('Evaluation', backref='checkpoint',
                                   lazy='dynamic')
@@ -232,7 +236,7 @@ class Application(db.Model, CRUDMixin):
 class EvaluationChart(object):
     def extract(self, user, team):
 
-        checkpoint_ids = map(lambda x: x.id, team.checkpoints)
+        checkpoint_ids = map(lambda x: x.id, team.regular_checkpoints)
 
         user_ids = map(lambda x: x.id, team.users)
 
@@ -253,9 +257,9 @@ class EvaluationChart(object):
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
         user_evaluations, team_evaluations = self.extract(user, team)
-        print('team_eval')
-        print(list(map(lambda x: x, team_evaluations)))
-        tuples = map(lambda x: (x.checkpoint.title, x.evaluation), user_evaluations)
+
+        tuples = map(lambda x: (x.checkpoint.title, x.evaluation),
+                     user_evaluations)
 
         # if len(tuples) > 0:
         try:
