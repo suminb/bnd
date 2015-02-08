@@ -5,6 +5,9 @@ from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON, ARRAY
 from datetime import datetime
 
+import click
+
+
 db = SQLAlchemy()
 
 try:
@@ -171,7 +174,10 @@ class Checkpoint(db.Model, CRUDMixin):
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
     due_date = db.Column(db.DateTime(timezone=True))
     title = db.Column(db.String)
-    # TODO: attendance
+    description = db.Column(db.Text)
+    type = db.Column(db.Enum('special', 'online', 'offline'), nullable=False,
+                     default='offline')
+
     evaluations = db.relationship('Evaluation', backref='checkpoint',
                                   lazy='dynamic')
 
@@ -260,3 +266,20 @@ class EvaluationChart(object):
                 json.dumps(team_evaluations)
         except:
             return [[], [], []]
+
+
+@click.group()
+def cli():
+    return None
+
+
+@cli.command()
+def create_all():
+    from bnd import create_app
+    app = create_app(None)
+    with app.app_context():
+        db.create_all()
+
+
+if __name__ == '__main__':
+    cli()
