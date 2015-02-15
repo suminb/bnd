@@ -1,7 +1,10 @@
 {% extends 'layout.html' %}
+{% from 'macros.html' import render_checkpoints, render_goals %}
 {% block content %}
 
 <h2>Checkpoint: {{ checkpoint.title }}</h2>
+
+{{ render_checkpoints(current_user, team, team.checkpoints) }}
 
 <h3>Goals</h3>
 <ul>
@@ -10,6 +13,8 @@
 {% endfor %}
 </ul>
 
-<a href="{{ url_for('goal.edit', goal_id='new', checkpoint_id=checkpoint.id) }}">Make a new goal</a>
+{% if checkpoint.goals.count() < 3 %}
+  <a href="{{ url_for('goal.edit', goal_id='new', checkpoint_id=checkpoint.id) }}">Make a new goal</a>
+{% endif %}
 
 {% endblock %}

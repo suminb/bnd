@@ -18,7 +18,8 @@
   {% for checkpoint in checkpoints %}
     <div class="col-sm-2 checkpoint btn">
       <a class="checkpoint-view" data-team-id="{{ team.id }}"
-         data-checkpoint-id="{{ checkpoint.id }}">
+         data-checkpoint-id="{{ checkpoint.id }}"
+         href="{{ url_for('checkpoint.view', checkpoint_id=checkpoint.id, team_id=team.id) }}">
         <div>{{ checkpoint.title }}</div>
         <span class="label {{ checkpoint_status_class(user.get_checkpoint_status(checkpoint)) }}">{{ user.get_checkpoint_status(checkpoint) }}</span>
       </a>
