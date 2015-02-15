@@ -50,10 +50,11 @@ def edit(goal_id):
     form = GoalForm(request.form, obj=None)
     if form.validate_on_submit():
         form.populate_obj(goal)
+        goal.user = current_user
         goal.team = current_user.current_team
         goal.save()
 
-        return redirect(url_for('team.view', id=goal.team_id))
+        return redirect(url_for('team.view', team_id=goal.team_id))
 
     context = dict(
         form=form,
