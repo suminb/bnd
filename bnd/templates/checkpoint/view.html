@@ -1,20 +1,73 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import render_checkpoints, render_goals %}
+{% from 'macros.html' import render_checkpoints, render_goal_eval_form %}
 {% block content %}
 
 <h2>Checkpoint: {{ checkpoint.title }}</h2>
 
 {{ render_checkpoints(current_user, team, team.checkpoints) }}
 
-<h3>Goals</h3>
-<ul>
-{% for goal in checkpoint.goals %}
-  <li><a href="{{ url_for('goal.view', goal_id=goal.id, checkpoint_id=checkpoint.id) }}">{{ goal.title }}</a></li>
-{% endfor %}
-</ul>
 
-{% if checkpoint.goals.count() < 3 %}
-  <a href="{{ url_for('goal.edit', goal_id='new', checkpoint_id=checkpoint.id) }}">Make a new goal</a>
+
+{% if checkpoint.type == 'special' %}
+
+  <div>{{ checkpoint.title }} 모임에 초대합니다.</div>
+
+  <input type="radio" id="radio-accept" name="status"/>
+  <label for="radio-accept">참석합니다</label>
+
+  <input type="radio" id="radio-decline" name="status"/>
+  <label for="radio-decline">참석 못 합니다</label>
+
+{% else %}
+
+  <div class="mainblock well">
+    <h3>{{ checkpoint.title }}</h3>
+    <p>*첫번쩨 Being&amp;Doing 어떠셨나요?</p>
+  </div>
+
+  <div class="mainblock well">
+    <h3>Task 01: BeingDoing Time 에서</h3>
+    <div class="row">
+      <div class="col-xs-8">
+        Being &amp; Doing Time 하셨나요?
+      </div>
+      <div class="col-xs-4 text-right">
+        <label>
+          <input type="radio"> 네
+        </label>
+        <label>
+          <input type="radio"> 아니오
+        </label>
+      </div>
+    </div><!--end row-->
+    <div class="row">
+      <div class="col-xs-8">
+        에세이는 작성 하셨나요?
+      </div>
+      <div class="col-xs-4 text-right">
+        <label>
+          <input type="radio"> 네
+        </label>
+        <label>
+          <input type="radio"> 아니오
+        </label>
+      </div>
+    </div><!--end row-->
+  </div>
+
+  {% for goal in checkpoint.goals %}
+    {{ render_goal_eval_form(goal, current_user) }}
+  {% endfor %}
+
+  <div class="options text-center">
+    <button class="btn btn-lg btn-green" type="button">제출하기</button>
+  </div>
+
+
+  {% if checkpoint.goals.count() < 3 %}
+    <a href="{{ url_for('goal.edit', goal_id='new', checkpoint_id=checkpoint.id) }}">Make a new goal</a>
+  {% endif %}
+
 {% endif %}
 
 {% endblock %}

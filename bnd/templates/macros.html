@@ -41,3 +41,68 @@
   </ul>
 {% endmacro %}
 
+
+{% macro render_goal_eval_form(goal, user) %}
+<div class="mainblock well">
+  <h3>Task 02: 목표 달성 평가하기</h3>
+  <div id="main04-01">
+    <div class="row">
+      <div class="col-xs-8">
+        <h4>{{ goal.title }}</h4>
+      </div>
+      <div class="col-xs-4 text-right">
+          <select class="selectpicker show-tick form-control">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>12</option>
+        </select>
+      </div>
+    </div><!--end row-->
+    <div class="panel panel-default">
+      <table class="table">
+        <tbody><tr>
+          <td class="col-xs-2 text-center"><h5>Goal Score</h5></td>
+          <td class="col-xs-10 text-center"><h5>Goal description</h5></td>
+        </tr>
+        <tr>
+          <td class="col-xs-2 text-center">
+            <button id="btn-score1" class="btn first" type="button">3 점</button></td>
+          <td class="col-xs-10 text-center">
+            <div class="form-group">
+              <input class="form-control" placeholder="What do you hope to accomplish?">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-2 text-center">
+            <button id="btn-score2" class="btn second" type="button">6 점</button></td>
+          <td class="col-xs-10 text-center">
+            <div class="form-group">
+              <input class="form-control" placeholder="What do you hope to accomplish?">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-2 text-center">
+            <button id="btn-score3" class="btn third" type="button">9 점</button></td>
+          <td class="col-xs-10 text-center">
+            <div class="form-group">
+              <input class="form-control" placeholder="What do you hope to accomplish?">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-2 text-center">
+            <button id="btn-score4" class="btn fourth" type="button">12 점</button></td>
+          <td class="col-xs-10 text-center">
+            <div class="form-group">
+              <input class="form-control" placeholder="What do you hope to accomplish?">
+            </div>
+          </td>
+        </tr>
+      </tbody></table>
+    </div>
+  </div><!--end main04-01-->
+</div>
+{% endmacro %}
