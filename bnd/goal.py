@@ -38,7 +38,7 @@ def view(goal_id):
     return render_template('goal/view.html', **context)
 
 
-@goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(id=None))
+@goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(goal_id=None))
 @goal_module.route('/edit/<goal_id>', methods=['get', 'post'])
 @login_required
 def edit(goal_id):

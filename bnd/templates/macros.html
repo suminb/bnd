@@ -51,11 +51,11 @@
         <h4>{{ goal.title }}</h4>
       </div>
       <div class="col-xs-4 text-right">
-          <select class="selectpicker show-tick form-control">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>12</option>
+          <select class="selectpicker show-tick form-control" name="">
+          <option value="3">3</option>
+          <option value="6">6</option>
+          <option value="9">9</option>
+          <option value="12">12</option>
         </select>
       </div>
     </div><!--end row-->
@@ -70,7 +70,8 @@
             <button id="btn-score1" class="btn first" type="button">3 점</button></td>
           <td class="col-xs-10 text-center">
             <div class="form-group">
-              <input class="form-control" placeholder="What do you hope to accomplish?">
+              <input class="form-control" placeholder="What do you hope to accomplish?"
+                     value="{{ goal.criterion1 }}">
             </div>
           </td>
         </tr>
@@ -79,7 +80,8 @@
             <button id="btn-score2" class="btn second" type="button">6 점</button></td>
           <td class="col-xs-10 text-center">
             <div class="form-group">
-              <input class="form-control" placeholder="What do you hope to accomplish?">
+              <input class="form-control" placeholder="What do you hope to accomplish?"
+                     value="{{ goal.criterion2 }}">
             </div>
           </td>
         </tr>
@@ -88,7 +90,8 @@
             <button id="btn-score3" class="btn third" type="button">9 점</button></td>
           <td class="col-xs-10 text-center">
             <div class="form-group">
-              <input class="form-control" placeholder="What do you hope to accomplish?">
+              <input class="form-control" placeholder="What do you hope to accomplish?"
+                     value="{{ goal.criterion3 }}">
             </div>
           </td>
         </tr>
@@ -97,7 +100,8 @@
             <button id="btn-score4" class="btn fourth" type="button">12 점</button></td>
           <td class="col-xs-10 text-center">
             <div class="form-group">
-              <input class="form-control" placeholder="What do you hope to accomplish?">
+              <input class="form-control" placeholder="What do you hope to accomplish?"
+                     value="{{ goal.criterion4 }}">
             </div>
           </td>
         </tr>

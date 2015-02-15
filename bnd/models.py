@@ -190,6 +190,7 @@ class Checkpoint(db.Model, CRUDMixin):
 
     @property
     def goals(self):
+        """All goals which belong to this checkpoint."""
         return Goal.query.filter_by(team_id=self.team_id)
 
 

@@ -9,20 +9,23 @@
 
 
 {% if checkpoint.type == 'special' %}
-
-  <div>{{ checkpoint.title }} 모임에 초대합니다.</div>
-
-  <input type="radio" id="radio-accept" name="status"/>
-  <label for="radio-accept">참석합니다</label>
-
-  <input type="radio" id="radio-decline" name="status"/>
-  <label for="radio-decline">참석 못 합니다</label>
+  <div class="mainblock text-center panel panel-default">
+    <div class="panel-body">
+      <h3>{{ checkpoint.title }} 모임에 초대합니다.</h3>
+      <label class="radio-inline">
+        <input type="radio" name="status" value="accept"> 참석합니다
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="status" value="decline"> 참석하지 못 합니다
+      </label>
+    </div>
+  </div>
 
 {% else %}
 
   <div class="mainblock well">
     <h3>{{ checkpoint.title }}</h3>
-    <p>*첫번쩨 Being&amp;Doing 어떠셨나요?</p>
+    <p></p>
   </div>
 
   <div class="mainblock well">
@@ -55,7 +58,7 @@
     </div><!--end row-->
   </div>
 
-  {% for goal in checkpoint.goals %}
+  {% for goal in goals %}
     {{ render_goal_eval_form(goal, current_user) }}
   {% endfor %}
 
@@ -64,7 +67,7 @@
   </div>
 
 
-  {% if checkpoint.goals.count() < 3 %}
+  {% if goals.count() < 3 %}
     <a href="{{ url_for('goal.edit', goal_id='new', checkpoint_id=checkpoint.id) }}">Make a new goal</a>
   {% endif %}
 
