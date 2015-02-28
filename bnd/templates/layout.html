@@ -72,12 +72,11 @@
 
     <div id="profile-info" class="sb-section col-xs-12 col-sm-12">
       <div class="profile-pic">
-        <img style="width:40px;height:40px;margin-right:8px;" src="{{ current_user }}">
+        <img style="width:40px;height:40px;margin-right:8px;" src="{{ current_user.picture }}">
       </div>
       <div class="profile-info">
-        <label>Seth Ahn</label>
-        <br>
-        6기, Seth 팀, Chair
+        <label>{{ current_user.name }}</label>
+        <p>{{ current_user.current_team.name }}</p>
       </div>
     </div>
 

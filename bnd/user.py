@@ -129,6 +129,7 @@ def authorized(resp):
             ('family_name', 'family_name'),
             ('given_name', 'given_name'),
             ('id', 'oauth_id'),
+            ('picture', 'picture'),
         )
         payload = {k[1]: guser.data[k[0]] for k in keys}
 

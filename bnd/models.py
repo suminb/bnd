@@ -80,6 +80,7 @@ class User(db.Model, UserMixin, CRUDMixin):
     birthdate = db.Column(db.Date)
     phone = db.Column(db.String)
     address = db.Column(db.String)
+    picture = db.Column(db.String)
     data = db.Column(JSON)
     goals = db.relationship('Goal', backref='user', lazy='dynamic')
     evaluations = db.relationship('Evaluation', backref='user', lazy='dynamic')
@@ -106,6 +107,11 @@ class User(db.Model, UserMixin, CRUDMixin):
             return 'Past-due'
         else:
             return 'In-progress'
+
+    @property
+    def name(self):
+        # TODO: i18n
+        return u'{}, {}'.format(self.family_name, self.given_name)
 
     @property
     def has_current_team(self):
