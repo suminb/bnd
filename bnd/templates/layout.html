@@ -76,7 +76,9 @@
       </div>
       <div class="profile-info">
         <label>{{ current_user.name }}</label>
-        <p>{{ current_user.current_team.name }}</p>
+        {% if current_user.has_current_team %}
+          <p>{{ current_user.current_team.name }}</p>
+        {% endif %}
       </div>
     </div>
 
