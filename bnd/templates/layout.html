@@ -70,61 +70,47 @@
 
   <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
 
-    <div class="panel-group" id="accordion">
-      {% if current_user.has_current_team %}
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-one">
-              {{ current_user.current_team.name }}
-            </a>
-          </h4>
-        </div>
-        <div id="collapse-one" class="panel-collapse collapse in">
-          <div class="panel-body">
-            <a href="{{ url_for('team.view', team_id=current_user.current_team.id) }}" class="list-group-item">커리큘럼</a>
-            <a href="{{ url_for('team.progress', team_id=current_user.current_team.id) }}" class="list-group-item">진행결과</a>
-            {% if current_user.is_chair %}
-              <a href="{{ url_for('team.members', team_id=current_user.current_team.id) }}" class="list-group-item">나의 멤버</a>
-            {% endif %}
-          </div>
-        </div>
+    <div id="profile-info" class="sb-section col-xs-12 col-sm-12">
+      <div class="profile-pic">
+        <img style="width:40px;height:40px;margin-right:8px;" src="{{ current_user }}">
       </div>
+      <div class="profile-info">
+        <label>Seth Ahn</label>
+        <br>
+        6기, Seth 팀, Chair
+      </div>
+    </div>
+
+    <div class="panel-group">
+      {% if current_user.has_current_team %}
+      <h5>{{ current_user.current_team.name }}</h5>
+      <ul>
+        <li>
+          <a href="{{ url_for('team.view', team_id=current_user.current_team.id) }}">커리큘럼</a>
+        </li>
+        <li>
+          <a href="{{ url_for('team.progress', team_id=current_user.current_team.id) }}">진행결과</a>
+        </li>
+        <li>
+          {% if current_user.is_chair %}
+            <a href="{{ url_for('team.members', team_id=current_user.current_team.id) }}">나의 멤버</a>
+          {% endif %}
+        </li>
+      </ul>
       {% endif %}
 
-      <!--
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-two">
-              Being &amp; Doing 6기
-            </a>
-          </h4>
-        </div>
-        <div id="collapse-two" class="panel-collapse collapse in">
-          <div class="panel-body">
-            <a href="#" class="list-group-item">지원하기</a>
-          </div>
-        </div>
-      </div>
-      -->
-
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-three">
-              지난 Being &amp; Doing
-            </a>
-          </h4>
-        </div>
-        <div id="collapse-three" class="panel-collapse collapse in">
-          <div class="panel-body">
-            <a href="#" class="list-group-item">Being &amp; Doing 5기</a>
-            <a href="#" class="list-group-item">Readers 2기</a>
-            <a href="#" class="list-group-item">Being &amp; Doing 2기</a>
-          </div>
-        </div>
-      </div>
+      <h5>지난 Being &amp; Doing</h5>
+      <ul>
+        <li>
+          <a href="#">Being &amp; Doing 5기</a>
+        </li>
+        <li>
+          <a href="#">Readers 2기</a>
+        </li>
+        <li>
+          <a href="#">Being &amp; Doing 2기</a>
+        </li>
+      </ul>
 
     </div><!-- panel-group accordion -->
 
