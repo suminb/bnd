@@ -1,4 +1,5 @@
 
+
 div.content {
   margin: .5em;
 }
@@ -21,9 +22,7 @@ a.checkpoint {
 html,
 body {
   overflow-x: hidden; /* Prevent scroll on narrow devices */
-}
-body {
-  padding-top: 70px;
+  padding-top: 20px;
 }
 footer {
   padding: 30px 0;
@@ -31,11 +30,9 @@ footer {
 
 
 
-/*Universal*/
-h1,h2,h3,h4,h5,h6,a {
-  font-family: 'Muli', sans-serif;
+.navbar {
+    margin: 0;
 }
-
 
 a.navbar-brand {
     font-weight: 100;
@@ -63,10 +60,6 @@ a.navbar-brand {
 }
 /*button style overwrite*/
 .btn-primary {
-    color: ;
-    background-color: ;
-    border-color:;
-    padding:;
     font-size: 1.8em;
     font-weight: 100;
     vertical-align: middle;
@@ -147,22 +140,20 @@ a.navbar-brand {
 
 /*header-area*/
 
-.image-bg-fluid-height,
-.image-bg-fixed-height {
+
+.image-bg-fluid-height {
     text-align: center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
-}
-
-.image-bg-fluid-height {
-    background: url('../img/bgD.png') no-repeat center center scroll;
+    background: url('/static/cover.png') no-repeat center scroll;
     padding-top: 300px;
     padding-bottom: 80px;
 }
 
-#home {
+
+.home {
   color: #D3D3D3;
 }
 #homeinfo {
@@ -285,9 +276,6 @@ a.navbar-brand {
 }
 /*END Buttons*/
 
-#move40 {
-  margin-top: 40px;
-}
 
 /*Sidebar*/
 #profile-info {

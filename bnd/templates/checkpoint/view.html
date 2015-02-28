@@ -2,6 +2,8 @@
 {% from 'macros.html' import render_checkpoints, render_goal_eval_form %}
 {% block content %}
 
+<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+
 <h2>Checkpoint: {{ checkpoint.title }}</h2>
 
 {{ render_checkpoints(current_user, team, team.checkpoints) }}
@@ -72,5 +74,7 @@
   {% endif %}
 
 {% endif %}
+
+</div>
 
 {% endblock %}

@@ -1,12 +1,59 @@
 {% extends 'layout.html' %}
+{% block sidebar %}{% endblock %}
 {% block content %}
-<div class="jumbotron">
-  <h1>Welcome to Being &amp Doing</h1>
-  <p>
-    <a>About</a> |
-    <a>What we do</a> |
-    <a>Admission</a> |
-    <a>Apply</a>
-  </p>
+<div class="row">
+  <div class="image-bg-fluid-height">
+    <div class="blog-header text-center">
+      <h1 class="blog-title home">Go Together</h1>
+      <p class="lead blog-description home">Being &amp; Doing is for teams, by teams.</p>
+    </div>
+
+    <div class="options text-center">
+      <button class="btn btn-large btn-primary login" type="button">Login</button><br>
+      <button class="btn btn-large btn-primary gplussign" type="button">Sign up with Google+</button>
+    </div>
+
+  </div> <!--end header area-->
+
+  <div class="centraltabs">
+    <ul id="intronav" class="infonav">
+      <li><a data-toggle="tab" href="#sectionA">About</a></li>
+      <li>|<a data-toggle="tab" href="#sectionB">What We Do</a>|</li>
+      <li><a data-toggle="tab" href="#sectionC">Admission</a></li>
+    </ul>
+  </div>
 </div>
+
+
+<div class="row">
+  <div class="col-xs-1"></div>
+  <div class="col-xs-10">
+    <div id="homeinfo" class="bs-example">
+      <div class="tab-content">
+        <div id="sectionA" class="tab-pane fade in active">
+          <h3>About</h3>
+          <p>Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui. Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth.</p>
+        </div>
+        <div id="sectionB" class="tab-pane fade">
+          <h3>What We Do</h3>
+          <p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut, mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis. Nunc facilisis leo at faucibus adipiscing.</p>
+        </div>
+        <div id="sectionC" class="tab-pane fade">
+          <h3>Admission</h3>
+          <p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut, mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis. Nunc facilisis leo at faucibus adipiscing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-1"></div>
+</div>
+
+<style>
+  .container {
+    width: 100%;
+
+  }
+</style>
+
+
 {% endblock %}
