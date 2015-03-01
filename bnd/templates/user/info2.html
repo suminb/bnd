@@ -1,23 +1,69 @@
 {% extends 'layout.html' %}
 {% from 'macros.html' import render_field %}
 {% block content %}
-<div class="content">
+<div class="col-sm-8">
 
-<h2>Create an Account</h2>
+  <div class="text-center">
+    <h1>Optional Information</h1>
+    <p class="lead">추가 입력 정보입니다.</p>
+  </div>
 
-<ul class="nav nav-tabs" role="tablist">
-  <li><a href="#">1. 기본 정보 입력</a></li>
-  <li class="active"><a href="#">2. 추가 정보 입력</a></li>
-  <li><a href="#">3. 가입 완료</a></li>
-</ul>
+  <form class="form-horizontal" role="form" method="post" action="">
+    {{ form.csrf_token }}
 
-<form class="form-horizontal" role="form" method="post" action="">
-  {{ form.csrf_token }}
-  {{ render_field(form.question1) }}
-  {{ render_field(form.question2) }}
-  {{ render_field(form.question3) }}
-  <button type="submit" class="btn btn-default">다음</button>
-</form>
+    <div id="section06">
+      <h4>주소</h4>
+      <div class="row">
+        <div class="col-xs-3">
+          <select class="selectpicker show-tick form-control">
+            <option>시/도 선택</option>
+            <option>011</option>
+            <option>012</option>
+            <option>013</option>
+          </select>
+        </div>
+        <div class="col-xs-7">
+          <div class="form-group">
+            <input class="form-control" placeholder="Address">
+          </div>
+        </div>
+        <div class="col-xs-2">
+          <button type="button" class="btn">Lookup</button>
+        </div>
+
+      </div><!--end row-->
+    </div> <!--end section 06-->
+
+    <div id="section07">
+      <h4>학력</h4>
+      <div class="row form-group">
+        <div class="col-sm-6">
+
+            <input class="form-control" placeholder="출신대학(원)">
+        </div>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="전공">
+        </div>
+      </div><!--end row-->
+    </div><!--end Section 07-->
+
+    <div id="section08">
+      <h4>경력</h4>
+      <div class="row form-group">
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="직장명">
+        </div>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="담당 직무">
+        </div>
+
+      </div><!--end row-->
+    </div><!--end Section 08-->
+
+    <div class="options text-center">
+      <button class="btn btn-lg btn-green" type="button">완료</button>
+    </div>
+  </form>
 
 </div><!-- end of div.content -->
 {% endblock %}

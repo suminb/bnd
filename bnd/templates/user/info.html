@@ -1,119 +1,124 @@
 {% extends 'layout.html' %}
 {% from 'macros.html' import render_field %}
 {% block content %}
-<div class="content">
+<div class="col-sm-6">
 
-<h2>Create an Account</h2>
-
-<ul class="nav nav-tabs" role="tablist">
-  <li class="active"><a href="#">1. 기본 정보 입력</a></li>
-  <li><a href="#">2. 추가 정보 입력</a></li>
-  <li><a href="#">3. 가입 완료</a></li>
-</ul>
-
-<form class="form-horizontal" role="form" method="post">
-  {{ form.csrf_token }}
-  <div class="form-group">
-    <label class="col-sm-2 control-label">성명</label>
-    <div class="col-sm-5">
-      {{ form.family_name(class_='form-control', placeholder='Family name') }}
-      <ul class="errors">
-      {% for error in form.family_name.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
-    </div>
-    <div class="col-sm-5">
-      {{ form.given_name(class_='form-control', placeholder='Given name') }}
-      <ul class="errors">
-      {% for error in form.given_name.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
-    </div>
+  <div class="text-center">
+    <h1>Tell us about yourself</h1>
+    <p class="lead">It'll help us get you started</p>
   </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">성별</label>
-    <div class="col-sm-10">
-      <div class="btn-group" data-toggle="buttons">
-        <!-- FIXME: There's gotta be a cleaner way to deal with this -->
-        <label class="btn btn-primary {% if form.gender.data == 'male' %}active{% endif %}">
-          <input type="radio" name="gender" value="male"
-          {% if form.gender.data == 'male' %}checked="checked"{% endif %}
-          /> Male
-        </label>
-        <label class="btn btn-primary {% if form.gender.data == 'female' %}active{% endif %}">
-          <input type="radio" name="gender" value="female"
-          {% if form.gender.data == 'female' %}checked="checked"{% endif %}
-          /> Female
-        </label>
+
+  <form class="form-horizontal" role="form" method="post">
+    {{ form.csrf_token }}
+    <div class="form-group">
+      <h4 class="section">이름</h4>
+      <div class="col-sm-6">
+        {{ form.family_name(class_='form-control', placeholder='Family name') }}
+        <ul class="errors">
+          {% for error in form.family_name.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
       </div>
-      <ul class="errors">
-      {% for error in form.gender.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
+      <div class="col-sm-6">
+        {{ form.given_name(class_='form-control', placeholder='Given name') }}
+        <ul class="errors">
+          {% for error in form.given_name.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">생년월일</label>
-    <div class="col-sm-10">
-      {{ form.birthdate(class_='form-control') }}
-      <ul class="errors">
-      {% for error in form.birthdate.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
+    <div class="form-group">
+      <h4 class="section">성별</h4>
+      <div class="col-sm-12">
+        <div class="btn-group" data-toggle="buttons">
+          <!-- FIXME: There's gotta be a cleaner way to deal with this -->
+          <label class="btn btn-male {% if form.gender.data == 'male' %}active{% endif %}">
+            <input type="radio" name="gender" value="male"
+                   {% if form.gender.data == 'male' %}checked="checked"{% endif %}
+            /> Male
+          </label>
+          <label class="btn btn-female {% if form.gender.data == 'female' %}active{% endif %}">
+            <input type="radio" name="gender" value="female"
+                   {% if form.gender.data == 'female' %}checked="checked"{% endif %}
+            /> Female
+          </label>
+        </div>
+        <ul class="errors">
+          {% for error in form.gender.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">전화번호</label>
-    <div class="col-sm-10">
-      {{ form.phone(class_='form-control') }}
-      <ul class="errors">
-      {% for error in form.phone.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
+    <div class="form-group">
+      <h4 class="section">생년월일</h4>
+      <div class="col-sm-12">
+        {{ form.birthdate(class_='form-control') }}
+        <ul class="errors">
+          {% for error in form.birthdate.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Email</label>
-    <div class="col-sm-10">
-      {{ form.email(class_='form-control', placeholder='your@email.com') }}
-      <ul class="errors">
-      {% for error in form.email.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
+    <div class="form-group">
+      <h4 class="section">전화번호</h4>
+      <div class="col-sm-12">
+        {{ form.phone(class_='form-control', placeholder='010-1234-5678') }}
+        <ul class="errors">
+          {% for error in form.phone.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Referrer</label>
-    <div class="col-sm-10">
-      {{ form.referrer(class_='form-control',
-         placeholder='A person whom referred this to you') }}
-      <ul class="errors">
-      {% for error in form.referrer.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
+    <div class="form-group">
+      <h4 class="section">이메일</h4>
+      <div class="col-sm-12">
+        {{ form.email(class_='form-control', placeholder='your@email.com') }}
+        <ul class="errors">
+          {% for error in form.email.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Address</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" placeholder="Your address"/>
+    <div class="form-group">
+      <h4 class="section">추천인</h4>
+      <div class="col-sm-12">
+        {{ form.referrer(class_='form-control',
+        placeholder='A person whom referred this to you') }}
+        <ul class="errors">
+          {% for error in form.referrer.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-  </div>
-  <!-- {{ render_field(form.education) }} -->
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Careers</label>
-    <div class="col-sm-10">
+    <div class="form-group">
+      <h4 class="section">당신의 인생에서 가장 중요한 질문은?</h4>
+      <div class="col-sm-12">
+        <input type="text" class="form-control" placeholder=""/>
+      </div>
     </div>
-  </div>
-  <button type="submit" class="btn btn-default">다음</button>
-</form>
+    <div class="form-group">
+      <h4 class="section">나에게 Being and Doing 이란?</h4>
+      <div class="col-sm-12">
+        <input type="text" class="form-control" placeholder=""/>
+      </div>
+    </div>
+    <div class="form-group">
+      <h4 class="section">Talk to me about this</h4>
+      <div class="col-sm-12">
+        <input type="text" class="form-control" placeholder=""/>
+      </div>
+    </div>
+    <div class="options text-center">
+      <button class="btn btn-lg btn-green" type="submit">다음</button>
+    </div>
+  </form>
 
 </div><!-- end of div.content -->
 {% endblock %}

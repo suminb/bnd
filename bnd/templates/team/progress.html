@@ -2,6 +2,8 @@
 {% from 'macros.html' import render_checkpoints, render_goals %}
 {% block content %}
 
+<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+
   <h2>Being &amp; Doing 목표 성취 현황</h2>
   <canvas id="eval_chart" width="600" height="280"></canvas>
 
@@ -45,5 +47,6 @@
     });
 
   </script>
+</div>
 
 {% endblock %}
