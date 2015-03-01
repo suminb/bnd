@@ -9,8 +9,13 @@
     </div>
 
     <div class="options text-center">
-      <button class="btn btn-large btn-primary login" type="button">Login</button><br>
-      <button class="btn btn-large btn-primary gplussign" type="button">Sign up with Google+</button>
+      {% if not current_user.is_anonymous() %}
+      <a class="btn btn-lg login" type="button"
+         href="{{ url_for('team.view', team_id=current_user.current_team.id) }}">My Team</a>
+      {% else %}
+      <a class="btn btn-lg gplussign" type="button"
+         href="{{ url_for('user.login') }}">Sign in with Google+</a>
+      {% endif %}
     </div>
 
   </div> <!--end header area-->
