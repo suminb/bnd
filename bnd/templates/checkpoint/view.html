@@ -8,7 +8,7 @@
 
 {{ render_checkpoints(current_user, team, team.checkpoints) }}
 
-
+<form action="{{ url_for('checkpoint.evaluate', checkpoint_id=checkpoint.id, team_id=team.id) }}" method="post">
 
 {% if checkpoint.type == 'special' %}
   <div class="mainblock text-center panel panel-default">
@@ -22,7 +22,9 @@
       </label>
     </div>
   </div>
-
+  <div class="options text-center">
+    <button class="btn btn-lg btn-green" type="button">제출하기</button>
+  </div>
 {% else %}
 
   <div class="mainblock well">
@@ -60,20 +62,23 @@
     </div><!--end row-->
   </div>
 
-  {% for goal in goals %}
+  <div class="mainblock well">
+    <h3>Task 02: 목표 달성 평가하기</h3>
+    {% for goal in goals %}
     {{ render_goal_eval_form(goal, current_user) }}
-  {% endfor %}
-
-  <div class="options text-center">
-    <button class="btn btn-lg btn-green" type="button">제출하기</button>
+    {% endfor %}
   </div>
 
-
+  <div class="options text-center">
   {% if goals.count() < 3 %}
-    <a href="{{ url_for('goal.edit', goal_id='new', checkpoint_id=checkpoint.id) }}">Make a new goal</a>
+    <a href="{{ url_for('goal.edit', goal_id='new', checkpoint_id=checkpoint.id) }}" class="btn btn-lg btn-add">Make a new goal</a>
   {% endif %}
+    <button class="btn btn-lg btn-green" type="submit">제출하기</button>
+  </div>
 
 {% endif %}
+
+</form>
 
 </div>
 

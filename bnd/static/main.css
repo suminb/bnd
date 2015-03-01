@@ -207,14 +207,13 @@ a.navbar-brand {
   color: #FFFFFF;
   background-color: #009688;
   border-color: #009688;
-} 
+}
 
 /*Add Button*/
 .btn-add {
   color: #448AFF;
   background-color: #FFFFFF;
   border-color: #448AFF;
-  font-weight: 800;  
 }
 .btn-add:hover,
 .btn-add:focus,
