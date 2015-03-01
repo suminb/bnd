@@ -14,6 +14,7 @@
   <script src="/static/chart.js"></script>
   <script>
     var options = Chart.defaults.Bar;
+    var evalsPerGoal = {{ chart_user_evaluations | safe }};
     var data = {
         labels: {{ chart_labels | safe }},
         datasets: [
@@ -23,7 +24,7 @@
                 strokeColor: "rgba(220,220,220,0.8)",
                 highlightFill: "rgba(220,220,220,0.75)",
                 highlightStroke: "rgba(220,220,220,1)",
-                data: {{ chart_user_evaluations | safe }}
+                data: evalsPerGoal[1] // FIXME: Remove hard-coded values
             },
             {
                 label: "My Second dataset",
@@ -31,7 +32,7 @@
                 strokeColor: "rgba(151,187,205,0.8)",
                 highlightFill: "rgba(151,187,205,0.75)",
                 highlightStroke: "rgba(151,187,205,1)",
-                data: {{ chart_team_evaluations | safe }}
+                data: evalsPerGoal[2] // FIXME: Remove hard-coded values
             }
         ]
     };

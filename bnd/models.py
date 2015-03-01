@@ -4,7 +4,7 @@ from flask.ext.login import UserMixin
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON, ARRAY
 from datetime import datetime
-
+import itertools
 import click
 
 
@@ -251,32 +251,64 @@ class EvaluationChart(object):
             user_id=user.id,
         ).filter(
             Evaluation.checkpoint_id.in_(checkpoint_ids)
-        ).all()
+        ).group_by(
+            Evaluation.checkpoint_id
+        ).group_by(
+            Evaluation.goal_id
+        )
 
         team_evaluations = Evaluation.query.with_entities(
             func.avg(Evaluation.evaluation)
         ).filter(
-            Evaluation.user_id.in_(user_ids),
-        ).group_by(Evaluation.checkpoint_id).all()
+            Evaluation.user_id.in_(user_ids)
+        ).group_by(
+            Evaluation.checkpoint_id
+        ).group_by(
+            Evaluation.goal_id
+        )
 
-        return user_evaluations, team_evaluations
+        return user_evaluations.all(), team_evaluations.all()
 
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
         user_evaluations, team_evaluations = self.extract(user, team)
 
+        eval_dict = {}
+
+        evals = map(lambda x: (x.checkpoint.title, x.goal_id, x.evaluation), user_evaluations)
+
+        for e in evals:
+            key = (e[1], e[0])
+            value = e[2]
+
+            eval_dict[key] = value
+
+        kvs = zip(*evals)
+
+        checkpoint_ids = set(kvs[0])
+        goal_ids = set(kvs[1])
+
+        evals_per_goal = {}
+
+        for goal_id in goal_ids:
+            for checkpoint_id in checkpoint_ids:
+                key = (goal_id, checkpoint_id)
+                evals_per_goal.setdefault(goal_id, [])
+                if key in eval_dict:
+                    evals_per_goal[goal_id].append(eval_dict[key])
+                else:
+                    evals_per_goal[goal_id].append(0)
+
         tuples = map(lambda x: (x.checkpoint.title, x.evaluation),
                      user_evaluations)
 
-        # if len(tuples) > 0:
         try:
-            labels, evaluations = zip(*tuples)
+            labels, goal_ids, evaluations = zip(*evals)
 
             import json
-            return json.dumps(labels), json.dumps(evaluations), \
-                json.dumps(team_evaluations)
+            return json.dumps(labels), json.dumps(evals_per_goal)
         except:
-            return [[], [], []]
+            return [[], {}]
 
 
 @click.group()
