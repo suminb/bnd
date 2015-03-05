@@ -103,10 +103,12 @@ class User(db.Model, UserMixin, CRUDMixin):
             return 'Completed'
         elif checkpoint.due_date is None:
             return 'Unknown'
-        elif checkpoint.due_date < datetime.now():
-            return 'Past-due'
+        # elif checkpoint.due_date < datetime.now():
+        #    return 'Past-due'
+        # else:
+        #    return 'In-progress'
         else:
-            return 'In-progress'
+            return 'Unknown'
 
     @property
     def name(self):
