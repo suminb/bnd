@@ -161,7 +161,8 @@ class Team(db.Model, CRUDMixin):
     close_datetime = db.Column(db.DateTime(timezone=True))
     name = db.Column(db.String, unique=True)
     #: Long text to be shown when users are about to join a particular team
-    poster = db.Column(db.Text)
+    classifier = db.Column(db.String)
+    description = db.Column(db.Text)
     users = db.relationship('User', secondary=user_team_assoc,
         backref=db.backref('teams', lazy='dynamic'))
     checkpoints = db.relationship('Checkpoint', backref='team', lazy='dynamic')
