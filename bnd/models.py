@@ -186,7 +186,7 @@ class Checkpoint(db.Model, CRUDMixin):
     due_date = db.Column(db.DateTime(timezone=True))
     title = db.Column(db.String)
     description = db.Column(db.Text)
-    type = db.Column(db.Enum('special', 'online', 'offline', name='type'),
+    type = db.Column(db.Enum('special', 'online', 'offline', name='checkpoint_type'),
                      nullable=False, default='offline')
 
     evaluations = db.relationship('Evaluation', backref='checkpoint',
@@ -206,6 +206,8 @@ class Goal(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
+    type = db.Column(db.Enum(u'전공', u'운동', u'예술', u'취미', u'생활', u'기타', name='goal_type'),
+                     nullable=False, default='offline')
     title = db.Column(db.String)
     content = db.Column(db.Text)
     criterion1 = db.Column(db.String)
