@@ -251,11 +251,7 @@ class Application(db.Model, CRUDMixin):
 
 # FIXME: To be relocated to elsewhere
 class EvaluationChart(object):
-    def extract(self, user, team):
-
-        checkpoint_ids = map(lambda x: x.id, team.regular_checkpoints)
-
-        user_ids = map(lambda x: x.id, team.users)
+    def extract_user_data(self, user, checkpoint_ids):
 
         user_evaluations = Evaluation.query.filter_by(
             user_id=user.id,
@@ -264,8 +260,15 @@ class EvaluationChart(object):
         ).group_by(
             Evaluation.checkpoint_id
         ).group_by(
+            Evaluation.id,
             Evaluation.goal_id
         )
+
+        return user_evaluations.all()
+
+    def extract_team_data(self, team):
+
+        user_ids = map(lambda x: x.id, team.users)
 
         team_evaluations = Evaluation.query.with_entities(
             func.avg(Evaluation.evaluation)
@@ -277,11 +280,13 @@ class EvaluationChart(object):
             Evaluation.goal_id
         )
 
-        return user_evaluations.all(), team_evaluations.all()
+        return team_evaluations.all()
 
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
-        user_evaluations, team_evaluations = self.extract(user, team)
+        checkpoint_ids = map(lambda x: x.id, team.regular_checkpoints)
+        user_evaluations = self.extract_user_data(user, checkpoint_ids)
+        team_evaluations = self.extract_team_data(team)
 
         eval_dict = {}
 
@@ -293,7 +298,7 @@ class EvaluationChart(object):
 
             eval_dict[key] = value
 
-        kvs = zip(*evals)
+        kvs = list(zip(*evals))
 
         checkpoint_ids = set(kvs[0])
         goal_ids = set(kvs[1])
