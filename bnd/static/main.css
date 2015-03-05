@@ -147,7 +147,7 @@ a.navbar-brand {
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
-    background: url('/static/cover.png') no-repeat center scroll;
+    background: url('/static/cover.jpg') no-repeat center scroll;
     padding-top: 300px;
     padding-bottom: 80px;
 }
