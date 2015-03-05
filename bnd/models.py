@@ -167,7 +167,7 @@ class Team(db.Model, CRUDMixin):
     description = db.Column(db.Text)
     users = db.relationship('User', secondary=user_team_assoc,
         backref=db.backref('teams', lazy='dynamic'))
-    checkpoints = db.relationship('Checkpoint', backref='team', lazy='dynamic')
+    _checkpoints = db.relationship('Checkpoint', backref='team', lazy='dynamic')
     goals = db.relationship('Goal', backref='team', lazy='dynamic')
 
     def __repr__(self):
@@ -180,6 +180,11 @@ class Team(db.Model, CRUDMixin):
     @property
     def regular_checkpoints(self):
         return filter(lambda x: x.type != 'special', self.checkpoints)
+
+    @property
+    def checkpoints(self):
+        from operator import attrgetter
+        return sorted(self._checkpoints, key=attrgetter('due_date'))
 
 
 class Checkpoint(db.Model, CRUDMixin):
