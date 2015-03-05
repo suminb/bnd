@@ -284,46 +284,48 @@ class EvaluationChart(object):
 
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
-        checkpoint_ids = map(lambda x: x.id, team.regular_checkpoints)
-        user_evaluations = self.extract_user_data(user, checkpoint_ids)
-        team_evaluations = self.extract_team_data(team)
+        # checkpoint_ids = map(lambda x: x.id, team.regular_checkpoints)
+        # user_evaluations = self.extract_user_data(user, checkpoint_ids)
+        # team_evaluations = self.extract_team_data(team)
+        #
+        # eval_dict = {}
+        #
+        # evals = map(lambda x: (x.checkpoint.title, x.goal_id, x.evaluation), user_evaluations)
+        #
+        # for e in evals:
+        #     key = (e[1], e[0])
+        #     value = e[2]
+        #
+        #     eval_dict[key] = value
+        #
+        # kvs = list(zip(*evals))
+        #
+        # checkpoint_ids = set(kvs[0])
+        # goal_ids = set(kvs[1])
+        #
+        # evals_per_goal = {}
+        #
+        # for goal_id in goal_ids:
+        #     for checkpoint_id in checkpoint_ids:
+        #         key = (goal_id, checkpoint_id)
+        #         evals_per_goal.setdefault(goal_id, [])
+        #         if key in eval_dict:
+        #             evals_per_goal[goal_id].append(eval_dict[key])
+        #         else:
+        #             evals_per_goal[goal_id].append(0)
+        #
+        # tuples = map(lambda x: (x.checkpoint.title, x.evaluation),
+        #              user_evaluations)
+        #
+        # try:
+        #     labels, goal_ids, evaluations = zip(*evals)
+        #
+        #     import json
+        #     return json.dumps(labels), json.dumps(evals_per_goal)
+        # except:
+        #     return [[], {}]
 
-        eval_dict = {}
-
-        evals = map(lambda x: (x.checkpoint.title, x.goal_id, x.evaluation), user_evaluations)
-
-        for e in evals:
-            key = (e[1], e[0])
-            value = e[2]
-
-            eval_dict[key] = value
-
-        kvs = list(zip(*evals))
-
-        checkpoint_ids = set(kvs[0])
-        goal_ids = set(kvs[1])
-
-        evals_per_goal = {}
-
-        for goal_id in goal_ids:
-            for checkpoint_id in checkpoint_ids:
-                key = (goal_id, checkpoint_id)
-                evals_per_goal.setdefault(goal_id, [])
-                if key in eval_dict:
-                    evals_per_goal[goal_id].append(eval_dict[key])
-                else:
-                    evals_per_goal[goal_id].append(0)
-
-        tuples = map(lambda x: (x.checkpoint.title, x.evaluation),
-                     user_evaluations)
-
-        try:
-            labels, goal_ids, evaluations = zip(*evals)
-
-            import json
-            return json.dumps(labels), json.dumps(evals_per_goal)
-        except:
-            return [[], {}]
+        return [[], {}]
 
 
 @click.group()
