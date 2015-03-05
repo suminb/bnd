@@ -23,7 +23,7 @@ def view_all():
         team=checkpoint.team,
     )
 
-    return render_template('view_all_ajax.html', **context)
+    return render_template('goal/view_all_ajax.html', **context)
 
 
 @goal_module.route('/<int:goal_id>')
@@ -33,26 +33,28 @@ def view(goal_id):
     context = dict(
         goal=goal,
         team=current_user.current_team,
+        checkpoint_id=request.args.get('checkpoint_id'),
     )
     return render_template('goal/view.html', **context)
 
 
-@goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(id=None))
-@goal_module.route('/edit/<id>', methods=['get', 'post'])
+@goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(goal_id=None))
+@goal_module.route('/edit/<goal_id>', methods=['get', 'post'])
 @login_required
-def edit(id):
-    if id is None:
+def edit(goal_id):
+    if goal_id is None:
         goal = Goal()
     else:
-        goal = Goal.get_or_404(id)
+        goal = Goal.get_or_404(goal_id)
 
     form = GoalForm(request.form, obj=None)
     if form.validate_on_submit():
         form.populate_obj(goal)
+        goal.user = current_user
         goal.team = current_user.current_team
         goal.save()
 
-        return redirect(url_for('team.view', id=goal.team_id))
+        return redirect(url_for('team.view', team_id=goal.team_id))
 
     context = dict(
         form=form,
@@ -61,9 +63,9 @@ def edit(id):
     return render_template('edit.html', **context)
 
 
+# @handle_request_type
 @goal_module.route('/<int:goal_id>/evaluate', methods=['get', 'post'])
 @login_required
-@handle_request_type
 def evaluate(goal_id):
     def get():
         team_id, checkpoint_id = map(request.args.get,
@@ -82,7 +84,7 @@ def evaluate(goal_id):
             checkpoint=checkpoint,
             evaluation=evaluation,
         )
-        return render_template('evaluate_ajax.html', **context)
+        return render_template('goal/evaluate.html', **context)
 
     def post():
         team_id, checkpoint_id = map(request.args.get,
@@ -108,6 +110,7 @@ def evaluate(goal_id):
 
         evaluation.save()
 
-        return redirect(url_for('.view', goal_id=goal_id))
+        return redirect(url_for('goal.view', goal_id=goal_id, checkpoint_id=checkpoint.id))
 
-    return dict(get=get, post=post)
+    # FIXME: This is stupid
+    return dict(get=get, post=post)[request.method.lower()]()

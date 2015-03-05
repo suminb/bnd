@@ -4,6 +4,9 @@ from flask.ext.login import UserMixin
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON, ARRAY
 from datetime import datetime
+import itertools
+import click
+
 
 db = SQLAlchemy()
 
@@ -77,6 +80,7 @@ class User(db.Model, UserMixin, CRUDMixin):
     birthdate = db.Column(db.Date)
     phone = db.Column(db.String)
     address = db.Column(db.String)
+    picture = db.Column(db.String)
     data = db.Column(JSON)
     goals = db.relationship('Goal', backref='user', lazy='dynamic')
     evaluations = db.relationship('Evaluation', backref='user', lazy='dynamic')
@@ -103,6 +107,11 @@ class User(db.Model, UserMixin, CRUDMixin):
             return 'Past-due'
         else:
             return 'In-progress'
+
+    @property
+    def name(self):
+        # TODO: i18n
+        return u'{}, {}'.format(self.family_name, self.given_name)
 
     @property
     def has_current_team(self):
@@ -165,18 +174,30 @@ class Team(db.Model, CRUDMixin):
     def is_open(self):
         raise NotImplemented()
 
+    @property
+    def regular_checkpoints(self):
+        return filter(lambda x: x.type != 'special', self.checkpoints)
+
 
 class Checkpoint(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
     due_date = db.Column(db.DateTime(timezone=True))
     title = db.Column(db.String)
-    # TODO: attendance
+    description = db.Column(db.Text)
+    type = db.Column(db.Enum('special', 'online', 'offline', name='type'),
+                     nullable=False, default='offline')
+
     evaluations = db.relationship('Evaluation', backref='checkpoint',
                                   lazy='dynamic')
 
     def __repr__(self):
         return u"Checkpoint '{}'".format(self.title)
+
+    @property
+    def goals(self):
+        """All goals which belong to this checkpoint."""
+        return Goal.query.filter_by(team_id=self.team_id)
 
 
 class Goal(db.Model, CRUDMixin):
@@ -222,7 +243,7 @@ class Application(db.Model, CRUDMixin):
 class EvaluationChart(object):
     def extract(self, user, team):
 
-        checkpoint_ids = map(lambda x: x.id, team.checkpoints)
+        checkpoint_ids = map(lambda x: x.id, team.regular_checkpoints)
 
         user_ids = map(lambda x: x.id, team.users)
 
@@ -230,29 +251,78 @@ class EvaluationChart(object):
             user_id=user.id,
         ).filter(
             Evaluation.checkpoint_id.in_(checkpoint_ids)
-        ).all()
+        ).group_by(
+            Evaluation.checkpoint_id
+        ).group_by(
+            Evaluation.goal_id
+        )
 
         team_evaluations = Evaluation.query.with_entities(
             func.avg(Evaluation.evaluation)
         ).filter(
-            Evaluation.user_id.in_(user_ids),
-        ).group_by(Evaluation.checkpoint_id).all()
+            Evaluation.user_id.in_(user_ids)
+        ).group_by(
+            Evaluation.checkpoint_id
+        ).group_by(
+            Evaluation.goal_id
+        )
 
-        return user_evaluations, team_evaluations
+        return user_evaluations.all(), team_evaluations.all()
 
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
         user_evaluations, team_evaluations = self.extract(user, team)
-        print('team_eval')
-        print(list(map(lambda x: x, team_evaluations)))
-        tuples = map(lambda x: (x.checkpoint.title, x.evaluation), user_evaluations)
 
-        # if len(tuples) > 0:
+        eval_dict = {}
+
+        evals = map(lambda x: (x.checkpoint.title, x.goal_id, x.evaluation), user_evaluations)
+
+        for e in evals:
+            key = (e[1], e[0])
+            value = e[2]
+
+            eval_dict[key] = value
+
+        kvs = zip(*evals)
+
+        checkpoint_ids = set(kvs[0])
+        goal_ids = set(kvs[1])
+
+        evals_per_goal = {}
+
+        for goal_id in goal_ids:
+            for checkpoint_id in checkpoint_ids:
+                key = (goal_id, checkpoint_id)
+                evals_per_goal.setdefault(goal_id, [])
+                if key in eval_dict:
+                    evals_per_goal[goal_id].append(eval_dict[key])
+                else:
+                    evals_per_goal[goal_id].append(0)
+
+        tuples = map(lambda x: (x.checkpoint.title, x.evaluation),
+                     user_evaluations)
+
         try:
-            labels, evaluations = zip(*tuples)
+            labels, goal_ids, evaluations = zip(*evals)
 
             import json
-            return json.dumps(labels), json.dumps(evaluations), \
-                json.dumps(team_evaluations)
+            return json.dumps(labels), json.dumps(evals_per_goal)
         except:
-            return [[], [], []]
+            return [[], {}]
+
+
+@click.group()
+def cli():
+    return None
+
+
+@cli.command()
+def create_all():
+    from bnd import create_app
+    app = create_app(None)
+    with app.app_context():
+        db.create_all()
+
+
+if __name__ == '__main__':
+    cli()

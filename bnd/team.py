@@ -18,6 +18,7 @@ def view_all():
 
 
 @team_module.route('/<int:team_id>')
+@login_required
 def view(team_id):
     team = Team.get_or_404(team_id)
 
@@ -28,6 +29,7 @@ def view(team_id):
 
 
 @team_module.route('/<int:team_id>/progress')
+@login_required
 def progress(team_id):
     team = Team.get_or_404(team_id)
 
@@ -37,12 +39,12 @@ def progress(team_id):
         team=team,
         chart_labels=chart_data[0],
         chart_user_evaluations=chart_data[1],
-        chart_team_evaluations=chart_data[2],
     )
     return render_template('team/progress.html', **context)
 
 
 @team_module.route('/<int:team_id>/members')
+@login_required
 def members(team_id):
     team = Team.get_or_404(team_id)
 

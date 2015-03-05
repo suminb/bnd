@@ -1,12 +1,85 @@
 {% extends 'layout.html' %}
+{% from 'macros.html' import render_checkpoints, render_goal_eval_form %}
 {% block content %}
+
+<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
 
 <h2>Checkpoint: {{ checkpoint.title }}</h2>
 
-<div>
-TODO: Show goals
-</div>
+{{ render_checkpoints(current_user, team, team.checkpoints) }}
 
-<a href="{{ url_for('goal.edit', id='new') }}">Make a new goal</a>
+<form action="{{ url_for('checkpoint.evaluate', checkpoint_id=checkpoint.id, team_id=team.id) }}" method="post">
+
+{% if checkpoint.type == 'special' %}
+  <div class="mainblock text-center panel panel-default">
+    <div class="panel-body">
+      <h3>{{ checkpoint.title }} 모임에 초대합니다.</h3>
+      <label class="radio-inline">
+        <input type="radio" name="status" value="accept"> 참석합니다
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="status" value="decline"> 참석하지 못 합니다
+      </label>
+    </div>
+  </div>
+  <div class="options text-center">
+    <button class="btn btn-lg btn-green" type="button">제출하기</button>
+  </div>
+{% else %}
+
+  <div class="mainblock well">
+    <h3>{{ checkpoint.title }}</h3>
+    <p></p>
+  </div>
+
+  <div class="mainblock well">
+    <h3>Task 01: BeingDoing Time 에서</h3>
+    <div class="row">
+      <div class="col-xs-8">
+        Being &amp; Doing Time 하셨나요?
+      </div>
+      <div class="col-xs-4 text-right">
+        <label>
+          <input type="radio"> 네
+        </label>
+        <label>
+          <input type="radio"> 아니오
+        </label>
+      </div>
+    </div><!--end row-->
+    <div class="row">
+      <div class="col-xs-8">
+        에세이는 작성 하셨나요?
+      </div>
+      <div class="col-xs-4 text-right">
+        <label>
+          <input type="radio"> 네
+        </label>
+        <label>
+          <input type="radio"> 아니오
+        </label>
+      </div>
+    </div><!--end row-->
+  </div>
+
+  <div class="mainblock well">
+    <h3>Task 02: 목표 달성 평가하기</h3>
+    {% for goal in goals %}
+    {{ render_goal_eval_form(goal, current_user) }}
+    {% endfor %}
+  </div>
+
+  <div class="options text-center">
+  {% if goals.count() < 3 %}
+    <a href="{{ url_for('goal.edit', goal_id='new', checkpoint_id=checkpoint.id) }}" class="btn btn-lg btn-add">Make a new goal</a>
+  {% endif %}
+    <button class="btn btn-lg btn-green" type="submit">제출하기</button>
+  </div>
+
+{% endif %}
+
+</form>
+
+</div>
 
 {% endblock %}

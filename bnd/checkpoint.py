@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
-from bnd.models import Checkpoint, Goal
+from bnd.models import Checkpoint, Team, Goal, Evaluation
 from bnd.forms import GoalForm
 from bnd.utils import handle_request_type
+import re
 
 
 checkpoint_module = Blueprint(
@@ -10,60 +11,47 @@ checkpoint_module = Blueprint(
 
 
 @checkpoint_module.route('/<int:checkpoint_id>')
+@login_required
 def view(checkpoint_id):
+    team_id, goal_id = map(request.args.get,
+                             ['team_id', 'goal_id'])
+
     checkpoint = Checkpoint.get_or_404(checkpoint_id)
+    team = Team.get_or_404(team_id)
+    goals = Goal.query.filter_by(team_id=team.id, user_id=current_user.id)
+
     context = dict(
         checkpoint=checkpoint,
+        team=team,
+        goals=goals,
     )
     return render_template('checkpoint/view.html', **context)
 
 
-# @checkpoint_module.route('/<int:checkpoint_id>/goal/<int:goal_id>')
-# @login_required  # TODO: Maybe we should make a @ajax_login_required decorator
-# def goal_view(checkpoint_id, goal_id):
-#     context = dict()
-#     return render_template('checkpoint/ajax_view_goal.html', **context)
-#
-#
-# @checkpoint_module.route('/<int:checkpoint_id>/goal/new', defaults=dict(goal_id='new'))
-# @checkpoint_module.route('/checkpoint/<int:checkpoint_id>/goal/<int:goal_id>/edit', methods=['get', 'post'])
-# @login_required
-# def goal_edit(checkpoint_id, goal_id):
-#
-#     checkpoint = Checkpoint.get_or_404(checkpoint_id)
-#
-#     if goal_id == 'new':
-#         goal = Goal()
-#     else:
-#         goal = Goal.get_or_404(id)
-#
-#     form = GoalForm(request.form, obj=None)
-#     if form.validate_on_submit():
-#         form.populate_obj(goal)
-#         goal.user = current_user
-#         goal.team = current_user.current_team
-#         goal.save()
-#
-#         return '', 200
-#
-#     context = dict(
-#         checkpoint=checkpoint,
-#         form=form,
-#         team=checkpoint.team,
-#         goal=goal,
-#         user=current_user,
-#     )
-#     return render_template('ajax_goal_edit.html', **context)
-#
-#
-# @checkpoint_module.route('/<int:checkpoint_id>/goal/<int:goal_id>/evaluate', methods=['get', 'post'])
-# @login_required
-# @handle_request_type
-# def evaluate(checkpoint_id, goal_id):
-#     def get():
-#         return 'GET', 200
-#
-#     def post():
-#         return 'POST', 200
-#
-#     return dict(get=get, post=post)
+@checkpoint_module.route('/<int:checkpoint_id>/evaluate', methods=['POST'])
+@login_required
+def evaluate(checkpoint_id):
+    team_id = request.args.get('team_id')
+
+    checkpoint = Checkpoint.get_or_404(checkpoint_id)
+    team = Team.get_or_404(team_id)
+
+    # TODO: Deal with multiple goals
+
+    for k, v in request.form.items():
+        m = re.match(r'goal-(?P<goal_id>\d+)', k)
+
+        if m is not None:
+            goal_id = m.group('goal_id')
+            Evaluation.create(
+                evaluation=v,
+                user=current_user,
+                checkpoint=checkpoint,
+                goal_id=goal_id,
+            )
+
+    context = dict(
+        checkpoint=checkpoint,
+        team=team,
+    )
+    return redirect(url_for('checkpoint.view', checkpoint_id=checkpoint.id, team_id=team.id))

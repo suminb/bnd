@@ -9,10 +9,20 @@
   <h3>Checkpoints</h3>
   <div class="row checkpoints">
   {% for checkpoint in team.checkpoints %}
-    <div class="col-sm-2 checkpoint btn">
-      <div><a href="{{ url_for('goal.evaluate', goal_id=goal.id, team_id=current_user.current_team.id, checkpoint_id=checkpoint.id) }}">{{ checkpoint.title }}</a></div>
-      <div><span class="label {{ checkpoint_status_class(current_user.get_checkpoint_status(checkpoint)) }}">{{ current_user.get_checkpoint_status(checkpoint) }}</span></div>
+    <div class="col-sm-2 checkpoint">
+      <a href="{{ url_for('checkpoint.view', goal_id=goal.id, team_id=current_user.current_team.id, checkpoint_id=checkpoint.id) }}">
+        <div>{{ checkpoint.title }}</div>
+        <div><span class="label {{ checkpoint_status_class(current_user.get_checkpoint_status(checkpoint)) }}">{{ current_user.get_checkpoint_status(checkpoint) }}</span></div>
+      </a>
     </div>
   {% endfor %}
   </div>
+
+  <p>3: {{ goal.criterion1 }}</p>
+  <p>6: {{ goal.criterion2 }}</p>
+  <p>9: {{ goal.criterion3 }}</p>
+  <p>12: {{ goal.criterion4 }}</p>
+
+  <a href="{{ url_for('goal.evaluate', goal_id=goal.id, checkpoint_id=checkpoint_id) }}">Evaluate</a>
+
 {% endblock %}

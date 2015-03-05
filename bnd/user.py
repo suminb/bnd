@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from flask.ext.login import login_required, login_user, logout_user, current_user
 from flask_oauthlib.client import OAuth
 from bnd import login_manager, log
-from bnd.models import User
+from bnd.models import db, User
 from bnd.forms import UserInfoForm, UserInfoForm2
 
 import os
@@ -43,11 +43,23 @@ def user_info():
         form.populate_obj(user)
 
         # TODO: Refactoring
-        user.data = dict(
-            referrer=form.data['referrer'],
-            education=form.data['education'],
-        )
-        user.save()
+        # FIXME: This is not supported by SQLLite
+        try:
+            user.data = dict(
+                referrer=form.data['referrer'],
+                education=form.data['education'],
+            )
+            user.save()
+        except:
+            # FIXME: This is only a temporary workaround
+            db.session.rollback()
+
+            import json
+            user.data = json.dumps(dict(
+                referrer=form.data['referrer'],
+                education=form.data['education'],
+            ))
+            user.save()
 
         return redirect('/user/info/2')
 
@@ -60,8 +72,9 @@ def user_info():
 @user_module.route('/info/2', methods=['get', 'post'])
 @login_required
 def user_info2():
-    guser = google.get('userinfo')
-    user = User.get_by_oauth_id(guser.data['id'])
+    #guser = google.get('userinfo')
+    #user = User.get_by_oauth_id(guser.data['id'])
+    user = current_user
 
     form = UserInfoForm2(request.form, obj=user)
 
@@ -129,6 +142,7 @@ def authorized(resp):
             ('family_name', 'family_name'),
             ('given_name', 'given_name'),
             ('id', 'oauth_id'),
+            ('picture', 'picture'),
         )
         payload = {k[1]: guser.data[k[0]] for k in keys}
 

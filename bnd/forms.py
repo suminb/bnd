@@ -19,6 +19,7 @@ class MultipleRadioFields(Field):
         yield RadioField('test1')
         yield StringField('test3')
 
+
 class UserInfoForm(Form):
     family_name = StringField('family_name', validators=[DataRequired()])
     given_name = StringField('given_name', validators=[DataRequired()])
@@ -28,7 +29,7 @@ class UserInfoForm(Form):
         validators=[DataRequired()])
     birthdate = DateField('birthdate', validators=[DataRequired()])
     email = EmailField('email', validators=[DataRequired()])
-    phone = TelField('phone')
+    phone = TelField('phone', validators=[DataRequired()])
     referrer = StringField('referrer', validators=[DataRequired()])
     education = StringField('Education', validators=[])
 
