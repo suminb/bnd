@@ -1,5 +1,5 @@
 from flask import Flask
-from flask.ext.login import LoginManager
+from flask.ext.login import LoginManager, current_user
 from flask.ext.admin import Admin, BaseView, expose
 from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
@@ -12,13 +12,14 @@ login_manager = LoginManager()
 admin = Admin()
 
 
-class AdminIndexView(BaseView):
-    @expose('/')
-    def index(self):
-        return self.render('index.html')
+class AdminModelView(ModelView):
+    #@expose('/')
+    #def index(self):
+    #    return self.render('index.html')
 
-
-#admin.index_view = AdminIndexView
+    def is_accessible(self):
+        return not current_user.is_anonymous() and \
+            current_user.email in ['suminb@gmail.com', 'seth.ahn@gmail.com']
 
 
 # FIXME: Refacfor the following section
@@ -59,11 +60,10 @@ def create_app(config_filename):
     app.register_blueprint(goal_module, url_prefix='/goal')
     app.register_blueprint(user_module, url_prefix='/user')
 
-
     admin.init_app(app)
     classes = [User, Team, Checkpoint, Goal, Evaluation]
     for cls in classes:
-        admin.add_view(ModelView(cls, db.session, endpoint='admin_'+cls.__name__))
+        admin.add_view(AdminModelView(cls, db.session, endpoint='admin_' + cls.__name__))
 
     app.jinja_env.globals.update(checkpoint_status_class=checkpoint_status_class)
 
