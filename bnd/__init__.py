@@ -32,11 +32,14 @@ def checkpoint_status_class(status):
         return 'label-default'
 
 
-def create_app(config_filename):
+def create_app(config_filename, db_uri=None):
+    """NOTE: `db_uri` is only a temporary solution. It shall be replaced by
+    something more robust."""
     app = Flask(__name__)
     # app.config.from_pyfile(config_filename)
     app.secret_key = 'secret'
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri if db_uri is not None else \
+        os.environ.get('DB_URI')
     app.config['DEBUG'] = True
 
     login_manager.init_app(app)
