@@ -237,18 +237,6 @@ class Evaluation(db.Model, CRUDMixin):
     evaluation = db.Column(db.Integer)
 
 
-class Application(db.Model, CRUDMixin):
-    """User application. Assumes the application cannot be modified once
-    submitted."""
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    timestamp = db.Column(db.DateTime(timezone=True))
-    #: A generic field to contain auxiliary information
-    data = db.Column(JSON)
-
-
-
 # FIXME: To be relocated to elsewhere
 class EvaluationChart(object):
     def extract_user_data(self, user, checkpoint_ids):
