@@ -38,7 +38,7 @@ def create_app(name=__name__, config={},
     app = Flask(name, static_folder=static_folder, template_folder=template_folder)
     app.secret_key = 'secret'
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
-    # app.config['DEBUG'] = True
+    app.config['DEBUG'] = True
 
     app.config.update(config)
 
