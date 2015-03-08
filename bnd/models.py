@@ -323,7 +323,7 @@ def cli():
 @cli.command()
 def create_all():
     from bnd import create_app
-    app = create_app(None)
+    app = create_app(__name__)
     with app.app_context():
         db.create_all()
 
@@ -331,7 +331,7 @@ def create_all():
 @cli.command()
 def drop_all():
     from bnd import create_app
-    app = create_app(None)
+    app = create_app(__name__)
     with app.app_context():
         db.drop_all()
 
