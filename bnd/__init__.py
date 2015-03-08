@@ -9,7 +9,6 @@ import os
 
 log = Logger()
 login_manager = LoginManager()
-admin = Admin()
 
 
 class AdminModelView(ModelView):
@@ -32,15 +31,16 @@ def checkpoint_status_class(status):
         return 'label-default'
 
 
-def create_app(config_filename, db_uri=None):
+def create_app(name=__name__, config={},
+               static_folder='static', template_folder='templates'):
     """NOTE: `db_uri` is only a temporary solution. It shall be replaced by
     something more robust."""
-    app = Flask(__name__)
-    # app.config.from_pyfile(config_filename)
+    app = Flask(name, static_folder=static_folder, template_folder=template_folder)
     app.secret_key = 'secret'
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri if db_uri is not None else \
-        os.environ.get('DB_URI')
-    app.config['DEBUG'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
+    # app.config['DEBUG'] = True
+
+    app.config.update(config)
 
     login_manager.init_app(app)
     login_manager.login_view = 'user.login'
@@ -63,6 +63,7 @@ def create_app(config_filename, db_uri=None):
     app.register_blueprint(goal_module, url_prefix='/goal')
     app.register_blueprint(user_module, url_prefix='/user')
 
+    admin = Admin()
     admin.init_app(app)
     classes = [User, Team, Checkpoint, Goal, Evaluation]
     for cls in classes:
