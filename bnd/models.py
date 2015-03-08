@@ -69,8 +69,8 @@ class User(db.Model, UserMixin, CRUDMixin):
     __table_args__ = (db.UniqueConstraint('oauth_provider', 'oauth_id'), {})
 
     id = db.Column(db.Integer, primary_key=True)
-    oauth_provider = db.Column(db.String, unique=True)
-    oauth_id = db.Column(db.String, unique=True)
+    oauth_provider = db.Column(db.String)
+    oauth_id = db.Column(db.String)
     given_name = db.Column(db.String)
     family_name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
@@ -133,11 +133,8 @@ class User(db.Model, UserMixin, CRUDMixin):
     def past_teams(self):
         raise NotImplementedError()
 
-    @property
-    def is_chair(self):
-        import warnings
-        warnings.warn('User.is_char() is not completely implemented')
-        return True
+    def is_chair_of(self, team):
+        return team.chair is not None and self.id == team.chair.id
 
     @staticmethod
     def get_by_oauth_id(oauth_id):
@@ -165,6 +162,8 @@ class Team(db.Model, CRUDMixin):
     #: Long text to be shown when users are about to join a particular team
     classifier = db.Column(db.String)
     description = db.Column(db.Text)
+    chair_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    chair = db.relationship(User, uselist=False)
     users = db.relationship('User', secondary=user_team_assoc,
         backref=db.backref('teams', lazy='dynamic'))
     _checkpoints = db.relationship('Checkpoint', backref='team', lazy='dynamic')

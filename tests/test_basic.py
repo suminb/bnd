@@ -5,7 +5,7 @@ import pytest
 HOST = 'http://localhost:5000'
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='module')
 def testapp():
     """ setup any state specific to the execution of the given module."""
     app = create_app(None)
