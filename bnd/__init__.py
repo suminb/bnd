@@ -11,6 +11,13 @@ log = Logger()
 login_manager = LoginManager()
 
 
+ADMINS = [
+    'suminb@gmail.com',
+    'seth.ahn@gmail.com',
+    'beingndoing.chair@gmail.com',
+]
+
+
 class AdminModelView(ModelView):
     #@expose('/')
     #def index(self):
@@ -18,7 +25,7 @@ class AdminModelView(ModelView):
 
     def is_accessible(self):
         return not current_user.is_anonymous() and \
-            current_user.email in ['suminb@gmail.com', 'seth.ahn@gmail.com']
+            current_user.email in ADMINS
 
 
 # FIXME: Refacfor the following section
