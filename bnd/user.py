@@ -49,7 +49,9 @@ def user_info():
         try:
             user.data = dict(
                 referrer=form.data['referrer'],
-                # education=form.data['education'],
+                question1=form.data['question1'],
+                question2=form.data['question2'],
+                question3=form.data['question3'],
             )
             user.save()
         except:
@@ -60,7 +62,9 @@ def user_info():
             form.populate_obj(user)
             user.data = json.dumps(dict(
                 referrer=form.data['referrer'],
-                # education=form.data['education'],
+                question1=form.data['question1'],
+                question2=form.data['question2'],
+                question3=form.data['question3'],
             ))
             user.save()
 
