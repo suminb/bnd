@@ -121,4 +121,12 @@
   </form>
 
 </div><!-- end of div.content -->
+<script>
+$(function() {
+  $('input[name=birthdate]').datepicker({
+    format: "yyyy-mm-dd",
+    autoclose: true
+  });
+});
+</script>
 {% endblock %}

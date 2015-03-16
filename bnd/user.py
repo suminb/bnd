@@ -39,6 +39,8 @@ def user_info():
     user = current_user
     form = UserInfoForm(request.form, obj=user)
 
+    #import pdb; pdb.set_trace()
+
     if form.validate_on_submit():
         form.populate_obj(user)
 
@@ -47,7 +49,7 @@ def user_info():
         try:
             user.data = dict(
                 referrer=form.data['referrer'],
-                education=form.data['education'],
+                # education=form.data['education'],
             )
             user.save()
         except:
@@ -55,9 +57,10 @@ def user_info():
             db.session.rollback()
 
             import json
+            form.populate_obj(user)
             user.data = json.dumps(dict(
                 referrer=form.data['referrer'],
-                education=form.data['education'],
+                # education=form.data['education'],
             ))
             user.save()
 
