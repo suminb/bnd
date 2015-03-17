@@ -39,36 +39,27 @@ def user_info():
     user = current_user
     form = UserInfoForm(request.form, obj=user)
 
-    #import pdb; pdb.set_trace()
-
     if form.validate_on_submit():
         form.populate_obj(user)
 
-        # TODO: Refactoring
-        # FIXME: This is not supported by SQLLite
-        try:
-            user.data = dict(
-                referrer=form.data['referrer'],
-                question1=form.data['question1'],
-                question2=form.data['question2'],
-                question3=form.data['question3'],
-            )
-            user.save()
-        except:
-            # FIXME: This is only a temporary workaround
-            db.session.rollback()
+        keys = ('referrer', 'question1', 'question2', 'question3')
 
-            import json
-            form.populate_obj(user)
-            user.data = json.dumps(dict(
-                referrer=form.data['referrer'],
-                question1=form.data['question1'],
-                question2=form.data['question2'],
-                question3=form.data['question3'],
-            ))
-            user.save()
+        data = dict(user.data)
+        for k in keys:
+            data[k] = form.data[k]
+
+        user.data = data
+        user.save()
 
         return redirect('/user/info/2')
+
+    # FIXME: Temporary
+    user.data.setdefault('question1', '')
+    user.data.setdefault('question2', '')
+    user.data.setdefault('question3', '')
+    form.question1.data = user.data['question1']
+    form.question2.data = user.data['question2']
+    form.question3.data = user.data['question3']
 
     context = dict(
         form=form,
