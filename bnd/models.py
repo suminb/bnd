@@ -10,13 +10,15 @@ import click
 
 db = SQLAlchemy()
 
-try:
-    if db.engine.driver != 'psycopg2':
-        JSON = ARRAY = db.String
-    pass
-except RuntimeError:
-    # NOTE: This is a temporary solution
-    JSON = ARRAY = db.String
+JsonType = db.String().with_variant(JSON(), 'postgresql')
+
+# try:
+#     if db.engine.driver != 'psycopg2':
+#         JSON = ARRAY = db.String
+#     pass
+# except RuntimeError:
+#     # NOTE: This is a temporary solution
+#     JSON = ARRAY = db.String
 
 
 class CRUDMixin(object):
@@ -81,7 +83,7 @@ class User(db.Model, UserMixin, CRUDMixin):
     phone = db.Column(db.String)
     address = db.Column(db.String)
     picture = db.Column(db.String)
-    data = db.Column(JSON)
+    data = db.Column(JsonType)
     goals = db.relationship('Goal', backref='user', lazy='dynamic')
     evaluations = db.relationship('Evaluation', backref='user', lazy='dynamic')
 

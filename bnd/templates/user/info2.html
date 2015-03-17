@@ -5,63 +5,52 @@
 
   <div class="text-center">
     <h1>Optional Information</h1>
+
     <p class="lead">추가 입력 정보입니다.</p>
   </div>
 
   <form class="form-horizontal" role="form" method="post" action="">
     {{ form.csrf_token }}
 
-    <div id="section06">
-      <h4>주소</h4>
-      <div class="row">
-        <div class="col-xs-3">
-          <select class="selectpicker show-tick form-control">
-            <option>시/도 선택</option>
-            <option>011</option>
-            <option>012</option>
-            <option>013</option>
-          </select>
-        </div>
-        <div class="col-xs-7">
-          <div class="form-group">
-            <input class="form-control" placeholder="Address">
-          </div>
-        </div>
-        <div class="col-xs-2">
-          <button type="button" class="btn">Lookup</button>
-        </div>
+    <h4>주소</h4>
 
-      </div><!--end row-->
-    </div> <!--end section 06-->
+    <div class="row form-group">
+      <div class="col-xs-10">
+        {{ render_field(form.address, show_label=False, placeholder="주소") }}
+      </div>
+      <div class="col-xs-2">
+        <button type="button" class="btn">Lookup</button>
+      </div>
+    </div>
+    <!--end row-->
 
-    <div id="section07">
-      <h4>학력</h4>
-      <div class="row form-group">
-        <div class="col-sm-6">
+    <h4>학력</h4>
 
-            <input class="form-control" placeholder="출신대학(원)">
-        </div>
-        <div class="col-xs-6">
-            <input class="form-control" placeholder="전공">
-        </div>
-      </div><!--end row-->
-    </div><!--end Section 07-->
+    <div class="row form-group">
+      <div class="col-sm-6">
+        {{ render_field(form.school, placeholder="출신대학(원)") }}
+      </div>
+      <div class="col-xs-6">
+        {{ render_field(form.major, placeholder="전공") }}
+      </div>
+    </div>
+    <!--end row-->
 
-    <div id="section08">
-      <h4>경력</h4>
-      <div class="row form-group">
-        <div class="col-xs-6">
-            <input class="form-control" placeholder="직장명">
-        </div>
-        <div class="col-xs-6">
-            <input class="form-control" placeholder="담당 직무">
-        </div>
+    <h4>경력</h4>
 
-      </div><!--end row-->
-    </div><!--end Section 08-->
+    <div class="row form-group">
+      <div class="col-xs-6">
+        <input class="form-control" placeholder="직장명">
+      </div>
+      <div class="col-xs-6">
+        <input class="form-control" placeholder="담당 직무">
+      </div>
+
+    </div>
+    <!--end row-->
 
     <div class="options text-center">
-      <button class="btn btn-lg btn-green" type="button">완료</button>
+      <button class="btn btn-lg btn-green" type="submit">완료</button>
     </div>
   </form>
 

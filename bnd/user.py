@@ -79,8 +79,6 @@ def user_info():
 @user_module.route('/info/2', methods=['get', 'post'])
 @login_required
 def user_info2():
-    #guser = google.get('userinfo')
-    #user = User.get_by_oauth_id(guser.data['id'])
     user = current_user
 
     form = UserInfoForm2(request.form, obj=user)
@@ -88,7 +86,7 @@ def user_info2():
     if form.validate_on_submit():
         form.populate_obj(user)
 
-        keys = ('question1', 'question2', 'question3')
+        keys = ('school', 'major')
 
         # If the old dict is re-used, the user.data field won't be updated
         data = dict(user.data)
