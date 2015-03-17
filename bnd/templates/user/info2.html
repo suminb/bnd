@@ -40,10 +40,10 @@
 
     <div class="row form-group">
       <div class="col-xs-6">
-        <input class="form-control" placeholder="직장명">
+        {{ render_field(form.company, placeholder="직장명") }}
       </div>
       <div class="col-xs-6">
-        <input class="form-control" placeholder="담당 직무">
+        {{ render_field(form.title, placeholder="담당 직무") }}
       </div>
 
     </div>

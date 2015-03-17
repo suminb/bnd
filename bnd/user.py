@@ -86,17 +86,29 @@ def user_info2():
     if form.validate_on_submit():
         form.populate_obj(user)
 
-        keys = ('school', 'major')
+        # keys = ('school', 'major')
 
         # If the old dict is re-used, the user.data field won't be updated
         data = dict(user.data)
-        for k in keys:
-            data[k] = form.data[k]
+        # for k in keys:
+        #     data[k] = form.data[k]
+
+        # FIXME: Temporary
+        data['education'] = dict(school=form.data['school'], major=form.data['major'])
+        data['career'] = [dict(company=form.data['company'], title=form.data['title'])]
 
         user.data = data
         user.save()
 
         return redirect('/')
+
+    # FIXME: Temporary
+    user.data.setdefault('education', dict(school='', major=''))
+    form.school.data = user.data['education']['school']
+    form.major.data = user.data['education']['major']
+    user.data.setdefault('career', [dict(company='', title='')])
+    form.company.data = user.data['career'][0]['company']
+    form.title.data = user.data['career'][0]['title']
 
     context = dict(
         form=form,

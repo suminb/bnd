@@ -40,8 +40,10 @@ class UserInfoForm(Form):
 
 class UserInfoForm2(Form):
     school = StringField('School', validators=[])
-    major = StringField('Major', validators=[])
-    address = StringField('Major', validators=[])
+    major = StringField('Field of Study', validators=[])
+    address = StringField('Address', validators=[])
+    company = StringField('Company', validators=[])
+    title = StringField('Title', validators=[])
 
 
 
