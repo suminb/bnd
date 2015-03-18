@@ -39,9 +39,11 @@ class UserInfoForm(Form):
 
 
 class UserInfoForm2(Form):
+    address = StringField('Address', validators=[])
+    zipcode = StringField('Zip', validators=[])
+
     school = StringField('School', validators=[])
     major = StringField('Field of Study', validators=[])
-    address = StringField('Address', validators=[])
     company = StringField('Company', validators=[])
     title = StringField('Title', validators=[])
 
