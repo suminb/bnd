@@ -1,6 +1,8 @@
 try:
+    # For Python 2
     from urlparse import urlparse, urlunparse
 except ImportError:
+    # For Python 3
     from urllib.parse import urlparse, urlunparse
 from flask import request, redirect
 from bnd import create_app

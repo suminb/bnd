@@ -39,6 +39,9 @@ def user_info():
     user = current_user
     form = UserInfoForm(request.form, obj=user)
 
+    if user.data is None:
+        user.data = {}
+
     if form.validate_on_submit():
         form.populate_obj(user)
 
@@ -71,8 +74,10 @@ def user_info():
 @login_required
 def user_info2():
     user = current_user
-
     form = UserInfoForm2(request.form, obj=user)
+
+    if user.data is None:
+        user.data = {}
 
     if form.validate_on_submit():
         form.populate_obj(user)

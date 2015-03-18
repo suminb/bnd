@@ -82,8 +82,14 @@ class User(db.Model, UserMixin, CRUDMixin):
     birthdate = db.Column(db.Date)
     phone = db.Column(db.String)
     address = db.Column(db.String)
+    zipcode = db.Column(db.String)
+
+    #: URL of Google profile picture
     picture = db.Column(db.String)
+
+    #: Arbitrary data
     data = db.Column(JsonType)
+
     goals = db.relationship('Goal', backref='user', lazy='dynamic')
     evaluations = db.relationship('Evaluation', backref='user', lazy='dynamic')
 
