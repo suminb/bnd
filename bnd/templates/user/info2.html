@@ -26,10 +26,12 @@
 
     <div class="row">
       <div id="wrap" class="col-sm-12" style="display:none;">
-        <img src="//i1.daumcdn.net/localimg/localimages/07/postcode/320/close.png"
-             id="btnFoldWrap"
-             style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
-             onclick="foldDaumPostcode()" alt="접기 버튼">
+        <!--<button id="close-address-form" class="close" aria-label="Close">-->
+          <!--<span aria-hidden="true">&times;</span>-->
+        <!--</button>-->
+        <span id="close-address-form" class="glyphicon glyphicon-remove"
+              aria-hidden="true"
+              style="position:absolute;right:0px;top:-1px;z-index:1"></span>
       </div>
     </div>
 
@@ -68,8 +70,9 @@
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
     $(function() {
-        $('#address').click(execDaumPostcode);
-        $('#zipcode').click(execDaumPostcode);
+        $('input[name=address]').click(execDaumPostcode);
+        $('input[name=zipcode]').click(execDaumPostcode);
+        $('#close-address-form').click(foldDaumPostcode);
     });
 
     //
