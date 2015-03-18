@@ -35,7 +35,7 @@ def load_user(user_id):
 
 @user_module.route('/info', methods=['get', 'post'])
 @login_required
-def user_info():
+def edit_info():
     user = current_user
     form = UserInfoForm(request.form, obj=user)
 
@@ -72,7 +72,7 @@ def user_info():
 
 @user_module.route('/info/2', methods=['get', 'post'])
 @login_required
-def user_info2():
+def edit_info2():
     user = current_user
     form = UserInfoForm2(request.form, obj=user)
 
@@ -162,7 +162,7 @@ def authorized(resp):
         user = User.create(**payload)
         login_user(user)
 
-        return redirect(url_for('user.user_info'))
+        return redirect(url_for('user.edit_info'))
 
 
 @google.tokengetter

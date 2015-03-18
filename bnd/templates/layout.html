@@ -51,7 +51,8 @@
               My Account <span class="caret"></span></a>
 
             <ul class="dropdown-menu" role="menu">
-              <!--<li class="divider"></li>-->
+              <li><a href="{{ url_for('user.edit_info') }}">My Information</a></li>
+              <li class="divider"></li>
               <li><a href="{{ url_for('user.logout') }}">Logout</a></li>
             </ul>
           </li>
