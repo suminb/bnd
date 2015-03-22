@@ -2,11 +2,15 @@
 {% from 'macros.html' import render_checkpoints, render_goals %}
 {% block content %}
 
+<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+
   <h1>Team: {{ team.name }}</h1>
 
   {{ render_checkpoints(current_user, team, team.checkpoints) }}
   <!-- {{ render_goals(current_user, team, None) }} -->
 
   <div id="rendered-results"></div>
+
+</div>
 
 {% endblock %}

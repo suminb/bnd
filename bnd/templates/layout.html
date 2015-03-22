@@ -10,6 +10,9 @@
   <!-- Optional theme -->
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
+  <link id="bsdp-css" href="/static/bootstrap-datepicker3.css" rel="stylesheet">
+  <script src="/static/bootstrap-datepicker.js"></script>
+
   <link rel="stylesheet" href="/static/main.css">
 
   <!-- Latest compiled and minified JavaScript -->
@@ -48,7 +51,8 @@
               My Account <span class="caret"></span></a>
 
             <ul class="dropdown-menu" role="menu">
-              <!--<li class="divider"></li>-->
+              <li><a href="{{ url_for('user.edit_info') }}">My Information</a></li>
+              <li class="divider"></li>
               <li><a href="{{ url_for('user.logout') }}">Logout</a></li>
             </ul>
           </li>
@@ -89,11 +93,11 @@
         <li>
           <a href="{{ url_for('team.progress', team_id=current_user.current_team.id) }}">진행결과</a>
         </li>
+        {% if current_user.is_chair_of(current_user.current_team) %}
         <li>
-          {% if current_user.is_chair %}
           <a href="{{ url_for('team.members', team_id=current_user.current_team.id) }}">나의 멤버</a>
-          {% endif %}
         </li>
+        {% endif %}
       </ul>
       {% endif %}
 

@@ -88,31 +88,25 @@
     <div class="form-group">
       <h4 class="section">추천인</h4>
       <div class="col-sm-12">
-        {{ form.referrer(class_='form-control',
-        placeholder='A person whom referred this to you') }}
-        <ul class="errors">
-          {% for error in form.referrer.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
+        {{ render_field(form.referrer, show_label=False, placeholder='추천인 이름') }}
       </div>
     </div>
     <div class="form-group">
       <h4 class="section">당신의 인생에서 가장 중요한 질문은?</h4>
       <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder=""/>
+        {{ render_field(form.question1, show_label=False, placeholder='') }}
       </div>
     </div>
     <div class="form-group">
       <h4 class="section">나에게 Being and Doing 이란?</h4>
       <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder=""/>
+        {{ render_field(form.question2, show_label=False, placeholder='') }}
       </div>
     </div>
     <div class="form-group">
       <h4 class="section">Talk to me about this</h4>
       <div class="col-sm-12">
-        <input type="text" class="form-control" placeholder=""/>
+        {{ render_field(form.question3, show_label=False, placeholder='') }}
       </div>
     </div>
     <div class="options text-center">
@@ -121,4 +115,12 @@
   </form>
 
 </div><!-- end of div.content -->
+<script>
+$(function() {
+  $('input[name=birthdate]').datepicker({
+    format: "yyyy-mm-dd",
+    autoclose: true
+  });
+});
+</script>
 {% endblock %}

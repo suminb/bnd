@@ -10,8 +10,15 @@
 
     <div class="options text-center">
       {% if not current_user.is_anonymous() %}
-      <a class="btn btn-lg login" type="button"
-         href="{{ url_for('team.view', team_id=current_user.current_team.id) }}">My Team</a>
+        {% if current_user.has_current_team %}
+        <a class="btn btn-lg login" type="button"
+           href="{{ url_for('team.view', team_id=current_user.current_team.id) }}">My Team</a>
+        {% else %}
+        <span style="color:white;">
+          You don't belong to any team.<br/>
+          Contact administrator.
+        </span>
+        {% endif %}
       {% else %}
       <a class="btn btn-lg gplussign" type="button"
          href="{{ url_for('user.login') }}">Sign in with Google+</a>

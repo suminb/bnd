@@ -4,8 +4,7 @@ from bnd.models import Team, Checkpoint, Goal
 from bnd.forms import GoalForm
 
 from flask import request, render_template, redirect
-from bnd.forms import ApplicationForm
-from bnd.models import db, User, Team, Checkpoint, Goal, Evaluation, Application
+from bnd.models import db, User, Team, Checkpoint, Goal, Evaluation
 
 main_module = Blueprint(
     'main', __name__, template_folder='templates/main')
@@ -17,16 +16,3 @@ def index():
     )
 
     return render_template('index.html', **context)
-
-
-@main_module.route('/application', methods=['get', 'post'])
-def application():
-    form = ApplicationForm(request.form, obj=None)
-
-    if form.validate_on_submit():
-        Application.create(data=form.data)
-
-        return redirect('/')
-
-    context = dict(form=form)
-    return render_template('application.html', **context)
