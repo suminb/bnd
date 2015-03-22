@@ -32,6 +32,11 @@ class CRUDMixin(object):
     @classmethod
     def create(cls, commit=True, **kwargs):
         instance = cls(**kwargs)
+
+        if hasattr(instance, 'timestamp') \
+                and getattr(instance, 'timestamp') is None:
+            instance.timestamp = datetime.utcnow()
+
         return instance.save(commit=commit)
 
     @classmethod
