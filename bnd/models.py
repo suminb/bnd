@@ -214,6 +214,16 @@ class Checkpoint(db.Model, CRUDMixin):
         """All goals which belong to this checkpoint."""
         return Goal.query.filter_by(team_id=self.team_id)
 
+    def evaluations_for_user(self, user):
+        return Evaluation.query.filter_by(user=user, checkpoint=self)
+
+    def average_evaluation_for_user(self, user):
+        average = Evaluation.query.with_entities(
+            func.avg(Evaluation.evaluation)
+        ).filter_by(user=user, checkpoint=self).first()
+
+        return average[0] if average[0] is not None else 0.0
+
 
 class Goal(db.Model, CRUDMixin):
     """One evaluation per checkpoint"""
