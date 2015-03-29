@@ -18,12 +18,13 @@
   <h3>Checkpoints</h3>
   <div class="row checkpoints">
   {% for checkpoint in checkpoints %}
-    <div class="col-sm-2 checkpoint btn">
-      <a class="checkpoint-view" data-team-id="{{ team.id }}"
+    <div class="col-sm-2 checkpoint">
+      <div class="status score-{{ checkpoint.average_evaluation_for_user(user) | round | int }}"></div>
+      <a class="checkpoint-view"
+         data-team-id="{{ team.id }}"
          data-checkpoint-id="{{ checkpoint.id }}"
          href="{{ url_for('checkpoint.view', checkpoint_id=checkpoint.id, team_id=team.id) }}">
-        <div>{{ checkpoint.title }}</div>
-        <span class="label {{ checkpoint_status_class(user.get_checkpoint_status(checkpoint)) }}">{{ user.get_checkpoint_status(checkpoint) }}</span>
+        {{ checkpoint.title }}
       </a>
     </div>
   {% endfor %}
@@ -51,10 +52,9 @@
     </div>
     <div class="col-xs-4 text-right">
         <select class="selectpicker show-tick form-control" name="goal-{{ goal.id }}">
-        <option value="3">3</option>
-        <option value="6">6</option>
-        <option value="9">9</option>
-        <option value="12">12</option>
+        {% for x in range(13) %}
+          <option value="{{ x }}">{{ x }}</option>
+        {% endfor %}
       </select>
     </div>
   </div><!--end row-->

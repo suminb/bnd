@@ -4,15 +4,47 @@ div.content {
   margin: .5em;
 }
 
-div.checkpoints div.checkpoint {
-  margin: .5em 0;
-  text-align: center;
-}
 ul.checkpoint li {
 }
-
-a.checkpoint {
+div.checkpoint {
+  margin: 2px;
+  padding: 0;
+}
+div.checkpoint a {
   display: block;
+  padding: 0.5em;
+  text-align: center;
+  border-left: 1px solid #c0c0c0;
+  border-right: 1px solid #c0c0c0;
+  border-bottom: 1px solid #c0c0c0;
+}
+div.checkpoint .status {
+  height: 6px;
+  background-color: #c0c0c0;
+}
+
+div.checkpoint .status.score-1,
+div.checkpoint .status.score-2,
+div.checkpoint .status.score-3 {
+  background-color: red;
+}
+
+div.checkpoint .status.score-4,
+div.checkpoint .status.score-5,
+div.checkpoint .status.score-6 {
+  background-color: #EF6C00;
+}
+
+div.checkpoint .status.score-7,
+div.checkpoint .status.score-8,
+div.checkpoint .status.score-9 {
+  background-color: #FDD835;
+}
+
+div.checkpoint .status.score-10,
+div.checkpoint .status.score-11,
+div.checkpoint .status.score-12 {
+  background-color: green;
 }
 
 input[name=address]:hover, input[name=zipcode]:hover {

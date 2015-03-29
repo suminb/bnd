@@ -32,6 +32,11 @@ class CRUDMixin(object):
     @classmethod
     def create(cls, commit=True, **kwargs):
         instance = cls(**kwargs)
+
+        if hasattr(instance, 'timestamp') \
+                and getattr(instance, 'timestamp') is None:
+            instance.timestamp = datetime.utcnow()
+
         return instance.save(commit=commit)
 
     @classmethod
@@ -63,6 +68,13 @@ class CRUDMixin(object):
 user_team_assoc = db.Table(
     'user_team_assoc',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('team_id', db.Integer, db.ForeignKey('team.id'))
+)
+
+
+checkpoint_team_assoc = db.Table(
+    'checkpoint_team_assoc',
+    db.Column('checkpoint_id', db.Integer, db.ForeignKey('checkpoint.id')),
     db.Column('team_id', db.Integer, db.ForeignKey('team.id'))
 )
 
@@ -164,8 +176,8 @@ class User(db.Model, UserMixin, CRUDMixin):
 
 class Team(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
-    open_datetime = db.Column(db.DateTime(timezone=True))
-    close_datetime = db.Column(db.DateTime(timezone=True))
+    open_datetime = db.Column(db.DateTime(timezone=False))
+    close_datetime = db.Column(db.DateTime(timezone=False))
     name = db.Column(db.String, unique=True)
     #: Long text to be shown when users are about to join a particular team
     classifier = db.Column(db.String)
@@ -174,7 +186,7 @@ class Team(db.Model, CRUDMixin):
     chair = db.relationship(User, uselist=False)
     users = db.relationship('User', secondary=user_team_assoc,
         backref=db.backref('teams', lazy='dynamic'))
-    _checkpoints = db.relationship('Checkpoint', backref='team', lazy='dynamic')
+    _checkpoints = db.relationship('Checkpoint', secondary=checkpoint_team_assoc, backref='team', lazy='dynamic')
     goals = db.relationship('Goal', backref='team', lazy='dynamic')
 
     def __repr__(self):
@@ -196,8 +208,7 @@ class Team(db.Model, CRUDMixin):
 
 class Checkpoint(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
-    team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
-    due_date = db.Column(db.DateTime(timezone=True))
+    due_date = db.Column(db.DateTime(timezone=False))
     title = db.Column(db.String)
     description = db.Column(db.Text)
     type = db.Column(db.Enum('special', 'online', 'offline', name='checkpoint_type'),
@@ -206,6 +217,9 @@ class Checkpoint(db.Model, CRUDMixin):
     evaluations = db.relationship('Evaluation', backref='checkpoint',
                                   lazy='dynamic')
 
+    teams = db.relationship('Team', secondary=checkpoint_team_assoc, backref='checkpoint',
+                            lazy='dynamic')
+
     def __repr__(self):
         return u"Checkpoint '{}'".format(self.title)
 
@@ -213,6 +227,16 @@ class Checkpoint(db.Model, CRUDMixin):
     def goals(self):
         """All goals which belong to this checkpoint."""
         return Goal.query.filter_by(team_id=self.team_id)
+
+    def evaluations_for_user(self, user):
+        return Evaluation.query.filter_by(user=user, checkpoint=self)
+
+    def average_evaluation_for_user(self, user):
+        average = Evaluation.query.with_entities(
+            func.avg(Evaluation.evaluation)
+        ).filter_by(user=user, checkpoint=self).first()
+
+        return average[0] if average[0] is not None else 0.0
 
 
 class Goal(db.Model, CRUDMixin):
@@ -240,7 +264,7 @@ class Evaluation(db.Model, CRUDMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
     checkpoint_id = db.Column(db.Integer, db.ForeignKey('checkpoint.id'))
-    timestamp = db.Column(db.DateTime(timezone=True))
+    timestamp = db.Column(db.DateTime(timezone=False))
     evaluation = db.Column(db.Integer)
 
 
