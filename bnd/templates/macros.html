@@ -46,64 +46,67 @@
 
 
 {% macro render_goal_eval_form(goal, user) %}
-  <div class="row">
-    <div class="col-xs-8">
-      <h4>{{ goal.title }}</h4>
-    </div>
-    <div class="col-xs-4 text-right">
-        <select class="selectpicker show-tick form-control" name="goal-{{ goal.id }}">
-        {% for x in range(13) %}
-          <option value="{{ x }}">{{ x }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </div><!--end row-->
-  <div class="panel panel-default">
-    <table class="table">
-      <tbody><tr>
-        <td class="col-xs-2 text-center"><h5>Goal Score</h5></td>
-        <td class="col-xs-10 text-center"><h5>Goal description</h5></td>
-      </tr>
-      <tr>
-        <td class="col-xs-2 text-center">
-          <button id="btn-score1" class="btn first" type="button">3 점</button></td>
-        <td class="col-xs-10 text-center">
-          <div class="form-group">
-            <input class="form-control" placeholder="What do you hope to accomplish?"
-                   value="{{ goal.criterion1 }}">
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="col-xs-2 text-center">
-          <button id="btn-score2" class="btn second" type="button">6 점</button></td>
-        <td class="col-xs-10 text-center">
-          <div class="form-group">
-            <input class="form-control" placeholder="What do you hope to accomplish?"
-                   value="{{ goal.criterion2 }}">
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="col-xs-2 text-center">
-          <button id="btn-score3" class="btn third" type="button">9 점</button></td>
-        <td class="col-xs-10 text-center">
-          <div class="form-group">
-            <input class="form-control" placeholder="What do you hope to accomplish?"
-                   value="{{ goal.criterion3 }}">
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="col-xs-2 text-center">
-          <button id="btn-score4" class="btn fourth" type="button">12 점</button></td>
-        <td class="col-xs-10 text-center">
-          <div class="form-group">
-            <input class="form-control" placeholder="What do you hope to accomplish?"
-                   value="{{ goal.criterion4 }}">
-          </div>
-        </td>
-      </tr>
-    </tbody></table>
+<div class="row">
+  <div class="col-xs-8">
+    <h4>{{ goal.title }}</h4>
   </div>
+  <div class="col-xs-4 text-right">
+    <select class="selectpicker show-tick form-control"
+            name="goal-{{ goal.id }}">
+      {% for x in range(13) %}
+      <option value="{{ x }}">{{ x }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div><!--end row-->
+<div class="panel panel-default">
+  <table class="table">
+    <tbody>
+    <tr>
+      <td class="col-xs-2 text-center"><h5>Goal Score</h5></td>
+      <td class="col-xs-10 text-center"><h5>Goal description</h5></td>
+    </tr>
+    <tr>
+      <td class="col-xs-2 text-center">
+        <button id="btn-score1" class="btn first" type="button">3 점</button>
+      </td>
+      <td class="col-xs-10 text-center">
+        <input class="form-control"
+               placeholder="What do you hope to accomplish?"
+               value="{{ goal.criterion1 }}">
+      </td>
+    </tr>
+    <tr>
+      <td class="col-xs-2 text-center">
+        <button id="btn-score2" class="btn second" type="button">6 점</button>
+      </td>
+      <td class="col-xs-10 text-center">
+        <input class="form-control"
+               placeholder="What do you hope to accomplish?"
+               value="{{ goal.criterion2 }}">
+      </td>
+    </tr>
+    <tr>
+      <td class="col-xs-2 text-center">
+        <button id="btn-score3" class="btn third" type="button">9 점</button>
+      </td>
+      <td class="col-xs-10 text-center">
+        <input class="form-control"
+               placeholder="What do you hope to accomplish?"
+               value="{{ goal.criterion3 }}">
+      </td>
+    </tr>
+    <tr>
+      <td class="col-xs-2 text-center">
+        <button id="btn-score4" class="btn fourth" type="button">12 점</button>
+      </td>
+      <td class="col-xs-10 text-center">
+        <input class="form-control"
+               placeholder="What do you hope to accomplish?"
+               value="{{ goal.criterion4 }}">
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 {% endmacro %}

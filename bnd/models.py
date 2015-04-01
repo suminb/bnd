@@ -106,7 +106,7 @@ class User(db.Model, UserMixin, CRUDMixin):
     evaluations = db.relationship('Evaluation', backref='user', lazy='dynamic')
 
     def __repr__(self):
-        return '{}, {} <{}>'.format(
+        return u'{}, {} <{}>'.format(
             self.family_name, self.given_name, self.email)
 
     def goals_for_team(self, team_id):
