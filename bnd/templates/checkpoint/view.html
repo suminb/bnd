@@ -65,7 +65,7 @@
   <div class="mainblock well">
     <h3>Task 02: 목표 달성 평가하기</h3>
     {% for goal in goals %}
-    {{ render_goal_eval_form(goal, current_user) }}
+    {{ render_goal_eval_form(goal, current_user, evaluations[goal.id]) }}
     {% endfor %}
   </div>
 

@@ -20,10 +20,16 @@ def view(checkpoint_id):
     team = Team.get_or_404(team_id)
     goals = Goal.query.filter_by(team_id=team.id, user_id=current_user.id)
 
+    evaluations = {}
+    # FIXME: Revise the following section; use a JOIN statement
+    for goal in goals:
+        evaluations[goal.id] = Evaluation.fetch(current_user.id, checkpoint.id, goal.id)
+
     context = dict(
         checkpoint=checkpoint,
         team=team,
         goals=goals,
+        evaluations=evaluations,
     )
     return render_template('checkpoint/view.html', **context)
 
