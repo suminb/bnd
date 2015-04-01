@@ -2,6 +2,8 @@
 <html>
 <head>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
   <!-- Latest compiled and minified CSS -->
@@ -9,6 +11,9 @@
 
   <!-- Optional theme -->
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+  <link id="bsdp-css" href="/static/bootstrap-datepicker3.css" rel="stylesheet">
+  <script src="/static/bootstrap-datepicker.js"></script>
 
   <link rel="stylesheet" href="/static/main.css">
 
@@ -30,11 +35,15 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Being &amp; Doing</a>
+        <a class="navbar-brand" href="/">Being &amp; Doing</a>
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
+          {% if not current_user.is_anonymous() and current_user.has_current_team %}
+          <li class="active">
+            <a href="{{ url_for('team.view', team_id=current_user.current_team.id) }}">My Team</a>
+          </li>
+          {% endif %}
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
@@ -44,9 +53,7 @@
               My Account <span class="caret"></span></a>
 
             <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
+              <li><a href="{{ url_for('user.edit_info') }}">My Information</a></li>
               <li class="divider"></li>
               <li><a href="{{ url_for('user.logout') }}">Logout</a></li>
             </ul>
@@ -61,81 +68,63 @@
   </div><!-- /.navbar -->
 {% endblock %}
 
+
 <div class="container">
+  {% block sidebar %}
+  <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3" id="sidebar" role="navigation">
 
-<div class="row row-offcanvas row-offcanvas-left">
-  <p class="pull-left visible-xs">
-    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
-  </p>
-
-  <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
-
-    <div class="panel-group" id="accordion">
-      {% if current_user.has_current_team %}
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-one">
-              {{ current_user.current_team.name }}
-            </a>
-          </h4>
-        </div>
-        <div id="collapse-one" class="panel-collapse collapse in">
-          <div class="panel-body">
-            <a href="{{ url_for('team.view', team_id=current_user.current_team.id) }}" class="list-group-item">커리큘럼</a>
-            <a href="{{ url_for('team.progress', team_id=current_user.current_team.id) }}" class="list-group-item">진행결과</a>
-            {% if current_user.is_chair %}
-              <a href="{{ url_for('team.members', team_id=current_user.current_team.id) }}" class="list-group-item">나의 멤버</a>
-            {% endif %}
-          </div>
-        </div>
+    <div id="profile-info" class="sb-section col-xs-12 col-sm-12">
+      <div class="profile-pic">
+        <img style="width:40px;height:40px;margin-right:8px;" src="{{ current_user.picture }}">
       </div>
+      <div class="profile-info">
+        <label>{{ current_user.name }}</label>
+        {% if current_user.has_current_team %}
+        <p>{{ current_user.current_team.name }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="panel-group">
+      {% if current_user.has_current_team %}
+      <h5>{{ current_user.current_team.name }}</h5>
+      <ul>
+        <li>
+          <a href="{{ url_for('team.view', team_id=current_user.current_team.id) }}">커리큘럼</a>
+        </li>
+        <li>
+          <a href="{{ url_for('team.progress', team_id=current_user.current_team.id) }}">진행결과</a>
+        </li>
+        {% if current_user.is_chair_of(current_user.current_team) %}
+        <li>
+          <a href="{{ url_for('team.members', team_id=current_user.current_team.id) }}">나의 멤버</a>
+        </li>
+        {% endif %}
+      </ul>
       {% endif %}
 
       <!--
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-two">
-              Being &amp; Doing 6기
-            </a>
-          </h4>
-        </div>
-        <div id="collapse-two" class="panel-collapse collapse in">
-          <div class="panel-body">
-            <a href="#" class="list-group-item">지원하기</a>
-          </div>
-        </div>
-      </div>
+      <h5>지난 Being &amp; Doing</h5>
+      <ul>
+        <li>
+          <a href="#">Being &amp; Doing 5기</a>
+        </li>
+        <li>
+          <a href="#">Readers 2기</a>
+        </li>
+        <li>
+          <a href="#">Being &amp; Doing 2기</a>
+        </li>
+      </ul>
       -->
-
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-three">
-              지난 Being &amp; Doing
-            </a>
-          </h4>
-        </div>
-        <div id="collapse-three" class="panel-collapse collapse in">
-          <div class="panel-body">
-            <a href="#" class="list-group-item">Being &amp; Doing 5기</a>
-            <a href="#" class="list-group-item">Readers 2기</a>
-            <a href="#" class="list-group-item">Being &amp; Doing 2기</a>
-          </div>
-        </div>
-      </div>
 
     </div><!-- panel-group accordion -->
 
-  </div><!-- sidebar-offcanvas -->
+  </div><!-- sidebar -->
+  {% endblock %}
 
-  <div class="col-xs-12 col-sm-9">
-    {% block content %}{% endblock %}
-  </div><!-- div.content -->
-
-</div><!-- div.row-offcanvas  -->
-</div><!-- div.container -->
+  {% block content %}{% endblock %}
+</div>
 
 </body>
 </html>

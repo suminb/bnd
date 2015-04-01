@@ -39,7 +39,6 @@ def progress(team_id):
         team=team,
         chart_labels=chart_data[0],
         chart_user_evaluations=chart_data[1],
-        chart_team_evaluations=chart_data[2],
     )
     return render_template('team/progress.html', **context)
 
@@ -48,6 +47,10 @@ def progress(team_id):
 @login_required
 def members(team_id):
     team = Team.get_or_404(team_id)
+
+    # TODO: Make a decorator to do this
+    if not current_user.is_chair_of(team):
+        return u'{} is not the chair of {}'.format(current_user, team), 403
 
     context = dict(
         team=team,

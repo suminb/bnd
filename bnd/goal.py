@@ -38,7 +38,7 @@ def view(goal_id):
     return render_template('goal/view.html', **context)
 
 
-@goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(id=None))
+@goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(goal_id=None))
 @goal_module.route('/edit/<goal_id>', methods=['get', 'post'])
 @login_required
 def edit(goal_id):
@@ -50,10 +50,11 @@ def edit(goal_id):
     form = GoalForm(request.form, obj=None)
     if form.validate_on_submit():
         form.populate_obj(goal)
+        goal.user = current_user
         goal.team = current_user.current_team
         goal.save()
 
-        return redirect(url_for('team.view', id=goal.team_id))
+        return redirect(url_for('team.view', team_id=goal.team_id))
 
     context = dict(
         form=form,
