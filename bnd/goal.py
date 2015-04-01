@@ -108,7 +108,7 @@ def evaluate(goal_id):
         evaluation.user = current_user
         evaluation.goal = goal
         evaluation.checkpoint = checkpoint
-        evaluation.evaluation = request.form.get('evaluation')
+        evaluation.score = request.form.get('evaluation')
 
         evaluation.save()
 

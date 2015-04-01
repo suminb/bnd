@@ -45,7 +45,7 @@
 {% endmacro %}
 
 
-{% macro render_goal_eval_form(goal, user) %}
+{% macro render_goal_eval_form(goal, user, evaluation) %}
 <div class="row">
   <div class="col-xs-8">
     <h4>{{ goal.title }}</h4>
@@ -54,7 +54,11 @@
     <select class="selectpicker show-tick form-control"
             name="goal-{{ goal.id }}">
       {% for x in range(13) %}
-      <option value="{{ x }}">{{ x }}</option>
+        {% if evaluation.score == x %}
+          <option value="{{ x }}" selected="selected">{{ x }}</option>
+        {% else %}
+          <option value="{{ x }}">{{ x }}</option>
+        {% endif %}
       {% endfor %}
     </select>
   </div>

@@ -49,6 +49,11 @@ class CRUDMixin(object):
     def get_or_404(cls, id):
         return cls.query.get_or_404(id)
 
+    @classmethod
+    def exists(cls, **kwargs):
+        row = cls.query.filter_by(**kwargs).first()
+        return row is not None
+
     def update(self, commit=True, **kwargs):
         for attr, value in kwargs.iteritems():
             setattr(self, attr, value)
@@ -233,7 +238,7 @@ class Checkpoint(db.Model, CRUDMixin):
 
     def average_evaluation_for_user(self, user):
         average = Evaluation.query.with_entities(
-            func.avg(Evaluation.evaluation)
+            func.avg(Evaluation.score)
         ).filter_by(user=user, checkpoint=self).first()
 
         return average[0] if average[0] is not None else 0.0
@@ -265,7 +270,16 @@ class Evaluation(db.Model, CRUDMixin):
     goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
     checkpoint_id = db.Column(db.Integer, db.ForeignKey('checkpoint.id'))
     timestamp = db.Column(db.DateTime(timezone=False))
-    evaluation = db.Column(db.Integer)
+    score = db.Column(db.Integer)
+
+    @staticmethod
+    def fetch(user_id, checkpoint_id, goal_id):
+        return Evaluation.query\
+            .filter(
+                Evaluation.user_id == user_id,
+                Evaluation.checkpoint_id == checkpoint_id,
+                Evaluation.goal_id == goal_id)\
+            .first()
 
 
 # FIXME: To be relocated to elsewhere
@@ -290,7 +304,7 @@ class EvaluationChart(object):
         user_ids = map(lambda x: x.id, team.users)
 
         team_evaluations = Evaluation.query.with_entities(
-            func.avg(Evaluation.evaluation)
+            func.avg(Evaluation.score)
         ).filter(
             Evaluation.user_id.in_(user_ids)
         ).group_by(
