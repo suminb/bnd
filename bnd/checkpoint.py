@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
-from bnd.models import Checkpoint, Team, Goal, Evaluation
-from bnd.forms import GoalForm
-from bnd.utils import handle_request_type
+from bnd.models import Checkpoint, Team, Goal, Evaluation, db
+from datetime import datetime
 import re
 
 
@@ -37,27 +36,36 @@ def view(checkpoint_id):
 @checkpoint_module.route('/<int:checkpoint_id>/evaluate', methods=['POST'])
 @login_required
 def evaluate(checkpoint_id):
+    """This will be called when a user clicks a submit button on the
+    checkpoint.view page."""
+
     team_id = request.args.get('team_id')
 
     checkpoint = Checkpoint.get_or_404(checkpoint_id)
     team = Team.get_or_404(team_id)
-
-    # TODO: Deal with multiple goals
 
     for k, v in request.form.items():
         m = re.match(r'goal-(?P<goal_id>\d+)', k)
 
         if m is not None:
             goal_id = m.group('goal_id')
-            Evaluation.create(
-                evaluation=v,
-                user=current_user,
-                checkpoint=checkpoint,
-                goal_id=goal_id,
-            )
 
-    context = dict(
-        checkpoint=checkpoint,
-        team=team,
-    )
-    return redirect(url_for('checkpoint.view', checkpoint_id=checkpoint.id, team_id=team.id))
+            evaluation = Evaluation.query.filter_by(
+                user_id=current_user.id,
+                checkpoint_id=checkpoint.id,
+                goal_id=goal_id).first()
+
+            if evaluation is None:
+                Evaluation.create(
+                    score=v,
+                    user=current_user,
+                    checkpoint=checkpoint,
+                    goal_id=goal_id,
+                )
+            else:
+                evaluation.timestamp = datetime.utcnow()
+                evaluation.score = v
+                db.session.commit()
+
+    return redirect(url_for('checkpoint.view', checkpoint_id=checkpoint.id,
+                            team_id=team.id))

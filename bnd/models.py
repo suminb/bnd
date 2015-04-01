@@ -49,6 +49,11 @@ class CRUDMixin(object):
     def get_or_404(cls, id):
         return cls.query.get_or_404(id)
 
+    @classmethod
+    def exists(cls, **kwargs):
+        row = cls.query.filter_by(**kwargs).first()
+        return row is not None
+
     def update(self, commit=True, **kwargs):
         for attr, value in kwargs.iteritems():
             setattr(self, attr, value)
