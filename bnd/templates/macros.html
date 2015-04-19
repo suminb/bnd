@@ -1,13 +1,15 @@
-{% macro render_field(field) %}
+{% macro render_field(field, show_label=True) %}
   <div class="form-group">
-    {{ field.label(class_='col-sm-12') }}
-    <div class="col-sm-12">{{ field(class_='', **kwargs)|safe }}</div>
+    {% if show_label %}
+      {{ field.label(class_='col-sm-12') }}
+    {% endif %}
+    {{ field(class_='form-control', **kwargs)|safe }}
     {% if field.errors %}
-      <ul class="errors">
+    <!--<ul class="errors">-->
       {% for error in field.errors %}
-        <li><span class="label label-danger">{{ error }}</a></li>
+        <div class="label label-danger" style="white-space:normal;">{{ error }}</div>
       {% endfor %}
-      </ul>
+      <!--</ul>-->
     {% endif %}
   </div>
 {% endmacro %}
@@ -16,12 +18,13 @@
   <h3>Checkpoints</h3>
   <div class="row checkpoints">
   {% for checkpoint in checkpoints %}
-    <div class="col-sm-2 checkpoint btn">
-      <a class="checkpoint-view" data-team-id="{{ team.id }}"
+    <div class="col-sm-2 checkpoint">
+      <div class="status score-{{ checkpoint.average_evaluation_for_user(user) | round | int }}"></div>
+      <a class="checkpoint-view"
+         data-team-id="{{ team.id }}"
          data-checkpoint-id="{{ checkpoint.id }}"
          href="{{ url_for('checkpoint.view', checkpoint_id=checkpoint.id, team_id=team.id) }}">
-        <div>{{ checkpoint.title }}</div>
-        <span class="label {{ checkpoint_status_class(user.get_checkpoint_status(checkpoint)) }}">{{ user.get_checkpoint_status(checkpoint) }}</span>
+        {{ checkpoint.title }}
       </a>
     </div>
   {% endfor %}
@@ -41,3 +44,73 @@
   </ul>
 {% endmacro %}
 
+
+{% macro render_goal_eval_form(goal, user, evaluation) %}
+<div class="row">
+  <div class="col-xs-8">
+    <h4>{{ goal.title }}</h4>
+  </div>
+  <div class="col-xs-4 text-right">
+    <select class="selectpicker show-tick form-control"
+            name="goal-{{ goal.id }}">
+      {% for x in range(13) %}
+        {% if evaluation.score == x %}
+          <option value="{{ x }}" selected="selected">{{ x }}</option>
+        {% else %}
+          <option value="{{ x }}">{{ x }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+  </div>
+</div><!--end row-->
+<div class="panel panel-default">
+  <table class="table">
+    <tbody>
+    <tr>
+      <td class="col-xs-2 text-center"><h5>Goal Score</h5></td>
+      <td class="col-xs-10 text-center"><h5>Goal description</h5></td>
+    </tr>
+    <tr>
+      <td class="col-xs-2 text-center">
+        <button id="btn-score1" class="btn first" type="button">3 점</button>
+      </td>
+      <td class="col-xs-10 text-center">
+        <input class="form-control"
+               placeholder="What do you hope to accomplish?"
+               value="{{ goal.criterion1 }}">
+      </td>
+    </tr>
+    <tr>
+      <td class="col-xs-2 text-center">
+        <button id="btn-score2" class="btn second" type="button">6 점</button>
+      </td>
+      <td class="col-xs-10 text-center">
+        <input class="form-control"
+               placeholder="What do you hope to accomplish?"
+               value="{{ goal.criterion2 }}">
+      </td>
+    </tr>
+    <tr>
+      <td class="col-xs-2 text-center">
+        <button id="btn-score3" class="btn third" type="button">9 점</button>
+      </td>
+      <td class="col-xs-10 text-center">
+        <input class="form-control"
+               placeholder="What do you hope to accomplish?"
+               value="{{ goal.criterion3 }}">
+      </td>
+    </tr>
+    <tr>
+      <td class="col-xs-2 text-center">
+        <button id="btn-score4" class="btn fourth" type="button">12 점</button>
+      </td>
+      <td class="col-xs-10 text-center">
+        <input class="form-control"
+               placeholder="What do you hope to accomplish?"
+               value="{{ goal.criterion4 }}">
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+{% endmacro %}

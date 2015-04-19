@@ -38,10 +38,12 @@ def view(goal_id):
     return render_template('goal/view.html', **context)
 
 
-@goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(id=None))
+@goal_module.route('/edit/new', methods=['get', 'post'], defaults=dict(goal_id=None))
 @goal_module.route('/edit/<goal_id>', methods=['get', 'post'])
 @login_required
 def edit(goal_id):
+    checkpoint_id = request.args.get('checkpoint_id')
+
     if goal_id is None:
         goal = Goal()
     else:
@@ -50,10 +52,11 @@ def edit(goal_id):
     form = GoalForm(request.form, obj=None)
     if form.validate_on_submit():
         form.populate_obj(goal)
+        goal.user = current_user
         goal.team = current_user.current_team
         goal.save()
 
-        return redirect(url_for('team.view', id=goal.team_id))
+        return redirect(url_for('checkpoint.view', checkpoint_id=checkpoint_id, team_id=goal.team_id))
 
     context = dict(
         form=form,
@@ -105,7 +108,7 @@ def evaluate(goal_id):
         evaluation.user = current_user
         evaluation.goal = goal
         evaluation.checkpoint = checkpoint
-        evaluation.evaluation = request.form.get('evaluation')
+        evaluation.score = request.form.get('evaluation')
 
         evaluation.save()
 

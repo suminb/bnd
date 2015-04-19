@@ -1,3 +1,5 @@
+"""THIS MODULE IS DEPRECATED"""
+
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
 from bnd.models import Checkpoint, Goal
@@ -15,7 +17,7 @@ def redirect_to_join_team():
 def team_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
-        if current_user.has_current_team:
+        if not current_user.is_anonymous() and current_user.has_current_team:
             return func(*args, **kwargs)
         else:
             return redirect_to_join_team()

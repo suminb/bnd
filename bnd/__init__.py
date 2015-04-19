@@ -1,5 +1,5 @@
 from flask import Flask
-from flask.ext.login import LoginManager
+from flask.ext.login import LoginManager, current_user
 from flask.ext.admin import Admin, BaseView, expose
 from flask.ext.admin.contrib.sqla import ModelView
 from logbook import Logger
@@ -9,16 +9,23 @@ import os
 
 log = Logger()
 login_manager = LoginManager()
-admin = Admin()
 
 
-class AdminIndexView(BaseView):
-    @expose('/')
-    def index(self):
-        return self.render('index.html')
+ADMINS = [
+    'suminb@gmail.com',
+    'seth.ahn@gmail.com',
+    'beingndoing.chair@gmail.com',
+]
 
 
-#admin.index_view = AdminIndexView
+class AdminModelView(ModelView):
+    #@expose('/')
+    #def index(self):
+    #    return self.render('index.html')
+
+    def is_accessible(self):
+        return not current_user.is_anonymous() and \
+            current_user.email in ADMINS
 
 
 # FIXME: Refacfor the following section
@@ -31,12 +38,16 @@ def checkpoint_status_class(status):
         return 'label-default'
 
 
-def create_app(config_filename):
-    app = Flask(__name__)
-    # app.config.from_pyfile(config_filename)
+def create_app(name=__name__, config={},
+               static_folder='static', template_folder='templates'):
+    """NOTE: `db_uri` is only a temporary solution. It shall be replaced by
+    something more robust."""
+    app = Flask(name, static_folder=static_folder, template_folder=template_folder)
     app.secret_key = 'secret'
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
     app.config['DEBUG'] = True
+
+    app.config.update(config)
 
     login_manager.init_app(app)
     login_manager.login_view = 'user.login'
@@ -59,11 +70,11 @@ def create_app(config_filename):
     app.register_blueprint(goal_module, url_prefix='/goal')
     app.register_blueprint(user_module, url_prefix='/user')
 
-
+    admin = Admin()
     admin.init_app(app)
     classes = [User, Team, Checkpoint, Goal, Evaluation]
     for cls in classes:
-        admin.add_view(ModelView(cls, db.session, endpoint='admin_'+cls.__name__))
+        admin.add_view(AdminModelView(cls, db.session, endpoint='admin_' + cls.__name__))
 
     app.jinja_env.globals.update(checkpoint_status_class=checkpoint_status_class)
 

@@ -4,19 +4,13 @@ from flask.ext.login import UserMixin
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON, ARRAY
 from datetime import datetime
-
+import itertools
 import click
 
 
 db = SQLAlchemy()
 
-try:
-    if db.engine.driver != 'psycopg2':
-        JSON = ARRAY = db.String
-    pass
-except RuntimeError:
-    # NOTE: This is a temporary solution
-    JSON = ARRAY = db.String
+JsonType = db.String().with_variant(JSON(), 'postgresql')
 
 
 class CRUDMixin(object):
@@ -30,6 +24,11 @@ class CRUDMixin(object):
     @classmethod
     def create(cls, commit=True, **kwargs):
         instance = cls(**kwargs)
+
+        if hasattr(instance, 'timestamp') \
+                and getattr(instance, 'timestamp') is None:
+            instance.timestamp = datetime.utcnow()
+
         return instance.save(commit=commit)
 
     @classmethod
@@ -41,6 +40,11 @@ class CRUDMixin(object):
     @classmethod
     def get_or_404(cls, id):
         return cls.query.get_or_404(id)
+
+    @classmethod
+    def exists(cls, **kwargs):
+        row = cls.query.filter_by(**kwargs).first()
+        return row is not None
 
     def update(self, commit=True, **kwargs):
         for attr, value in kwargs.iteritems():
@@ -65,12 +69,19 @@ user_team_assoc = db.Table(
 )
 
 
+checkpoint_team_assoc = db.Table(
+    'checkpoint_team_assoc',
+    db.Column('checkpoint_id', db.Integer, db.ForeignKey('checkpoint.id')),
+    db.Column('team_id', db.Integer, db.ForeignKey('team.id'))
+)
+
+
 class User(db.Model, UserMixin, CRUDMixin):
     __table_args__ = (db.UniqueConstraint('oauth_provider', 'oauth_id'), {})
 
     id = db.Column(db.Integer, primary_key=True)
-    oauth_provider = db.Column(db.String, unique=True)
-    oauth_id = db.Column(db.String, unique=True)
+    oauth_provider = db.Column(db.String)
+    oauth_id = db.Column(db.String)
     given_name = db.Column(db.String)
     family_name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
@@ -80,12 +91,19 @@ class User(db.Model, UserMixin, CRUDMixin):
     birthdate = db.Column(db.Date)
     phone = db.Column(db.String)
     address = db.Column(db.String)
-    data = db.Column(JSON)
+    zipcode = db.Column(db.String)
+
+    #: URL of Google profile picture
+    picture = db.Column(db.String)
+
+    #: Arbitrary data
+    data = db.Column(JsonType)
+
     goals = db.relationship('Goal', backref='user', lazy='dynamic')
     evaluations = db.relationship('Evaluation', backref='user', lazy='dynamic')
 
     def __repr__(self):
-        return '{}, {} <{}>'.format(
+        return u'{}, {} <{}>'.format(
             self.family_name, self.given_name, self.email)
 
     def goals_for_team(self, team_id):
@@ -102,10 +120,17 @@ class User(db.Model, UserMixin, CRUDMixin):
             return 'Completed'
         elif checkpoint.due_date is None:
             return 'Unknown'
-        elif checkpoint.due_date < datetime.now():
-            return 'Past-due'
+        # elif checkpoint.due_date < datetime.now():
+        #    return 'Past-due'
+        # else:
+        #    return 'In-progress'
         else:
-            return 'In-progress'
+            return 'Unknown'
+
+    @property
+    def name(self):
+        # TODO: i18n
+        return u'{}, {}'.format(self.family_name, self.given_name)
 
     @property
     def has_current_team(self):
@@ -125,11 +150,8 @@ class User(db.Model, UserMixin, CRUDMixin):
     def past_teams(self):
         raise NotImplementedError()
 
-    @property
-    def is_chair(self):
-        import warnings
-        warnings.warn('User.is_char() is not completely implemented')
-        return True
+    def is_chair_of(self, team):
+        return team.chair is not None and self.id == team.chair.id
 
     @staticmethod
     def get_by_oauth_id(oauth_id):
@@ -151,14 +173,17 @@ class User(db.Model, UserMixin, CRUDMixin):
 
 class Team(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
-    open_datetime = db.Column(db.DateTime(timezone=True))
-    close_datetime = db.Column(db.DateTime(timezone=True))
+    open_datetime = db.Column(db.DateTime(timezone=False))
+    close_datetime = db.Column(db.DateTime(timezone=False))
     name = db.Column(db.String, unique=True)
     #: Long text to be shown when users are about to join a particular team
-    poster = db.Column(db.Text)
+    classifier = db.Column(db.String)
+    description = db.Column(db.Text)
+    chair_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    chair = db.relationship(User, uselist=False)
     users = db.relationship('User', secondary=user_team_assoc,
         backref=db.backref('teams', lazy='dynamic'))
-    checkpoints = db.relationship('Checkpoint', backref='team', lazy='dynamic')
+    _checkpoints = db.relationship('Checkpoint', secondary=checkpoint_team_assoc, backref='team', lazy='dynamic')
     goals = db.relationship('Goal', backref='team', lazy='dynamic')
 
     def __repr__(self):
@@ -172,25 +197,43 @@ class Team(db.Model, CRUDMixin):
     def regular_checkpoints(self):
         return filter(lambda x: x.type != 'special', self.checkpoints)
 
+    @property
+    def checkpoints(self):
+        from operator import attrgetter
+        return sorted(self._checkpoints, key=attrgetter('due_date'))
+
 
 class Checkpoint(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
-    team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
-    due_date = db.Column(db.DateTime(timezone=True))
+    due_date = db.Column(db.DateTime(timezone=False))
     title = db.Column(db.String)
     description = db.Column(db.Text)
-    type = db.Column(db.Enum('special', 'online', 'offline', name='type'),
+    type = db.Column(db.Enum('special', 'online', 'offline', name='checkpoint_type'),
                      nullable=False, default='offline')
 
     evaluations = db.relationship('Evaluation', backref='checkpoint',
                                   lazy='dynamic')
+
+    teams = db.relationship('Team', secondary=checkpoint_team_assoc, backref='checkpoint',
+                            lazy='dynamic')
 
     def __repr__(self):
         return u"Checkpoint '{}'".format(self.title)
 
     @property
     def goals(self):
+        """All goals which belong to this checkpoint."""
         return Goal.query.filter_by(team_id=self.team_id)
+
+    def evaluations_for_user(self, user):
+        return Evaluation.query.filter_by(user=user, checkpoint=self)
+
+    def average_evaluation_for_user(self, user):
+        average = Evaluation.query.with_entities(
+            func.avg(Evaluation.score)
+        ).filter_by(user=user, checkpoint=self).first()
+
+        return average[0] if average[0] is not None else 0.0
 
 
 class Goal(db.Model, CRUDMixin):
@@ -198,6 +241,8 @@ class Goal(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
+    type = db.Column(db.Enum(u'전공', u'운동', u'예술', u'취미', u'생활', u'기타', name='goal_type'),
+                     nullable=False, default='offline')
     title = db.Column(db.String)
     content = db.Column(db.Text)
     criterion1 = db.Column(db.String)
@@ -216,60 +261,96 @@ class Evaluation(db.Model, CRUDMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'))
     checkpoint_id = db.Column(db.Integer, db.ForeignKey('checkpoint.id'))
-    timestamp = db.Column(db.DateTime(timezone=True))
-    evaluation = db.Column(db.Integer)
+    timestamp = db.Column(db.DateTime(timezone=False))
+    score = db.Column(db.Integer)
 
-
-class Application(db.Model, CRUDMixin):
-    """User application. Assumes the application cannot be modified once
-    submitted."""
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    timestamp = db.Column(db.DateTime(timezone=True))
-    #: A generic field to contain auxiliary information
-    data = db.Column(JSON)
-
+    @staticmethod
+    def fetch(user_id, checkpoint_id, goal_id):
+        return Evaluation.query\
+            .filter(
+                Evaluation.user_id == user_id,
+                Evaluation.checkpoint_id == checkpoint_id,
+                Evaluation.goal_id == goal_id)\
+            .first()
 
 
 # FIXME: To be relocated to elsewhere
 class EvaluationChart(object):
-    def extract(self, user, team):
-
-        checkpoint_ids = map(lambda x: x.id, team.regular_checkpoints)
-
-        user_ids = map(lambda x: x.id, team.users)
+    def extract_user_data(self, user, checkpoint_ids):
 
         user_evaluations = Evaluation.query.filter_by(
             user_id=user.id,
         ).filter(
             Evaluation.checkpoint_id.in_(checkpoint_ids)
-        ).all()
+        ).group_by(
+            Evaluation.checkpoint_id
+        ).group_by(
+            Evaluation.id,
+            Evaluation.goal_id
+        )
+
+        return user_evaluations.all()
+
+    def extract_team_data(self, team):
+
+        user_ids = map(lambda x: x.id, team.users)
 
         team_evaluations = Evaluation.query.with_entities(
-            func.avg(Evaluation.evaluation)
+            func.avg(Evaluation.score)
         ).filter(
-            Evaluation.user_id.in_(user_ids),
-        ).group_by(Evaluation.checkpoint_id).all()
+            Evaluation.user_id.in_(user_ids)
+        ).group_by(
+            Evaluation.checkpoint_id
+        ).group_by(
+            Evaluation.goal_id
+        )
 
-        return user_evaluations, team_evaluations
+        return team_evaluations.all()
 
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
-        user_evaluations, team_evaluations = self.extract(user, team)
+        # checkpoint_ids = map(lambda x: x.id, team.regular_checkpoints)
+        # user_evaluations = self.extract_user_data(user, checkpoint_ids)
+        # team_evaluations = self.extract_team_data(team)
+        #
+        # eval_dict = {}
+        #
+        # evals = map(lambda x: (x.checkpoint.title, x.goal_id, x.evaluation), user_evaluations)
+        #
+        # for e in evals:
+        #     key = (e[1], e[0])
+        #     value = e[2]
+        #
+        #     eval_dict[key] = value
+        #
+        # kvs = list(zip(*evals))
+        #
+        # checkpoint_ids = set(kvs[0])
+        # goal_ids = set(kvs[1])
+        #
+        # evals_per_goal = {}
+        #
+        # for goal_id in goal_ids:
+        #     for checkpoint_id in checkpoint_ids:
+        #         key = (goal_id, checkpoint_id)
+        #         evals_per_goal.setdefault(goal_id, [])
+        #         if key in eval_dict:
+        #             evals_per_goal[goal_id].append(eval_dict[key])
+        #         else:
+        #             evals_per_goal[goal_id].append(0)
+        #
+        # tuples = map(lambda x: (x.checkpoint.title, x.evaluation),
+        #              user_evaluations)
+        #
+        # try:
+        #     labels, goal_ids, evaluations = zip(*evals)
+        #
+        #     import json
+        #     return json.dumps(labels), json.dumps(evals_per_goal)
+        # except:
+        #     return [[], {}]
 
-        tuples = map(lambda x: (x.checkpoint.title, x.evaluation),
-                     user_evaluations)
-
-        # if len(tuples) > 0:
-        try:
-            labels, evaluations = zip(*tuples)
-
-            import json
-            return json.dumps(labels), json.dumps(evaluations), \
-                json.dumps(team_evaluations)
-        except:
-            return [[], [], []]
+        return [[], {}]
 
 
 @click.group()
@@ -280,9 +361,18 @@ def cli():
 @cli.command()
 def create_all():
     from bnd import create_app
-    app = create_app(None)
+    app = create_app(__name__)
     with app.app_context():
         db.create_all()
+
+
+@cli.command()
+def drop_all():
+    from bnd import create_app
+    app = create_app(__name__)
+    with app.app_context():
+        db.drop_all()
+
 
 
 if __name__ == '__main__':
