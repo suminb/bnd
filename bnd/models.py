@@ -12,14 +12,6 @@ db = SQLAlchemy()
 
 JsonType = db.String().with_variant(JSON(), 'postgresql')
 
-# try:
-#     if db.engine.driver != 'psycopg2':
-#         JSON = ARRAY = db.String
-#     pass
-# except RuntimeError:
-#     # NOTE: This is a temporary solution
-#     JSON = ARRAY = db.String
-
 
 class CRUDMixin(object):
     """Copied from https://realpython.com/blog/python/python-web-applications-with-flask-part-ii/
