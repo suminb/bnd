@@ -4,6 +4,7 @@ from flask_oauthlib.client import OAuth
 from bnd import login_manager, log
 from bnd.models import db, User
 from bnd.forms import UserInfoForm, UserInfoForm2
+from datetime import datetime
 
 import os
 
@@ -45,6 +46,12 @@ def edit_info():
     if form.validate_on_submit():
         form.populate_obj(user)
 
+        # FIMXE: Refactor the following statement
+        strtime = '{}-{}-{}'.format(form.birthdate_year.data,
+                                    form.birthdate_month.data,
+                                    form.birthdate_day.data)
+        user.birthdate = datetime.strptime(strtime, '%Y-%m-%d')
+
         keys = ('referrer', 'question1', 'question2', 'question3')
 
         data = dict(user.data)
@@ -63,6 +70,11 @@ def edit_info():
     form.question1.data = user.data['question1']
     form.question2.data = user.data['question2']
     form.question3.data = user.data['question3']
+
+    # FIXME: Temporary
+    form.birthdate_year.data = user.birthdate.strftime('%Y')
+    form.birthdate_month.data = user.birthdate.strftime('%m')
+    form.birthdate_day.data = user.birthdate.strftime('%d')
 
     context = dict(
         form=form,

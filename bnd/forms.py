@@ -27,7 +27,11 @@ class UserInfoForm(Form):
         'gender',
         choices=[('male', 'Male'), ('female', 'Female')],
         validators=[DataRequired()])
-    birthdate = DateField('birthdate', validators=[DataRequired()])
+
+    birthdate_year = StringField('birthdate_year', validators=[DataRequired()])
+    birthdate_month = StringField('birthdate_month', validators=[DataRequired()])
+    birthdate_day = StringField('birthdate_day', validators=[DataRequired()])
+
     email = EmailField('email', validators=[DataRequired()])
     phone = TelField('phone', validators=[DataRequired()])
     referrer = StringField('referrer', validators=[])
