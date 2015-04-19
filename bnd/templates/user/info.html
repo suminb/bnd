@@ -13,20 +13,10 @@
     <div class="form-group">
       <h4 class="section">이름</h4>
       <div class="col-sm-6">
-        {{ form.family_name(class_='form-control', placeholder='Family name') }}
-        <ul class="errors">
-          {% for error in form.family_name.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
+        {{ render_field(form.family_name, show_label=False, placeholder='성') }}
       </div>
       <div class="col-sm-6">
-        {{ form.given_name(class_='form-control', placeholder='Given name') }}
-        <ul class="errors">
-          {% for error in form.given_name.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
+        {{ render_field(form.given_name, show_label=False, placeholder='이름') }}
       </div>
     </div>
     <div class="form-group">
@@ -45,44 +35,33 @@
             /> Female
           </label>
         </div>
-        <ul class="errors">
-          {% for error in form.gender.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
+        {% for error in form.gender.errors %}
+        <div class="label label-danger">{{ error }}</div>
+        {% endfor %}
       </div>
     </div>
     <div class="form-group">
       <h4 class="section">생년월일</h4>
-      <div class="col-sm-12">
-        {{ form.birthdate(class_='form-control') }}
-        <ul class="errors">
-          {% for error in form.birthdate.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
+      <div class="col-sm-4">
+        {{ render_field(form.birthdate_year, show_label=False, placeholder='YYYY') }}
+      </div>
+      <div class="col-sm-4">
+        {{ render_field(form.birthdate_month, show_label=False, placeholder='MM') }}
+      </div>
+      <div class="col-sm-4">
+        {{ render_field(form.birthdate_day, show_label=False, placeholder='DD') }}
       </div>
     </div>
     <div class="form-group">
       <h4 class="section">전화번호</h4>
       <div class="col-sm-12">
-        {{ form.phone(class_='form-control', placeholder='010-1234-5678') }}
-        <ul class="errors">
-          {% for error in form.phone.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
+        {{ render_field(form.phone, show_label=False, placeholder='010-1234-5678') }}
       </div>
     </div>
     <div class="form-group">
       <h4 class="section">이메일</h4>
       <div class="col-sm-12">
-        {{ form.email(class_='form-control', placeholder='your@email.com') }}
-        <ul class="errors">
-          {% for error in form.email.errors %}
-          <li>{{ error }}</li>
-          {% endfor %}
-        </ul>
+        {{ render_field(form.email, show_label=False, placeholder='your@email.com') }}
       </div>
     </div>
     <div class="form-group">

@@ -1,10 +1,9 @@
 # -*- coding: utf8 -*-
 from flask_wtf import Form
 from wtforms.fields.html5 import EmailField, TelField
-from wtforms import Field, StringField, RadioField, DateField, TextAreaField, SelectField
-from wtforms import FieldList
+from wtforms import Field, StringField, RadioField, SelectField, IntegerField
 from wtforms.widgets import ListWidget
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, NumberRange
 
 
 class MultipleRadioFields(Field):
@@ -27,7 +26,17 @@ class UserInfoForm(Form):
         'gender',
         choices=[('male', 'Male'), ('female', 'Female')],
         validators=[DataRequired()])
-    birthdate = DateField('birthdate', validators=[DataRequired()])
+
+    birthdate_year = IntegerField(
+        'birthdate_year',
+        validators=[DataRequired(), NumberRange(min=1900, max=2015)])
+    birthdate_month = IntegerField(
+        'birthdate_month',
+        validators=[DataRequired(), NumberRange(min=1, max=12)])
+    birthdate_day = IntegerField(
+        'birthdate_day',
+        validators=[DataRequired(), NumberRange(min=1, max=31)])
+
     email = EmailField('email', validators=[DataRequired()])
     phone = TelField('phone', validators=[DataRequired()])
     referrer = StringField('referrer', validators=[])
@@ -37,14 +46,14 @@ class UserInfoForm(Form):
     question3 = StringField(u'Talk to me about this')
 
 
-
 class UserInfoForm2(Form):
+    address = StringField('Address', validators=[])
+    zipcode = StringField('Zip', validators=[])
+
     school = StringField('School', validators=[])
     major = StringField('Field of Study', validators=[])
-    address = StringField('Address', validators=[])
     company = StringField('Company', validators=[])
     title = StringField('Title', validators=[])
-
 
 
 class GoalForm(Form):

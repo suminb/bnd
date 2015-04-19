@@ -4,6 +4,7 @@ from flask_oauthlib.client import OAuth
 from bnd import login_manager, log
 from bnd.models import db, User
 from bnd.forms import UserInfoForm, UserInfoForm2
+from datetime import datetime
 
 import os
 
@@ -35,12 +36,21 @@ def load_user(user_id):
 
 @user_module.route('/info', methods=['get', 'post'])
 @login_required
-def user_info():
+def edit_info():
     user = current_user
     form = UserInfoForm(request.form, obj=user)
 
+    if user.data is None:
+        user.data = {}
+
     if form.validate_on_submit():
         form.populate_obj(user)
+
+        # FIMXE: Refactor the following statement
+        strtime = '{}-{}-{}'.format(form.birthdate_year.data,
+                                    form.birthdate_month.data,
+                                    form.birthdate_day.data)
+        user.birthdate = datetime.strptime(strtime, '%Y-%m-%d')
 
         keys = ('referrer', 'question1', 'question2', 'question3')
 
@@ -61,6 +71,11 @@ def user_info():
     form.question2.data = user.data['question2']
     form.question3.data = user.data['question3']
 
+    # FIXME: Temporary
+    form.birthdate_year.data = user.birthdate.strftime('%Y')
+    form.birthdate_month.data = user.birthdate.strftime('%m')
+    form.birthdate_day.data = user.birthdate.strftime('%d')
+
     context = dict(
         form=form,
     )
@@ -69,10 +84,12 @@ def user_info():
 
 @user_module.route('/info/2', methods=['get', 'post'])
 @login_required
-def user_info2():
+def edit_info2():
     user = current_user
-
     form = UserInfoForm2(request.form, obj=user)
+
+    if user.data is None:
+        user.data = {}
 
     if form.validate_on_submit():
         form.populate_obj(user)
@@ -157,7 +174,7 @@ def authorized(resp):
         user = User.create(**payload)
         login_user(user)
 
-        return redirect(url_for('user.user_info'))
+        return redirect(url_for('user.edit_info'))
 
 
 @google.tokengetter

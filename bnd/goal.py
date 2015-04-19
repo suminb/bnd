@@ -42,6 +42,8 @@ def view(goal_id):
 @goal_module.route('/edit/<goal_id>', methods=['get', 'post'])
 @login_required
 def edit(goal_id):
+    checkpoint_id = request.args.get('checkpoint_id')
+
     if goal_id is None:
         goal = Goal()
     else:
@@ -54,7 +56,7 @@ def edit(goal_id):
         goal.team = current_user.current_team
         goal.save()
 
-        return redirect(url_for('team.view', team_id=goal.team_id))
+        return redirect(url_for('checkpoint.view', checkpoint_id=checkpoint_id, team_id=goal.team_id))
 
     context = dict(
         form=form,
@@ -106,7 +108,7 @@ def evaluate(goal_id):
         evaluation.user = current_user
         evaluation.goal = goal
         evaluation.checkpoint = checkpoint
-        evaluation.evaluation = request.form.get('evaluation')
+        evaluation.score = request.form.get('evaluation')
 
         evaluation.save()
 

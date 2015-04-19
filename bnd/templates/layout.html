@@ -2,6 +2,8 @@
 <html>
 <head>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
   <!-- Latest compiled and minified CSS -->
@@ -51,7 +53,8 @@
               My Account <span class="caret"></span></a>
 
             <ul class="dropdown-menu" role="menu">
-              <!--<li class="divider"></li>-->
+              <li><a href="{{ url_for('user.edit_info') }}">My Information</a></li>
+              <li class="divider"></li>
               <li><a href="{{ url_for('user.logout') }}">Logout</a></li>
             </ul>
           </li>
