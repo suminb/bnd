@@ -3,13 +3,13 @@
     {% if show_label %}
       {{ field.label(class_='col-sm-12') }}
     {% endif %}
-    <div class="col-sm-12">{{ field(class_='form-control', **kwargs)|safe }}</div>
+    {{ field(class_='form-control', **kwargs)|safe }}
     {% if field.errors %}
-      <ul class="errors">
+    <!--<ul class="errors">-->
       {% for error in field.errors %}
-        <li><span class="label label-danger">{{ error }}</a></li>
+        <div class="label label-danger" style="white-space:normal;">{{ error }}</div>
       {% endfor %}
-      </ul>
+      <!--</ul>-->
     {% endif %}
   </div>
 {% endmacro %}
