@@ -306,6 +306,33 @@ class EvaluationChart(object):
 
         # return user_evaluations.all()
 
+    def get_user_data(self, user, team):
+        """
+        :param user:
+        :param team:
+
+        :type user: User
+        :type team: Team
+
+        :return: A dictionary containing user evaluation data for each goal
+        """
+        checkpoint_ids = [c.id for c in team.regular_checkpoints]
+        goals = [g for g in self.get_current_goals(user)]
+
+        evals = {}
+
+        # For each goal,
+        for index, goal in enumerate(goals):
+            evals[goal.id] = {}
+
+            for checkpoint_id in checkpoint_ids:
+                evals[goal.id][checkpoint_id] = 0.0
+
+            for checkpoint_id, score in self.get_user_evaluations_for_goal(user, goal):
+                evals[goal.id][checkpoint_id] = score
+
+        return evals
+
     def extract_team_data(self, team):
 
         user_ids = [u.id for u in team.users]
@@ -342,57 +369,25 @@ class EvaluationChart(object):
 
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
-        checkpoint_ids = [c.id for c in team.regular_checkpoints]
-        labels = [c.title for c in team.regular_checkpoints]
-        goals = [g for g in self.get_current_goals(user)]
 
-        evals = []
+        labels = [(c.id, c.title) for c in team.regular_checkpoints]
 
-        # For each goal,
-        for goal in goals:
-            evals.append([])
-            for checkpoint_id, score in self.get_user_evaluations_for_goal(user, goal):
+        goal_ids = [g.id for g in self.get_current_goals(user)]
 
+        user_data = self.get_user_data(user, team)
 
+        arrays = [None] * (len(goal_ids) + 1)
 
-        evals = [(x.title, x.evaluation.goal_id, x.evaluation.avg) for x in user_evaluations]
-        import pdb; pdb.set_trace()
-        #
-        # for e in evals:
-        #     key = (e[1], e[0])
-        #     value = e[2]
-        #
-        #     eval_dict[key] = value
-        #
-        # kvs = list(zip(*evals))
-        #
-        # checkpoint_ids = set(kvs[0])
-        # goal_ids = set(kvs[1])
-        #
-        # evals_per_goal = {}
-        #
-        # for goal_id in goal_ids:
-        #     for checkpoint_id in checkpoint_ids:
-        #         key = (goal_id, checkpoint_id)
-        #         evals_per_goal.setdefault(goal_id, [])
-        #         if key in eval_dict:
-        #             evals_per_goal[goal_id].append(eval_dict[key])
-        #         else:
-        #             evals_per_goal[goal_id].append(0)
-        #
-        # tuples = map(lambda x: (x.checkpoint.title, x.evaluation),
-        #              user_evaluations)
-        #
-        # try:
-        #     labels, goal_ids, evaluations = zip(*evals)
-        #
-        #     import json
-        #     return json.dumps(labels), json.dumps(evals_per_goal)
-        # except:
-        #     return [[], {}]
+        # First element is a list of labels
+        arrays[0] = labels
 
-        return [[], {}]
+        for index, goal_id in enumerate(goal_ids):
+            arrays[index + 1] = []
 
+            for checkpoint_id, label in labels:
+                arrays[index + 1].append(user_data[goal_id][checkpoint_id])
+
+        return arrays
 
 @click.group()
 def cli():
