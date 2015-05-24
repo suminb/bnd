@@ -278,22 +278,37 @@ class Evaluation(db.Model, CRUDMixin):
 class EvaluationChart(object):
     def extract_user_data(self, user, checkpoint_ids):
 
-        user_evaluations = Evaluation.query.filter_by(
-            user_id=user.id,
-        ).filter(
-            Evaluation.checkpoint_id.in_(checkpoint_ids)
-        ).group_by(
-            Evaluation.checkpoint_id
-        ).group_by(
-            Evaluation.id,
-            Evaluation.goal_id
-        )
+        # FIXME: Potential risk of SQL injection
+        raw_query = """
+        SELECT title, checkpoint.id, goal_id, score FROM checkpoint LEFT JOIN (
+            SELECT checkpoint_id, goal_id, avg(score) AS score FROM evaluation
+            WHERE user_id={0}
+            GROUP BY checkpoint_id, goal_id
+        ) AS evaluations ON checkpoint.id=evaluations.checkpoint_id
+        WHERE checkpoint.id IN ({1})
+        """.format(user.id, ','.join(map(str, checkpoint_ids)))
 
-        return user_evaluations.all()
+        # inner_query = Evaluation.query.with_entities(
+        #     Evaluation.checkpoint_id, func.avg(Evaluation.score)
+        # ).filter(
+        #     Evaluation.user_id==user.id
+        # ).group_by(
+        #     Evaluation.checkpoint_id
+        # ).subquery()
+        #
+        # user_evaluations = Checkpoint.query.outerjoin(
+        #     inner_query.alias('evaluation'), Evaluation.checkpoint_id==Checkpoint.id
+        # ).filter(
+        #     Checkpoint.id.in_(checkpoint_ids)
+        # )
+
+        return db.engine.execute(raw_query)
+
+        # return user_evaluations.all()
 
     def extract_team_data(self, team):
 
-        user_ids = map(lambda x: x.id, team.users)
+        user_ids = [u.id for u in team.users]
 
         team_evaluations = Evaluation.query.with_entities(
             func.avg(Evaluation.score)
@@ -307,15 +322,41 @@ class EvaluationChart(object):
 
         return team_evaluations.all()
 
+    def get_current_goals(self, user):
+        goals = Goal.query.filter(
+            Goal.user_id==user.id,
+            Goal.team_id==user.current_team.id,
+        )
+        return goals.all()
+
+    def get_user_evaluations_for_goal(self, user, goal):
+        evaluations = Evaluation.query.with_entities(
+            Evaluation.checkpoint_id,
+            func.avg(Evaluation.score)
+        ).filter(
+            Evaluation.user_id==user.id, Evaluation.goal_id==goal.id
+        ).group_by(
+            Evaluation.checkpoint_id
+        )
+        return [(int(x[0]), float(x[1])) for x in evaluations.all()]
+
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
-        # checkpoint_ids = map(lambda x: x.id, team.regular_checkpoints)
-        # user_evaluations = self.extract_user_data(user, checkpoint_ids)
-        # team_evaluations = self.extract_team_data(team)
-        #
-        # eval_dict = {}
-        #
-        # evals = map(lambda x: (x.checkpoint.title, x.goal_id, x.evaluation), user_evaluations)
+        checkpoint_ids = [c.id for c in team.regular_checkpoints]
+        labels = [c.title for c in team.regular_checkpoints]
+        goals = [g for g in self.get_current_goals(user)]
+
+        evals = []
+
+        # For each goal,
+        for goal in goals:
+            evals.append([])
+            for checkpoint_id, score in self.get_user_evaluations_for_goal(user, goal):
+
+
+
+        evals = [(x.title, x.evaluation.goal_id, x.evaluation.avg) for x in user_evaluations]
+        import pdb; pdb.set_trace()
         #
         # for e in evals:
         #     key = (e[1], e[0])
