@@ -7,7 +7,7 @@ from logbook import Logger
 import os
 
 
-__version__ = '0.9.2'
+__version__ = '0.9.3'
 
 
 log = Logger()
@@ -50,7 +50,8 @@ def create_app(name=__name__, config={},
     app.secret_key = 'secret'
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
     app.config['DEBUG'] = True
-    app.config['REDIS_URL'] = os.environ.get('REDIS_URL')
+    app.config['REDIS_URL'] = os.environ.get(
+        'REDIS_URL', 'redis://:password@localhost:6379/0')
 
     app.config.update(config)
 
