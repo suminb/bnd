@@ -38,7 +38,7 @@ def progress(team_id):
     context = dict(
         team=team,
         chart_labels=chart_data[0],
-        chart_user_evaluations=chart_data[1],
+        chart_user_evaluations=chart_data[1:],
     )
     return render_template('team/progress.html', **context)
 
