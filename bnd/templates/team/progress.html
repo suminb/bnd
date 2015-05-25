@@ -15,33 +15,31 @@
 
   <script src="/static/chart.js"></script>
   <script>
+    var colors = [
+      "rgba(240,200,200,0.5)",
+      "rgba(200,240,200,0.5)",
+      "rgba(200,200,240,0.5)"
+    ];
     var options = Chart.defaults.Bar;
+    options['scaleOverride'] = true;
+    options['scaleSteps'] = 4;
+    options['scaleStepWidth'] = 3;
+    options['scaleStartValue'] = 0;
+
     var evalsPerGoal = {{ chart_user_evaluations | tojson | safe }};
     var data = {
         labels: {{ chart_labels | tojson | safe }},
-        datasets: [
-            {
-                label: "My First dataset",
-                fillColor: "rgba(220,220,220,0.5)",
+        datasets: $.map(evalsPerGoal, function(v, i) {
+            return {
+                label: "(" + i + ")",
+                fillColor: colors[i],
                 strokeColor: "rgba(220,220,220,0.8)",
                 highlightFill: "rgba(220,220,220,0.75)",
                 highlightStroke: "rgba(220,220,220,1)",
-                data: evalsPerGoal[0] // FIXME: Remove hard-coded values
+                data: v
             }
-        ]
+        })
     };
-
-    /*
-    ,
-            {
-                label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.5)",
-                strokeColor: "rgba(151,187,205,0.8)",
-                highlightFill: "rgba(151,187,205,0.75)",
-                highlightStroke: "rgba(151,187,205,1)",
-                data: evalsPerGoal[1] // FIXME: Remove hard-coded values
-            }
-    */
 
     $(function() {
         // Get context with jQuery - using jQuery's .get() method.
