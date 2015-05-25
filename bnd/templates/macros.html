@@ -1,7 +1,7 @@
 {% macro render_field(field, show_label=True) %}
   <div class="form-group">
     {% if show_label %}
-      {{ field.label(class_='col-sm-12') }}
+      {{ field.label(class_='') }}
     {% endif %}
     {{ field(class_='form-control', **kwargs)|safe }}
     {% if field.errors %}
