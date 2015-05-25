@@ -1,16 +1,33 @@
 # -*- coding: utf-8 -*-
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import UserMixin
+from flask.ext.login import UserMixin, current_user
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON, ARRAY
 from datetime import datetime
-import itertools
+from bnd import redis_store
 import click
+import json
 
 
 db = SQLAlchemy()
 
 JsonType = db.String().with_variant(JSON(), 'postgresql')
+
+
+def cached(func):
+    """Cache data at a Redis store."""
+    def wrapper(self, *args, **kwargs):
+        key = 'func:{}-user:{}'.format(func.func_name, current_user.id)
+        data = redis_store.get(key)
+
+        if data is None:
+            data = func(self, *args, **kwargs)
+            redis_store.set(key, json.dumps(data))
+        else:
+            data = json.loads(data)
+
+        return data
+    return wrapper
 
 
 class CRUDMixin(object):
@@ -367,6 +384,7 @@ class EvaluationChart(object):
         )
         return [(int(x[0]), float(x[1])) for x in evaluations.all()]
 
+    @cached
     def get_chart_data(self, user, team):
         """Outputs data to feed to a chart library."""
 
