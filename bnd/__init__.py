@@ -7,7 +7,7 @@ from bnd.models import User, Team, Checkpoint, Goal, Evaluation
 import os
 
 
-__version__ = '0.9.0'
+__version__ = '0.9.1'
 
 
 log = Logger()
