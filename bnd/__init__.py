@@ -2,8 +2,8 @@ from flask import Flask
 from flask.ext.login import LoginManager, current_user
 from flask.ext.admin import Admin, BaseView, expose
 from flask.ext.admin.contrib.sqla import ModelView
+from flask.ext.redis import FlaskRedis
 from logbook import Logger
-from bnd.models import User, Team, Checkpoint, Goal, Evaluation
 import os
 
 
@@ -12,6 +12,7 @@ __version__ = '0.9.1'
 
 log = Logger()
 login_manager = LoginManager()
+redis_store = FlaskRedis()
 
 
 ADMINS = [
@@ -49,11 +50,14 @@ def create_app(name=__name__, config={},
     app.secret_key = 'secret'
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
     app.config['DEBUG'] = True
+    app.config['REDIS_URL'] = os.environ.get('REDIS_URL')
 
     app.config.update(config)
 
     login_manager.init_app(app)
     login_manager.login_view = 'user.login'
+
+    redis_store.init_app(app)
 
     from bnd.models import db
     db.init_app(app)
@@ -72,6 +76,8 @@ def create_app(name=__name__, config={},
     app.register_blueprint(checkpoint_module, url_prefix='/checkpoint')
     app.register_blueprint(goal_module, url_prefix='/goal')
     app.register_blueprint(user_module, url_prefix='/user')
+
+    from bnd.models import User, Team, Checkpoint, Goal, Evaluation
 
     admin = Admin()
     admin.init_app(app)
