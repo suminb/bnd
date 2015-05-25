@@ -17,7 +17,7 @@ JsonType = db.String().with_variant(JSON(), 'postgresql')
 def cached(func):
     """Cache data at a Redis store."""
     def wrapper(self, *args, **kwargs):
-        key = 'func:{}-user:{}'.format(func.func_name, current_user.id)
+        key = 'func:{}-user:{}'.format(func.__name__, current_user.id)
         data = redis_store.get(key)
 
         if data is None:
