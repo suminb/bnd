@@ -5,7 +5,7 @@
 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
 
   <h2>Being &amp; Doing 목표 성취 현황</h2>
-  <canvas id="eval_chart" width="600" height="280"></canvas>
+  <canvas id="eval_chart" width="800" height="380"></canvas>
 
   <ul>
   {% for team in current_user.teams %}
@@ -16,15 +16,22 @@
   <script src="/static/chart.js"></script>
   <script>
     var colors = [
-      "rgba(240,200,200,0.5)",
-      "rgba(200,240,200,0.5)",
-      "rgba(200,200,240,0.5)"
+      "rgba(144,202,119,0.75)",
+      "rgba(129,198,221,0.75)",
+      "rgba(233,182,77,0.75)"
     ];
+    var highlightColors = [
+      "rgba(144,202,119,0.85)",
+      "rgba(129,198,221,0.85)",
+      "rgba(233,182,77,0.85)"
+    ];
+
     var options = Chart.defaults.Bar;
     options['scaleOverride'] = true;
     options['scaleSteps'] = 4;
     options['scaleStepWidth'] = 3;
     options['scaleStartValue'] = 0;
+    options['barShowStroke'] = false;
 
     var evalsPerGoal = {{ chart_user_evaluations | tojson | safe }};
     var data = {
@@ -33,9 +40,7 @@
             return {
                 label: "(" + i + ")",
                 fillColor: colors[i],
-                strokeColor: "rgba(220,220,220,0.8)",
-                highlightFill: "rgba(220,220,220,0.75)",
-                highlightStroke: "rgba(220,220,220,1)",
+                highlightFill: highlightColors[i],
                 data: v
             }
         })
