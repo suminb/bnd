@@ -24,7 +24,7 @@ def cached(func):
             data = func(self, *args, **kwargs)
             redis_store.set(key, json.dumps(data))
         else:
-            data = json.loads(data)
+            data = json.loads(data.decode('utf-8'))
 
         return data
     return wrapper
