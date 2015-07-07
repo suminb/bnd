@@ -1,5 +1,3 @@
-
-
 div.content {
   margin: .5em;
 }
@@ -7,8 +5,10 @@ div.content {
 ul.checkpoint li {
 }
 div.checkpoint {
-  margin: 2px;
   padding: 0;
+}
+div.checkpoint-inner {
+  margin: 2px;
 }
 div.checkpoint a {
   display: block;
@@ -116,7 +116,6 @@ a.navbar-brand {
 /*Login Button*/
 .login {
   color: #FFFFFF;
-    
   border-color: #009688;
 }
 .login:hover,
@@ -128,7 +127,7 @@ a.navbar-brand {
   color: #FFFFFF;
   background-color: #009688;
   border-color: #FFF;
-}   
+}
 /*Google Plus Sign In Button*/
 .gplussign {
   color: #FFFFFF;
@@ -144,7 +143,7 @@ a.navbar-brand {
   color: #FFFFFF;
   background-color: #F44336;
   border-color: #FFF;
-}   
+}
 
 /*Centered Menu*/
 .infonav {
@@ -182,7 +181,7 @@ a.navbar-brand {
     background-size: cover;
     -o-background-size: cover;
     background: url('/static/cover.png') no-repeat center scroll;
-    padding-top: 300px;
+    padding-top: 120px;
     padding-bottom: 80px;
 }
 
@@ -332,7 +331,11 @@ a.navbar-brand {
 }
 
 .mainblock {
-  margin: 50px 0px;
+  margin: 16px 0px;
+}
+
+.well h3 {
+  margin: 0 0 .25em 0;
 }
 
 /*dynamic menu*/

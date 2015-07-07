@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
-from flask.ext.login import login_required, login_user, logout_user, current_user
+from flask import Blueprint, render_template, request, redirect, url_for, \
+    session
+from flask.ext.login import login_required, login_user, logout_user, \
+    current_user
 from flask_oauthlib.client import OAuth
 from bnd import login_manager, log
-from bnd.models import db, User
+from bnd.models import User
 from bnd.forms import UserInfoForm, UserInfoForm2
 from datetime import datetime
 
@@ -72,9 +74,10 @@ def edit_info():
     form.question3.data = user.data['question3']
 
     # FIXME: Temporary
-    form.birthdate_year.data = user.birthdate.strftime('%Y')
-    form.birthdate_month.data = user.birthdate.strftime('%m')
-    form.birthdate_day.data = user.birthdate.strftime('%d')
+    if user.birthdate is not None:
+        form.birthdate_year.data = user.birthdate.strftime('%Y')
+        form.birthdate_month.data = user.birthdate.strftime('%m')
+        form.birthdate_day.data = user.birthdate.strftime('%d')
 
     context = dict(
         form=form,
@@ -102,8 +105,10 @@ def edit_info2():
         #     data[k] = form.data[k]
 
         # FIXME: Temporary
-        data['education'] = dict(school=form.data['school'], major=form.data['major'])
-        data['career'] = [dict(company=form.data['company'], title=form.data['title'])]
+        data['education'] = dict(school=form.data['school'],
+                                 major=form.data['major'])
+        data['career'] = [dict(company=form.data['company'],
+                               title=form.data['title'])]
 
         user.data = data
         user.save()
