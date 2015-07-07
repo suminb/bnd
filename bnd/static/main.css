@@ -264,7 +264,10 @@ a.navbar-brand {
 }
 
 
-.btn.status {
+.btn.score-3,
+.btn.score-6,
+.btn.score-9,
+.btn.score-12 {
   color: #FFF;
 }
 
