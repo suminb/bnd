@@ -25,26 +25,30 @@ div.checkpoint .status {
 
 div.checkpoint .status.score-1,
 div.checkpoint .status.score-2,
-div.checkpoint .status.score-3 {
-  background-color: red;
+div.checkpoint .status.score-3,
+.btn.score-3 {
+  background-color: #E54436;
 }
 
 div.checkpoint .status.score-4,
 div.checkpoint .status.score-5,
-div.checkpoint .status.score-6 {
-  background-color: #EF6C00;
+div.checkpoint .status.score-6,
+.btn.score-6 {
+  background-color: #E5731F;
 }
 
 div.checkpoint .status.score-7,
 div.checkpoint .status.score-8,
-div.checkpoint .status.score-9 {
-  background-color: #FDD835;
+div.checkpoint .status.score-9,
+.btn.score-9 {
+  background-color: #F0BE10;
 }
 
 div.checkpoint .status.score-10,
 div.checkpoint .status.score-11,
-div.checkpoint .status.score-12 {
-  background-color: green;
+div.checkpoint .status.score-12,
+.btn.score-12 {
+  background-color: #24A557;
 }
 
 input[name=address]:hover, input[name=zipcode]:hover {
@@ -223,7 +227,7 @@ a.navbar-brand {
   color: #FFFFFF;
   background-color: #FF4081;
   border-color: #FF4081;
-} 
+}
 
 /*Green Next button*/
 .btn-green {
@@ -257,36 +261,15 @@ a.navbar-brand {
   color: #FFFFFF;
   background-color: #448AFF;
   border-color: #448AFF;
-} 
-
-#btn-score {}
-
-.first{
-  color: #FFFFFF;
-  background-color: red;
-  border-color: red;
 }
 
-.second{
-  color: #FFFFFF;
-  background-color: #EF6C00;
-  border-color: #EF6C00;
-}
 
-.third{
-  color: #FFFFFF;
-  background-color: #FDD835;
-  border-color: #FDD835; 
-}
- 
-.fourth{
-  color: #FFFFFF;
-  background-color: green;
-  border-color: green; 
+.btn.status {
+  color: #FFF;
 }
 
 /*setup buttons*/
-.setup-btn { 
+.setup-btn {
   margin: 2px;
 }
 
