@@ -5,8 +5,10 @@ div.content {
 ul.checkpoint li {
 }
 div.checkpoint {
-  margin: 2px;
   padding: 0;
+}
+div.checkpoint-inner {
+  margin: 2px;
 }
 div.checkpoint a {
   display: block;

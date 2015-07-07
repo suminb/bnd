@@ -17,14 +17,16 @@
 {% macro render_checkpoints(user, team, checkpoints) %}
   <div class="row checkpoints">
   {% for checkpoint in checkpoints %}
-    <div class="col-sm-2 checkpoint">
-      <div class="status score-{{ checkpoint.average_evaluation_for_user(user) | round | int }}"></div>
-      <a class="checkpoint-view"
-         data-team-id="{{ team.id }}"
-         data-checkpoint-id="{{ checkpoint.id }}"
-         href="{{ url_for('checkpoint.view', checkpoint_id=checkpoint.id, team_id=team.id) }}">
-        {{ checkpoint.title }}
-      </a>
+    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2 checkpoint">
+      <div class="checkpoint-inner">
+        <div class="status score-{{ checkpoint.average_evaluation_for_user(user) | round | int }}"></div>
+        <a class="checkpoint-view"
+           data-team-id="{{ team.id }}"
+           data-checkpoint-id="{{ checkpoint.id }}"
+           href="{{ url_for('checkpoint.view', checkpoint_id=checkpoint.id, team_id=team.id) }}">
+          {{ checkpoint.title }}
+        </a>
+      </div>
     </div>
   {% endfor %}
   </div>
