@@ -1,5 +1,3 @@
-
-
 div.content {
   margin: .5em;
 }
@@ -116,7 +114,6 @@ a.navbar-brand {
 /*Login Button*/
 .login {
   color: #FFFFFF;
-    
   border-color: #009688;
 }
 .login:hover,
@@ -128,7 +125,7 @@ a.navbar-brand {
   color: #FFFFFF;
   background-color: #009688;
   border-color: #FFF;
-}   
+}
 /*Google Plus Sign In Button*/
 .gplussign {
   color: #FFFFFF;
@@ -144,7 +141,7 @@ a.navbar-brand {
   color: #FFFFFF;
   background-color: #F44336;
   border-color: #FFF;
-}   
+}
 
 /*Centered Menu*/
 .infonav {
@@ -333,6 +330,10 @@ a.navbar-brand {
 
 .mainblock {
   margin: 16px 0px;
+}
+
+.well h3 {
+  margin: 0 0 .25em 0;
 }
 
 /*dynamic menu*/
