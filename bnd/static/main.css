@@ -182,7 +182,7 @@ a.navbar-brand {
     background-size: cover;
     -o-background-size: cover;
     background: url('/static/cover.png') no-repeat center scroll;
-    padding-top: 300px;
+    padding-top: 120px;
     padding-bottom: 80px;
 }
 
