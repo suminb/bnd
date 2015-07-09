@@ -292,6 +292,14 @@ class Evaluation(db.Model, CRUDMixin):
             .first()
 
 
+class CheckpointEvaluation(db.Model, CRUDMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    checkpoint_id = db.Column(db.Integer, db.ForeignKey('checkpoint.id'))
+    timestamp = db.Column(db.DateTime(timezone=False))
+    data = db.Column(JsonType)
+
+
 # FIXME: To be relocated to elsewhere
 class EvaluationChart(object):
     def extract_user_data(self, user, checkpoint_ids):
