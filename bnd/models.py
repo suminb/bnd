@@ -280,6 +280,7 @@ class Evaluation(db.Model, CRUDMixin):
     checkpoint_id = db.Column(db.Integer, db.ForeignKey('checkpoint.id'))
     timestamp = db.Column(db.DateTime(timezone=False))
     score = db.Column(db.Integer)
+    data = db.Column(JsonType)
 
     @staticmethod
     def fetch(user_id, checkpoint_id, goal_id):
