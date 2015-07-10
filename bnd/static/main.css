@@ -295,16 +295,9 @@ a.navbar-brand {
 /*END Buttons*/
 
 
-/*Sidebar*/
-#profile-info {
-  text-align: center;
-}
-.sb-section{
-  margin-top: 20px;
-}
-
-.sb-section ul{
-  list-style-type: none;
+/* Sidebar */
+.profile {
+  margin: 2em 0;
 }
 
 /*main-information section*/
