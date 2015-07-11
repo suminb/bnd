@@ -7,10 +7,10 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
   <!-- Optional theme -->
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 
   <link id="bsdp-css" href="/static/bootstrap-datepicker3.css" rel="stylesheet">
   <script src="/static/bootstrap-datepicker.js"></script>
@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="/static/main.css">
 
   <!-- Latest compiled and minified JavaScript -->
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
   <script src="/static/sprintf.min.js"></script>
   <script src="/static/main.js"></script>
@@ -73,22 +73,28 @@
   {% block sidebar %}
   <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3" id="sidebar" role="navigation">
 
-    <div id="profile-info" class="sb-section col-xs-12 col-sm-12">
-      <div class="profile-pic">
-        <img style="width:40px;height:40px;margin-right:8px;" src="{{ current_user.picture }}">
+  <div class="profile">
+    <div class="media">
+      <div class="media-left">
+        <a href="#">
+          <img style="width:40px;height:40px;margin-right:8px;" src="{{ current_user.picture }}">
+        </a>
       </div>
-      <div class="profile-info">
-        <label>{{ current_user.name }}</label>
+      <div class="media-body">
+        <h4 class="media-heading">{{ current_user.name }}</h4>
         {% if current_user.has_current_team %}
-        <p>{{ current_user.current_team.name }}</p>
+        {{ current_user.current_team.name }}
         {% endif %}
       </div>
     </div>
+  </div>
 
     <div class="panel-group">
       {% if current_user.has_current_team %}
-      <h5>{{ current_user.current_team.name }}</h5>
-      <ul>
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#">{{ current_user.current_team.name }}</a></li>
+      </ul>
+      <ul class="nav nav-pills nav-stacked">
         <li>
           <a href="{{ url_for('team.view', team_id=current_user.current_team.id) }}">커리큘럼</a>
         </li>
