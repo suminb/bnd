@@ -7,7 +7,7 @@ from logbook import Logger
 import os
 
 
-__version__ = '0.9.8'
+__version__ = '0.9.9'
 
 
 log = Logger()
