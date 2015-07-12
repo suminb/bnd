@@ -78,14 +78,17 @@ def create_app(name=__name__, config={},
     app.register_blueprint(goal_module, url_prefix='/goal')
     app.register_blueprint(user_module, url_prefix='/user')
 
-    from bnd.models import User, Team, Checkpoint, Goal, Evaluation
+    from bnd.models import User, Team, Checkpoint, Goal, Evaluation, \
+        CheckpointEvaluation
 
     admin = Admin()
     admin.init_app(app)
-    classes = [User, Team, Checkpoint, Goal, Evaluation]
+    classes = [User, Team, Checkpoint, Goal, Evaluation, CheckpointEvaluation]
     for cls in classes:
-        admin.add_view(AdminModelView(cls, db.session, endpoint='admin_' + cls.__name__))
+        admin.add_view(AdminModelView(cls, db.session,
+                                      endpoint='admin_' + cls.__name__))
 
-    app.jinja_env.globals.update(checkpoint_status_class=checkpoint_status_class)
+    app.jinja_env.globals.update(
+        checkpoint_status_class=checkpoint_status_class)
 
     return app
