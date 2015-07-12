@@ -95,7 +95,9 @@ class CheckpointEvaluationForm(Form):
 
     def process(self, formdata=None, obj=None, **kwargs):
 
-        if obj is not None:
+        super(CheckpointEvaluationForm, self).process(formdata, obj, kwargs)
+
+        if obj is not None and obj.first() is not None:
             record = obj.first().data
             self.attendance.process(formdata, record['attendance'])
             self.essay.process(formdata, record['essay'])
