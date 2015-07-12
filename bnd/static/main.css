@@ -55,6 +55,14 @@ input[name=address]:hover, input[name=zipcode]:hover {
   cursor: pointer;
 }
 
+ul.choices {
+  list-style: none;
+}
+ul.choices li {
+  display: inline;
+  margin: 0 .4em;
+}
+
 /*
  * Style tweaks
  * --------------------------------------------------

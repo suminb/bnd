@@ -81,3 +81,21 @@ class GoalForm(Form):
     criterion4 = StringField(
         '',
         validators=[DataRequired()])
+
+
+class CheckpointEvaluationForm(Form):
+    attendance = RadioField(
+        'attendance',
+        choices=[('yes', '예'), ('no', '아니오'), ('na', '해당 없음')],
+        validators=[DataRequired()])
+    essay = RadioField(
+        'attendance',
+        choices=[('yes', '예'), ('no', '아니오'), ('na', '해당 없음')],
+        validators=[DataRequired()])
+
+    def process(self, formdata=None, obj=None, **kwargs):
+
+        if obj is not None:
+            record = obj.first().data
+            self.attendance.process(formdata, record['attendance'])
+            self.essay.process(formdata, record['essay'])

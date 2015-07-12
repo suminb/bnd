@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
 from bnd.models import Checkpoint, Team, Goal, Evaluation, \
-    CheckpointEvaluation,db
+    CheckpointEvaluation, db
+from bnd.forms import CheckpointEvaluationForm
 from datetime import datetime
 import re
 
@@ -19,6 +20,11 @@ def view(checkpoint_id):
     team = Team.get_or_404(team_id)
     goals = Goal.query.filter_by(team_id=team.id, user_id=current_user.id)
 
+    checkpoint_eval = CheckpointEvaluation.query.filter_by(
+        user_id=current_user.id, checkpoint_id=checkpoint_id)
+
+    form = CheckpointEvaluationForm(obj=checkpoint_eval)
+
     evaluations = {}
     # FIXME: Revise the following section; use a JOIN statement
     for goal in goals:
@@ -26,10 +32,12 @@ def view(checkpoint_id):
                                                 checkpoint.id, goal.id)
 
     context = dict(
+        form=form,
         checkpoint=checkpoint,
         team=team,
         goals=goals,
         evaluations=evaluations,
+        checkpoint_evaluation=checkpoint_eval,
     )
     return render_template('checkpoint/view.html', **context)
 
