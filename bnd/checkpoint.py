@@ -53,12 +53,12 @@ def evaluate(checkpoint_id):
     checkpoint_evaluation = CheckpointEvaluation.query.filter_by(
         user_id=current_user.id,
         checkpoint_id=checkpoint.id,
-    )
+    ).first()
 
     if checkpoint_evaluation is None:
         CheckpointEvaluation.create(
-            user=current_user,
-            checkpoint=checkpoint,
+            user_id=current_user.id,
+            checkpoint_id=checkpoint.id,
             data=data,
         )
     else:
