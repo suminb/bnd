@@ -76,7 +76,7 @@ def evaluate(checkpoint_id):
 
     # Then process Evaluation
     for k, v in request.form.items():
-        m = re.match(r'goal-(?P<goal_id>\d+)', k)
+        m = re.match(r'goal-(?P<goal_id>\d+)-score', k)
 
         if m is not None:
             goal_id = m.group('goal_id')
@@ -85,6 +85,7 @@ def evaluate(checkpoint_id):
                 user_id=current_user.id,
                 checkpoint_id=checkpoint.id,
                 goal_id=goal_id).first()
+            assessment = request.form.get('goal-{}-assessment'.format(goal_id))
 
             if evaluation is None:
                 Evaluation.create(
@@ -92,10 +93,15 @@ def evaluate(checkpoint_id):
                     user=current_user,
                     checkpoint=checkpoint,
                     goal_id=goal_id,
-                )
+                    data=dict(assessment=assessment))
+
             else:
                 evaluation.timestamp = datetime.utcnow()
                 evaluation.score = v
+                if evaluation.data:
+                    evaluation.data.update('assessment', assessment)
+                else:
+                    evaluation.data = dict(assessment=assessment)
                 db.session.commit()
 
     return redirect(url_for('checkpoint.view', checkpoint_id=checkpoint.id,

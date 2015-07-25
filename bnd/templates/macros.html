@@ -53,7 +53,7 @@
   </div>
   <div class="col-xs-4 text-right">
     <select class="selectpicker show-tick form-control"
-            name="goal-{{ goal.id }}">
+            name="goal-{{ goal.id }}-score">
       {% for x in range(13) %}
         {% if evaluation.score == x %}
           <option value="{{ x }}" selected="selected">{{ x }}</option>
@@ -78,7 +78,7 @@
       <td class="col-xs-10 text-center">
         <input class="form-control"
                placeholder="What do you hope to accomplish?"
-               value="{{ goal.criterion1 }}">
+               value="{{ goal.criterion1 }}"/>
       </td>
     </tr>
     <tr>
@@ -88,7 +88,7 @@
       <td class="col-xs-10 text-center">
         <input class="form-control"
                placeholder="What do you hope to accomplish?"
-               value="{{ goal.criterion2 }}">
+               value="{{ goal.criterion2 }}"/>
       </td>
     </tr>
     <tr>
@@ -98,7 +98,7 @@
       <td class="col-xs-10 text-center">
         <input class="form-control"
                placeholder="What do you hope to accomplish?"
-               value="{{ goal.criterion3 }}">
+               value="{{ goal.criterion3 }}"/>
       </td>
     </tr>
     <tr>
@@ -108,7 +108,16 @@
       <td class="col-xs-10 text-center">
         <input class="form-control"
                placeholder="What do you hope to accomplish?"
-               value="{{ goal.criterion4 }}">
+               value="{{ goal.criterion4 }}"/>
+      </td>
+    </tr>
+    <tr>
+      <td class="col-xs-2"></td>
+      <td class="col-xs-10">
+        <input class="form-control"
+               placeholder="주관식 평가"
+               name="goal-{{ goal.id }}-assessment"
+               value="{{ evaluation.data.assessment }}"/>
       </td>
     </tr>
     </tbody>
