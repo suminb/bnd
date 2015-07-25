@@ -10,6 +10,18 @@ goal_module = Blueprint(
     'goal', __name__, template_folder='templates/goal')
 
 
+@goal_module.route('/')
+@login_required
+def index():
+    team = current_user.current_team
+    goals = Goal.query.filter_by(user_id=current_user.id, team_id=team.id)
+    context = dict(
+        team=team,
+        goals=goals,
+    )
+    return render_template('goal/index.html', **context)
+
+
 @goal_module.route('/view_all/ajax')
 def view_all():
     team_id = request.args.get('team_id')
