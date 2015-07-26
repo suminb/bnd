@@ -37,7 +37,7 @@
   <ul>
   {% for goal in user.goals_for_team(team.id) %}
     {% if checkpoint %}
-      <li><a href="{{ url_for('goal.evaluate', goal_id=goal.id, team_id=team.id, checkpoint_id=checkpoint.id) }}">{{ goal.title }}</a></li>
+      <li><a href="{{ url_for('checkpoint.evaluate', goal_id=goal.id, team_id=team.id, checkpoint_id=checkpoint.id) }}">{{ goal.title }}</a></li>
     {% else %}
       <li>{{ goal.title }}</li>
     {% endif %}
