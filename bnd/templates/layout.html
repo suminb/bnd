@@ -96,6 +96,9 @@
       </ul>
       <ul class="nav nav-pills nav-stacked">
         <li>
+          <a href="{{ url_for('goal.index', team_id=current_user.current_team.id) }}">목표 관리</a>
+        </li>
+        <li>
           <a href="{{ url_for('team.view', team_id=current_user.current_team.id) }}">커리큘럼</a>
         </li>
         <li>
@@ -108,21 +111,6 @@
         {% endif %}
       </ul>
       {% endif %}
-
-      <!--
-      <h5>지난 Being &amp; Doing</h5>
-      <ul>
-        <li>
-          <a href="#">Being &amp; Doing 5기</a>
-        </li>
-        <li>
-          <a href="#">Readers 2기</a>
-        </li>
-        <li>
-          <a href="#">Being &amp; Doing 2기</a>
-        </li>
-      </ul>
-      -->
 
     </div><!-- panel-group accordion -->
 
