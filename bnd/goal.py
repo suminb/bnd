@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask.ext.login import login_required, current_user
-from bnd.models import Goal, Team, Checkpoint, Evaluation
+from bnd.models import Goal, Checkpoint, Evaluation
 from bnd.forms import GoalForm
-from bnd.utils import handle_request_type
 
 
 goal_module = Blueprint(
@@ -54,7 +53,10 @@ def view(goal_id):
 @login_required
 def delete(goal_id):
     goal = Goal.get_or_404(goal_id)
+
+    Evaluation.query.filter(Evaluation.goal_id == goal.id).delete()
     goal.delete()
+
     return ''
 
 
@@ -86,4 +88,3 @@ def edit(goal_id):
         user=current_user,
     )
     return render_template('edit.html', **context)
-
