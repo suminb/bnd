@@ -58,8 +58,27 @@
     </div>
 
     <div class="options text-center">
+      {% if goal.id %}
+      <a href="javascript:deleteGoal()" class="btn btn-lg btn-danger">삭제</a>
+      {% endif %}
       <button class="btn btn-lg btn-green" type="submit">완료</button>
     </div>
   </form>
 </div>
+
+<script>
+{% if goal.id %}
+function deleteGoal() {
+  if (confirm('You are about to delete this goal. Are you sure?')) {
+    $.ajax({
+      url: '{{ url_for("goal.delete", goal_id=goal.id) }}',
+      type: 'DELETE',
+      success: function(response) {
+        location.href = '{{ url_for("goal.index") }}';
+      }
+    });
+  }
+}
+{% endif %}
+</script>
 {% endblock %}

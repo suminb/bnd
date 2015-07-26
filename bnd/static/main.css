@@ -254,6 +254,12 @@ a.navbar-brand {
   border-color: #009688;
 }
 
+.btn-danger {
+  border-color: #c9302c;
+  color: #c9302c;
+  background: none;
+}
+
 /*Add Button*/
 .btn-add {
   color: #448AFF;
@@ -270,7 +276,6 @@ a.navbar-brand {
   background-color: #448AFF;
   border-color: #448AFF;
 }
-
 
 .btn.score-3,
 .btn.score-6,
@@ -331,7 +336,9 @@ a.navbar-brand {
 /* start commented backslash hack \*/ * html .group { height: 1%; } .group { display: block; } /* close commented backslash hack */
 article, aside, figure, footer, header, hgroup, menu, nav, section { display: block; }
 a:focus { outline: 0; }
-
-
 /*end dynamic menu*/
 
+/* Custom styles */
+.text-vcenter {
+  vertical-align: middle;
+}

@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import render_field %}
+{% block content %}
+
+<h2>목표 관리</h2>
+
+<div class="col-sm-9">
+  {% if goals.count() == 0 %}
+  <p>등록된 목표가 없습니다.</p>
+  {% else %}
+  <ul>
+    {% for goal in goals %}
+    <li><a href="{{ url_for('goal.edit', goal_id=goal.id) }}">{{ goal.title }}</a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if goals.count() < 3 %}
+  <a href="{{ url_for('goal.edit', goal_id='new', team_id=team.id) }}" class="btn btn-add">Make a new goal</a>
+  {% endif %}
+</div>
+{% endblock %}
