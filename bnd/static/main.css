@@ -254,6 +254,12 @@ a.navbar-brand {
   border-color: #009688;
 }
 
+.btn-danger {
+  border-color: #c9302c;
+  color: #c9302c;
+  background: none;
+}
+
 /*Add Button*/
 .btn-add {
   color: #448AFF;
