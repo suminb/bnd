@@ -74,7 +74,7 @@ function deleteGoal() {
       url: '{{ url_for("goal.delete", goal_id=goal.id) }}',
       type: 'DELETE',
       success: function(response) {
-        // TODO: Redirect to a different page
+        location.href = '{{ url_for("goal.index") }}';
       }
     });
   }
