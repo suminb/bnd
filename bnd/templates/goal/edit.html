@@ -58,13 +58,16 @@
     </div>
 
     <div class="options text-center">
+      {% if goal.id %}
       <a href="javascript:deleteGoal()" class="btn btn-lg btn-danger">삭제</a>
+      {% endif %}
       <button class="btn btn-lg btn-green" type="submit">완료</button>
     </div>
   </form>
 </div>
 
 <script>
+{% if goal.id %}
 function deleteGoal() {
   if (confirm('You are about to delete this goal. Are you sure?')) {
     $.ajax({
@@ -76,5 +79,6 @@ function deleteGoal() {
     });
   }
 }
+{% endif %}
 </script>
 {% endblock %}
