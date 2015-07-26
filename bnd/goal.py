@@ -70,14 +70,14 @@ def edit(goal_id):
     else:
         goal = Goal.get_or_404(goal_id)
 
-    form = GoalForm(request.form, obj=None)
+    form = GoalForm(request.form, obj=goal)
     if form.validate_on_submit():
         form.populate_obj(goal)
         goal.user = current_user
         goal.team = current_user.current_team
         goal.save()
 
-        return redirect(url_for('checkpoint.view', checkpoint_id=checkpoint_id,
+        return redirect(url_for('goal.index', checkpoint_id=checkpoint_id,
                                 team_id=goal.team_id))
 
     context = dict(
