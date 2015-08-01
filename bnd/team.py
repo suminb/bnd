@@ -112,3 +112,13 @@ def goal_edit(team_id, goal_id):
         user=current_user,
     )
     return render_template('goal_edit.html', **context)
+
+
+@team_module.route('/<int:team_id>/announcements')
+@login_required
+def announcements(team_id):
+    team = Team.get_or_404(team_id)
+    context = dict(
+        announcements=team.announcements,
+    )
+    return render_template('announcements.html', **context)

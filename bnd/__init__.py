@@ -7,7 +7,7 @@ from logbook import Logger
 import os
 
 
-__version__ = '0.10.2'
+__version__ = '0.10.3'
 
 
 log = Logger()
@@ -46,7 +46,8 @@ def create_app(name=__name__, config={},
                static_folder='static', template_folder='templates'):
     """NOTE: `db_uri` is only a temporary solution. It shall be replaced by
     something more robust."""
-    app = Flask(name, static_folder=static_folder, template_folder=template_folder)
+    app = Flask(name, static_folder=static_folder,
+                template_folder=template_folder)
     app.secret_key = 'secret'
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
     app.config['DEBUG'] = True
@@ -79,11 +80,12 @@ def create_app(name=__name__, config={},
     app.register_blueprint(user_module, url_prefix='/user')
 
     from bnd.models import User, Team, Checkpoint, Goal, Evaluation, \
-        CheckpointEvaluation
+        CheckpointEvaluation, Announcement
 
     admin = Admin()
     admin.init_app(app)
-    classes = [User, Team, Checkpoint, Goal, Evaluation, CheckpointEvaluation]
+    classes = [User, Team, Checkpoint, Goal, Evaluation, CheckpointEvaluation,
+               Announcement]
     for cls in classes:
         admin.add_view(AdminModelView(cls, db.session,
                                       endpoint='admin_' + cls.__name__))
