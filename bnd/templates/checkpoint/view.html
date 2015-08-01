@@ -60,7 +60,11 @@
   </div>
 
   <div class="options text-center">
+    {% if has_evaluations %}
+    <button class="btn btn-lg btn-green" type="submit">수정하기</button>
+    {% else %}
     <button class="btn btn-lg btn-green" type="submit">제출하기</button>
+    {% endif %}
   </div>
 
 {% endif %}
