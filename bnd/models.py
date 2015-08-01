@@ -93,13 +93,22 @@ checkpoint_team_assoc = db.Table(
 )
 
 
+announcement_team_assoc = db.Table(
+    'announcement_team_assoc',
+    db.Column('announcement_id', db.Integer, db.ForeignKey('announcement.id')),
+    db.Column('team_id', db.Integer, db.ForeignKey('team.id'))
+)
+
+
 class Announcement(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     db.Column(db.DateTime(timezone=False))
     title = db.Column(db.String)
     content = db.Column(db.Text)
-    teams = db.relationship('Team', backref='announcement', lazy='dynamic')
     data = db.Column(JsonType)
+    teams = db.relationship('Team', secondary=announcement_team_assoc,
+                            backref=db.backref('announcements',
+                                               lazy='dynamic'))
 
 
 class User(db.Model, UserMixin, CRUDMixin):
