@@ -14,5 +14,4 @@ main_module = Blueprint(
 def index():
     context = dict(
     )
-
     return render_template('index.html', **context)

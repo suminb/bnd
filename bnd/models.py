@@ -2,7 +2,7 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import UserMixin, current_user
 from sqlalchemy import func
-from sqlalchemy.dialects.postgresql import JSON, ARRAY
+from sqlalchemy.dialects.postgresql import JSON
 from datetime import datetime
 from bnd import redis_store
 import click
@@ -91,6 +91,33 @@ checkpoint_team_assoc = db.Table(
     db.Column('checkpoint_id', db.Integer, db.ForeignKey('checkpoint.id')),
     db.Column('team_id', db.Integer, db.ForeignKey('team.id'))
 )
+
+
+announcement_team_assoc = db.Table(
+    'announcement_team_assoc',
+    db.Column('announcement_id', db.Integer, db.ForeignKey('announcement.id')),
+    db.Column('team_id', db.Integer, db.ForeignKey('team.id'))
+)
+
+
+class Announcement(db.Model, CRUDMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    db.Column(db.DateTime(timezone=False))
+    title = db.Column(db.String)
+    content = db.Column(db.Text)
+    data = db.Column(JsonType)
+    teams = db.relationship('Team', secondary=announcement_team_assoc,
+                            backref=db.backref('announcements',
+                                               lazy='dynamic'))
+
+    @property
+    def link(self):
+        """A synthetic property."""
+        if self.content and (self.content.startswith('http://') or
+                             self.content.startswith('https://')):
+            return self.content
+        else:
+            return ''
 
 
 class User(db.Model, UserMixin, CRUDMixin):
@@ -199,8 +226,10 @@ class Team(db.Model, CRUDMixin):
     chair_id = db.Column(db.Integer, db.ForeignKey(User.id))
     chair = db.relationship(User, uselist=False)
     users = db.relationship('User', secondary=user_team_assoc,
-        backref=db.backref('teams', lazy='dynamic'))
-    _checkpoints = db.relationship('Checkpoint', secondary=checkpoint_team_assoc, backref='team', lazy='dynamic')
+                            backref=db.backref('teams', lazy='dynamic'))
+    _checkpoints = db.relationship('Checkpoint',
+                                   secondary=checkpoint_team_assoc,
+                                   backref='team', lazy='dynamic')
     goals = db.relationship('Goal', backref='team', lazy='dynamic')
 
     def __repr__(self):
@@ -225,14 +254,15 @@ class Checkpoint(db.Model, CRUDMixin):
     due_date = db.Column(db.DateTime(timezone=False))
     title = db.Column(db.String)
     description = db.Column(db.Text)
-    type = db.Column(db.Enum('special', 'online', 'offline', name='checkpoint_type'),
+    type = db.Column(db.Enum('special', 'online', 'offline',
+                             name='checkpoint_type'),
                      nullable=False, default='offline')
 
     evaluations = db.relationship('Evaluation', backref='checkpoint',
                                   lazy='dynamic')
 
-    teams = db.relationship('Team', secondary=checkpoint_team_assoc, backref='checkpoint',
-                            lazy='dynamic')
+    teams = db.relationship('Team', secondary=checkpoint_team_assoc,
+                            backref='checkpoint', lazy='dynamic')
 
     def __repr__(self):
         return u"Checkpoint '{}'".format(self.title)
@@ -258,7 +288,8 @@ class Goal(db.Model, CRUDMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
-    type = db.Column(db.Enum(u'전공', u'운동', u'예술', u'취미', u'생활', u'기타', name='goal_type'),
+    type = db.Column(db.Enum(u'전공', u'운동', u'예술', u'취미', u'생활',
+                             u'기타', name='goal_type'),
                      nullable=False, default='offline')
     title = db.Column(db.String)
     content = db.Column(db.Text)
@@ -354,7 +385,8 @@ class EvaluationChart(object):
             for checkpoint_id in checkpoint_ids:
                 evals[goal.id][checkpoint_id] = 0.0
 
-            for checkpoint_id, score in self.get_user_evaluations_for_goal(user, goal):
+            for checkpoint_id, score in \
+                    self.get_user_evaluations_for_goal(user, goal):
                 evals[goal.id][checkpoint_id] = score
 
         return evals
@@ -377,8 +409,8 @@ class EvaluationChart(object):
 
     def get_current_goals(self, user):
         goals = Goal.query.filter(
-            Goal.user_id==user.id,
-            Goal.team_id==user.current_team.id,
+            Goal.user_id == user.id,
+            Goal.team_id == user.current_team.id,
         )
         return goals.all()
 
@@ -387,7 +419,7 @@ class EvaluationChart(object):
             Evaluation.checkpoint_id,
             func.avg(Evaluation.score)
         ).filter(
-            Evaluation.user_id==user.id, Evaluation.goal_id==goal.id
+            Evaluation.user_id == user.id, Evaluation.goal_id == goal.id
         ).group_by(
             Evaluation.checkpoint_id
         )
@@ -415,6 +447,7 @@ class EvaluationChart(object):
                 arrays[index + 1].append(user_data[goal_id][checkpoint_id])
 
         return arrays
+
 
 @click.group()
 def cli():
