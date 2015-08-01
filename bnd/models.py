@@ -93,6 +93,15 @@ checkpoint_team_assoc = db.Table(
 )
 
 
+class Announcement(db.Model, CRUDMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    db.Column(db.DateTime(timezone=False))
+    title = db.Column(db.String)
+    content = db.Column(db.Text)
+    teams = db.relationship('Team', backref='announcement', lazy='dynamic')
+    data = db.Column(JsonType)
+
+
 class User(db.Model, UserMixin, CRUDMixin):
     __table_args__ = (db.UniqueConstraint('oauth_provider', 'oauth_id'), {})
 
