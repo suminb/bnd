@@ -110,6 +110,15 @@ class Announcement(db.Model, CRUDMixin):
                             backref=db.backref('announcements',
                                                lazy='dynamic'))
 
+    @property
+    def link(self):
+        """A synthetic property."""
+        if self.content and (self.content.startswith('http://') or
+                             self.content.startswith('https://')):
+            return self.content
+        else:
+            return ''
+
 
 class User(db.Model, UserMixin, CRUDMixin):
     __table_args__ = (db.UniqueConstraint('oauth_provider', 'oauth_id'), {})
