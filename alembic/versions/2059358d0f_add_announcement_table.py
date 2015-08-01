@@ -26,4 +26,5 @@ def upgrade():
 
 
 def downgrade():
+    op.drop_table('announcement_team_assoc')
     op.drop_table(Announcement.__tablename__)
