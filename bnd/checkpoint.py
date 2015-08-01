@@ -1,11 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for
-from flask.ext.login import login_required, current_user
-from bnd.models import Checkpoint, Team, Goal, Evaluation, \
-    CheckpointEvaluation, db
-from bnd.forms import CheckpointEvaluationForm
+from functools import reduce
 from datetime import datetime
 import re
 
+from flask import Blueprint, render_template, request, redirect, url_for
+from flask.ext.login import login_required, current_user
+
+from bnd.forms import CheckpointEvaluationForm
+from bnd.models import Checkpoint, Team, Goal, Evaluation, \
+    CheckpointEvaluation, db
 
 checkpoint_module = Blueprint(
     'checkpoint', __name__, template_folder='templates/checkpoint')
@@ -31,12 +33,16 @@ def view(checkpoint_id):
         evaluations[goal.id] = Evaluation.fetch(current_user.id,
                                                 checkpoint.id, goal.id)
 
+    has_evaluations = reduce(lambda x, y: x and y,
+                             [v is not None for v in evaluations.values()])
+
     context = dict(
         form=form,
         checkpoint=checkpoint,
         team=team,
         goals=goals,
         evaluations=evaluations,
+        has_evaluations=has_evaluations,
         checkpoint_evaluation=checkpoint_eval,
     )
     return render_template('checkpoint/view.html', **context)
