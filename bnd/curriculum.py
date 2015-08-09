@@ -14,6 +14,7 @@ curriculum_module = Blueprint(
 def redirect_to_join_team():
     return redirect('/team/list')
 
+
 def team_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -23,6 +24,7 @@ def team_required(func):
             return redirect_to_join_team()
 
     return decorated_view
+
 
 @curriculum_module.route('')
 @login_required
