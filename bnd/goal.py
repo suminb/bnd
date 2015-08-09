@@ -21,22 +21,6 @@ def index():
     return render_template('goal/index.html', **context)
 
 
-@goal_module.route('/view_all/ajax')
-def view_all():
-    team_id = request.args.get('team_id')
-    checkpoint_id = request.args.get('checkpoint_id')
-    goals = Goal.query.filter_by(team_id=team_id)
-    checkpoint = Checkpoint.get_or_404(checkpoint_id)
-
-    context = dict(
-        goals=goals,
-        checkpoint=checkpoint,
-        team=checkpoint.team,
-    )
-
-    return render_template('goal/view_all_ajax.html', **context)
-
-
 @goal_module.route('/<int:goal_id>', methods=['get'])
 @login_required
 def view(goal_id):
